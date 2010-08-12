@@ -1,0 +1,20 @@
+<!DOCTYPE RCC><RCC version="1.0">
+    <qresource>
+        <file alias="connect.png">images/connect.png</file>
+        <file alias="import.png">images/import.png</file>
+        <file alias="pause.png">images/pause.png</file>
+        <file alias="print.png">images/print.png</file>
+        <file alias="slice.png">images/slice.png</file>
+        <file alias="stop.png">images/stop.png</file>
+
+        <file alias="N.png">images/north.png</file>
+        <file alias="NE.png">images/north_east.png</file>
+        <file alias="E.png">images/east.png</file>
+        <file alias="SE.png">images/south_east.png</file>
+        <file alias="S.png">images/south.png</file>
+        <file alias="SW.png">images/south_west.png</file>
+        <file alias="W.png">images/west.png</file>
+        <file alias="NW.png">images/north_west.png</file>
+    </qresource>
+</RCC>
+

@@ -1,0 +1,9 @@
+FORMS	     += ui/aboutDialog.ui
+FORMS	     += ui/fabqtDialog.ui
+FORMS	     += ui/toolDialog.ui
+SOURCES	     += core/python/classes.py
+SOURCES	     += core/python/functions.py
+SOURCES	     += fabqt.py
+TRANSLATIONS += languages/fabqt_ca_ES.ts
+TRANSLATIONS += languages/fabqt_pt_BR.ts
+TRANSLATIONS += languages/fabqt_es_ES.ts
