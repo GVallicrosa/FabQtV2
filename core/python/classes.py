@@ -47,8 +47,27 @@ class toolDialog(QDialog, ui_toolDialog.Ui_toolDlg):
             toolObject = Tool()
         self.toolObject = toolObject
         self.newTool = newTool
-        self.connect(self.toolButtonBox, SIGNAL("accepted()"), self.verifyAndSave) # Apply to write tool if all things are entered and correct
-        print '*** Tool dialog initialized'
+
+## Enable only to write numbers on the parameters
+        self.tipDiameterLineEdit.setValidator(QDoubleValidator(0.000,10.000, 6, self.tipDiameterLineEdit));
+        self.syringeDiameterLineEdit.setValidator(QDoubleValidator(0,10, 6,self.syringeDiameterLineEdit));
+        self.pathWidthLineEdit.setValidator(QDoubleValidator(0,10, 6,self.pathWidthLineEdit));
+        self.pathHeightLineEdit.setValidator(QDoubleValidator(0,10, 6,self.pathHeightLineEdit));
+        self.jogSpeedLineEdit.setValidator(QIntValidator (1, 20000, self.jogSpeedLineEdit));
+        self.suckBackLineEdit.setValidator(QDoubleValidator(0,10, 6,self.suckBackLineEdit));
+        self.pushoutLineEdit.setValidator(QDoubleValidator(0,10, 6,self.pushoutLineEdit));
+        self.pathSpeedLineEdit.setValidator(QDoubleValidator(0,10, 6,self.pathSpeedLineEdit));
+        self.pausePathsLineEdit.setValidator(QIntValidator (1, 10000, self.pausePathsLineEdit));
+        self.clearanceLineEdit.setValidator(QDoubleValidator(0,10, 6, self.clearanceLineEdit));
+        self.depositionLineEdit.setValidator(QDoubleValidator(0,10, 6,self.depositionLineEdit));
+
+    def accept(self):
+        if self.verify():
+            self.toolObject = self.updateTool(self.toolObject)
+            saveTool(self.toolObject, self.newTool)
+            self.close()
+        else:
+            QMessageBox().about(self, self.tr("Error"),self.tr("Not all paramaters are filled"))
 
     def updateTool(self, tool):
             tool.name = self.toolNameLineEdit.text()
@@ -66,13 +85,8 @@ class toolDialog(QDialog, ui_toolDialog.Ui_toolDlg):
             return tool
         
 
-    def verifyAndSave(self):
-        print '*** Veryfy and save'
-
-        if not self.toolNameLineEdit.text().isEmpty() and not self.tipDiameterLineEdit.text().isEmpty() and not self.syringeDiameterLineEdit.text        ().isEmpty() and not self.pathWidthLineEdit.text().isEmpty() and not self.pathHeightLineEdit.text().isEmpty() and not self.jogSpeedLineEdit.text().isEmpty() and not self.suckBackLineEdit.text().isEmpty() and not self.pushoutLineEdit.text().isEmpty() and not self.pathSpeedLineEdit.text().isEmpty() and not self.pausePathsLineEdit.text().isEmpty() and not self.clearanceLineEdit.text().isEmpty() and not self.depositionLineEdit.text().isEmpty():
-
-            self.toolObject = self.updateTool(self.toolObject)
-            saveTool(self.toolObject, self.newTool)
+    def verify(self):
+        if self.toolNameLineEdit.text().isEmpty() or self.tipDiameterLineEdit.text().isEmpty() or self.syringeDiameterLineEdit.text().isEmpty() or self.pathWidthLineEdit.text().isEmpty() or self.pathHeightLineEdit.text().isEmpty() or self.jogSpeedLineEdit.text().isEmpty() or self.suckBackLineEdit.text().isEmpty() or self.pushoutLineEdit.text().isEmpty() or self.pathSpeedLineEdit.text().isEmpty() or self.pausePathsLineEdit.text().isEmpty() or self.clearanceLineEdit.text().isEmpty() or self.depositionLineEdit.text().isEmpty():
+            return False
         else:
-            print 'Cannot close'
-
+            return True

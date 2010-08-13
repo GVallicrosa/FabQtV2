@@ -17,35 +17,42 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
     def __init__(self, parent = None):
         super(FabQtMain, self).__init__(parent)
         self.setupUi(self)
-        ## Initial values
+
+## Initial values
         self.configToolName = None
-        ## Load preferences
-        settings = QSettings()
+
+## Load preferences (called at the main loop)
         self.resize(settings.value("MainWindow/Size",QVariant(QSize(600, 500))).toSize())
         self.move(settings.value("MainWindow/Position",QVariant(QPoint(0, 0))).toPoint())
         self.restoreState(settings.value("MainWindow/State").toByteArray());
-        ## Show/hide dialogs from the menu
+
+## Show/hide dialogs from the menu
         self.connect(self.actionMain_tools, SIGNAL("toggled(bool)"), self.mainDock.setVisible)
         self.connect(self.actionStatus_Info, SIGNAL("toggled(bool)"), self.infoDock.setVisible)
         self.connect(self.actionToolbar, SIGNAL("toggled(bool)"), self.toolBar.setVisible)
-        ## If you close a dialog, update in the menu
+
+## If you close a dialog, update in the menu
         self.connect(self.mainDock, SIGNAL("visibilityChanged(bool)"), self.actionMain_tools.setChecked) # PROBLEM: when minimized, it loses the docks
         self.connect(self.infoDock, SIGNAL("visibilityChanged(bool)"), self.actionStatus_Info.setChecked)
-        ## Update movements
+
+## Update movements
         self.connect(self.x_IncrementLineEdit, SIGNAL("textEdited(QString)"), self.updateMovement)
         self.connect(self.y_IncrementLineEdit, SIGNAL("textEdited(QString)"), self.updateMovement)
         self.connect(self.z_IncrementLineEdit, SIGNAL("textEdited(QString)"), self.updateMovement)
         self.connect(self.u_IncrementLineEdit, SIGNAL("textEdited(QString)"), self.updateMovement)
         self.connect(self.v_IncrementLineEdit, SIGNAL("textEdited(QString)"), self.updateMovement)
-        ## General actions
+
+## General actions
         self.connect(self.actionQuit, SIGNAL("triggered()"), self.close)
         self.connect(self.actionAbout, SIGNAL("triggered()"), self.showAboutDialog)
         self.connect(self.actionImport, SIGNAL("triggered()"), self.startPrinting)
         self.connect(self.importModelButton, SIGNAL("triggered()"), self.startPrinting)
-        ## Context menus
+
+## Context menus
         self.connect(self.modelTreeWidget, SIGNAL("customContextMenuRequested(QPoint)"), self.showModelCustomContextMenu)
         self.connect(self.configTreeWidget, SIGNAL("customContextMenuRequested(QPoint)"), self.showConfigCustomContextMenu)
-        ## The config context menu
+
+## The config context menu
         self.toolMenu = QMenu()
         actionEditTool = self.toolMenu.addAction("Edit Tool")
         actionNewTool = self.toolMenu.addAction("New Tool")
@@ -54,7 +61,8 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         self.toolMenu.addAction(actionEditTool)
         self.toolMenu.addSeparator()
         self.toolMenu.addAction(actionNewTool)
-        ## The model context menu
+
+## The model context menu
         self.modelMenu = QMenu()
         actionProperties = self.modelMenu.addAction("Properties")
         actionStandard = self.modelMenu.addAction("Standard Path Planning")
@@ -80,6 +88,26 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         self.modelMenu.addAction(actionScale)
         self.modelMenu.addAction(actionOrigin)
 
+## Translations (en, ca, es_ES, pt_BR)
+        self.connect(self.actionEnglish, SIGNAL("triggered()"), self.set_en)
+        self.connect(self.actionSpanish_Spain, SIGNAL("triggered()"), self.set_es_ES)
+        self.connect(self.actionCatalan, SIGNAL("triggered()"), self.set_ca)
+        self.connect(self.actionPortuguese_Brazil, SIGNAL("triggered()"), self.set_pt_BR)
+
+    ## I don't like this solution for the translation
+    def set_en(self):
+        self.updateTranslation('en')
+    def set_es_ES(self):
+        self.updateTranslation('es_ES')
+    def set_ca(self):
+        self.updateTranslation('ca')
+    def set_pt_BR(self):
+        self.updateTranslation('pt_BR')
+
+    def updateTranslation(self,lang):
+        settings.setValue("Language",QVariant('languages/fabqt_' + lang))
+        QMessageBox().about(self, self.tr("Translation Info"),self.tr("You need to restart the application to change the language"))
+
     def closeEvent(self, event): # Save some settings before closing
         if self.okToContinue():
             settings = QSettings()
@@ -103,10 +131,8 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         dialog.exec_()
 
     def showConfigCustomContextMenu(self, pos):
-        print '*** Entering Config Custom Menu'
         index = self.configTreeWidget.indexAt(pos) 
         if not index.isValid(): # if not valid, nothing to edit
-            print '*** The index is not valid --> exiting Config Custom Menu'
             return 
         item = self.configTreeWidget.itemAt(pos) 
         #if not item.parent() == 'Tools': # if it has parent, it is a slice, not a model
@@ -134,7 +160,6 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
             dialog = toolDialog(self)
             dialog.exec_()
 
-
     def startPrinting(self): # need to be implemented
         pass
 
@@ -155,6 +180,13 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
     app.setApplicationName("FabQt") # Need to save settings
     app.setOrganizationName("FabQt") # Need to save settings
+
+    settings = QSettings()
+
+    translator = QTranslator()
+    translator.load(settings.value("Language",QVariant(QString("languages/fabqt_en"))).toString())
+    app.installTranslator(translator)
+
     form = FabQtMain()
     form.show()
     form.updateDialogs()

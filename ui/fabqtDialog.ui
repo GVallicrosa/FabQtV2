@@ -99,8 +99,18 @@
     </property>
     <addaction name="actionAbout"/>
    </widget>
+   <widget class="QMenu" name="menuLanguage">
+    <property name="title">
+     <string>Language</string>
+    </property>
+    <addaction name="actionEnglish"/>
+    <addaction name="actionSpanish_Spain"/>
+    <addaction name="actionCatalan"/>
+    <addaction name="actionPortuguese_Brazil"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuShow_Tools"/>
+   <addaction name="menuLanguage"/>
    <addaction name="menuHelp"/>
   </widget>
   <widget class="QDockWidget" name="mainDock">
@@ -2124,6 +2134,38 @@
   <action name="actionAbout">
    <property name="text">
     <string>About</string>
+   </property>
+  </action>
+  <action name="actionEnglish">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>English</string>
+   </property>
+  </action>
+  <action name="actionSpanish_Spain">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Spanish (Spain)</string>
+   </property>
+  </action>
+  <action name="actionCatalan">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Catalan</string>
+   </property>
+  </action>
+  <action name="actionPortuguese_Brazil">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Portuguese (Brazil)</string>
    </property>
   </action>
  </widget>

@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'fabqtDialog.ui'
 #
-# Created: Thu Aug 12 12:19:07 2010
+# Created: Fri Aug 13 12:53:50 2010
 #      by: PyQt4 UI code generator 4.7.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -47,6 +47,8 @@ class Ui_MainWindow(object):
         self.menuShow_Tools.setObjectName("menuShow_Tools")
         self.menuHelp = QtGui.QMenu(self.menubar)
         self.menuHelp.setObjectName("menuHelp")
+        self.menuLanguage = QtGui.QMenu(self.menubar)
+        self.menuLanguage.setObjectName("menuLanguage")
         MainWindow.setMenuBar(self.menubar)
         self.mainDock = QtGui.QDockWidget(MainWindow)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Fixed)
@@ -843,6 +845,18 @@ class Ui_MainWindow(object):
         self.actionToolbar.setObjectName("actionToolbar")
         self.actionAbout = QtGui.QAction(MainWindow)
         self.actionAbout.setObjectName("actionAbout")
+        self.actionEnglish = QtGui.QAction(MainWindow)
+        self.actionEnglish.setCheckable(True)
+        self.actionEnglish.setObjectName("actionEnglish")
+        self.actionSpanish_Spain = QtGui.QAction(MainWindow)
+        self.actionSpanish_Spain.setCheckable(True)
+        self.actionSpanish_Spain.setObjectName("actionSpanish_Spain")
+        self.actionCatalan = QtGui.QAction(MainWindow)
+        self.actionCatalan.setCheckable(True)
+        self.actionCatalan.setObjectName("actionCatalan")
+        self.actionPortuguese_Brazil = QtGui.QAction(MainWindow)
+        self.actionPortuguese_Brazil.setCheckable(True)
+        self.actionPortuguese_Brazil.setObjectName("actionPortuguese_Brazil")
         self.menuFile.addAction(self.actionNew)
         self.menuFile.addSeparator()
         self.menuFile.addAction(self.actionOpen)
@@ -858,8 +872,13 @@ class Ui_MainWindow(object):
         self.menuShow_Tools.addSeparator()
         self.menuShow_Tools.addAction(self.actionToolbar)
         self.menuHelp.addAction(self.actionAbout)
+        self.menuLanguage.addAction(self.actionEnglish)
+        self.menuLanguage.addAction(self.actionSpanish_Spain)
+        self.menuLanguage.addAction(self.actionCatalan)
+        self.menuLanguage.addAction(self.actionPortuguese_Brazil)
         self.menubar.addAction(self.menuFile.menuAction())
         self.menubar.addAction(self.menuShow_Tools.menuAction())
+        self.menubar.addAction(self.menuLanguage.menuAction())
         self.menubar.addAction(self.menuHelp.menuAction())
         self.toolBar.addAction(self.actionConnect)
         self.toolBar.addSeparator()
@@ -879,6 +898,7 @@ class Ui_MainWindow(object):
         self.menuFile.setTitle(QtGui.QApplication.translate("MainWindow", "File", None, QtGui.QApplication.UnicodeUTF8))
         self.menuShow_Tools.setTitle(QtGui.QApplication.translate("MainWindow", "Show", None, QtGui.QApplication.UnicodeUTF8))
         self.menuHelp.setTitle(QtGui.QApplication.translate("MainWindow", "Help", None, QtGui.QApplication.UnicodeUTF8))
+        self.menuLanguage.setTitle(QtGui.QApplication.translate("MainWindow", "Language", None, QtGui.QApplication.UnicodeUTF8))
         self.incrementLabel.setText(QtGui.QApplication.translate("MainWindow", "Incr.", None, QtGui.QApplication.UnicodeUTF8))
         self.positionLabel.setText(QtGui.QApplication.translate("MainWindow", "Position", None, QtGui.QApplication.UnicodeUTF8))
         self.commandLabel.setText(QtGui.QApplication.translate("MainWindow", "Command", None, QtGui.QApplication.UnicodeUTF8))
@@ -943,5 +963,9 @@ class Ui_MainWindow(object):
         self.actionStatus_Info.setText(QtGui.QApplication.translate("MainWindow", "Status/Info", None, QtGui.QApplication.UnicodeUTF8))
         self.actionToolbar.setText(QtGui.QApplication.translate("MainWindow", "Toolbar", None, QtGui.QApplication.UnicodeUTF8))
         self.actionAbout.setText(QtGui.QApplication.translate("MainWindow", "About", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionEnglish.setText(QtGui.QApplication.translate("MainWindow", "English", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionSpanish_Spain.setText(QtGui.QApplication.translate("MainWindow", "Spanish (Spain)", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionCatalan.setText(QtGui.QApplication.translate("MainWindow", "Catalan", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionPortuguese_Brazil.setText(QtGui.QApplication.translate("MainWindow", "Portuguese (Brazil)", None, QtGui.QApplication.UnicodeUTF8))
 
 import resources_rc

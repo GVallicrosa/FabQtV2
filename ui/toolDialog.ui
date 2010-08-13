@@ -22,7 +22,7 @@
         <string>Material name and color of the tip</string>
        </property>
        <property name="text">
-        <string>Tool Name:</string>
+        <string notr="true">Tool Name:</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -38,7 +38,7 @@
         <string>[seconds] early dispensing to start flow quickly</string>
        </property>
        <property name="text">
-        <string>SuckBack:</string>
+        <string notr="true">SuckBack:</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -65,7 +65,7 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt; Purple - 0.51 ||     Yellow - 0.10&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="text">
-        <string>Tip Diameter:</string>
+        <string notr="true">Tip Diameter:</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -81,7 +81,7 @@ p, li { white-space: pre-wrap; }
         <string>[seconds] reverse plunger motion to stop flow quickly</string>
        </property>
        <property name="text">
-        <string>Pushout:</string>
+        <string notr="true">Pushout:</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -98,7 +98,7 @@ p, li { white-space: pre-wrap; }
 Diameter of the filament in extrusion [mm]</string>
        </property>
        <property name="text">
-        <string>Syringe Diameter:</string>
+        <string notr="true">Syringe Diameter:</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -117,7 +117,7 @@ Diameter of the filament in extrusion [mm]</string>
         <string>Width of stream of material deposited [mm]</string>
        </property>
        <property name="text">
-        <string>Path Width:</string>
+        <string notr="true">Path Width:</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -146,7 +146,7 @@ Diameter of the filament in extrusion [mm]</string>
         <string>Heigth of layers of material deposited [mm]</string>
        </property>
        <property name="text">
-        <string>Path Height:</string>
+        <string notr="true">Path Height:</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -161,8 +161,12 @@ Diameter of the filament in extrusion [mm]</string>
      </item>
      <item row="5" column="0">
       <widget class="QLabel" name="label_9">
+       <property name="toolTip">
+        <string>Stepper motor frequency [Hz]
+(11400 for default motors)</string>
+       </property>
        <property name="text">
-        <string>Jog Speed:</string>
+        <string notr="true">Jog Speed:</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -181,7 +185,7 @@ Diameter of the filament in extrusion [mm]</string>
         <string>[mm/s] speed along paths when depositing material</string>
        </property>
        <property name="text">
-        <string>Path Speed:</string>
+        <string notr="true">Path Speed:</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -199,7 +203,7 @@ p, li { white-space: pre-wrap; }
 &lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;(usually two times path heigth)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="text">
-        <string>Clearance:</string>
+        <string notr="true">Clearance:</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -209,7 +213,7 @@ p, li { white-space: pre-wrap; }
      <item row="3" column="2">
       <widget class="QLabel" name="label_15">
        <property name="text">
-        <string>Pause Paths:</string>
+        <string notr="true">Pause Paths:</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -227,7 +231,7 @@ p, li { white-space: pre-wrap; }
 &lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;(orientative value calculated from others)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="text">
-        <string>Deposition Rate:</string>
+        <string notr="true">Deposition Rate:</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>

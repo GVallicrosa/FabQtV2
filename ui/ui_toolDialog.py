@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'toolDialog.ui'
 #
-# Created: Thu Aug 12 12:19:08 2010
+# Created: Fri Aug 13 12:53:51 2010
 #      by: PyQt4 UI code generator 4.7.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -18,6 +18,7 @@ class Ui_toolDlg(object):
         self.gridLayout = QtGui.QGridLayout()
         self.gridLayout.setObjectName("gridLayout")
         self.label = QtGui.QLabel(toolDlg)
+        self.label.setText("Tool Name:")
         self.label.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.label.setObjectName("label")
         self.gridLayout.addWidget(self.label, 0, 0, 1, 1)
@@ -25,6 +26,7 @@ class Ui_toolDlg(object):
         self.toolNameLineEdit.setObjectName("toolNameLineEdit")
         self.gridLayout.addWidget(self.toolNameLineEdit, 0, 1, 1, 1)
         self.label_8 = QtGui.QLabel(toolDlg)
+        self.label_8.setText("SuckBack:")
         self.label_8.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.label_8.setObjectName("label_8")
         self.gridLayout.addWidget(self.label_8, 0, 2, 1, 1)
@@ -32,6 +34,7 @@ class Ui_toolDlg(object):
         self.suckBackLineEdit.setObjectName("suckBackLineEdit")
         self.gridLayout.addWidget(self.suckBackLineEdit, 0, 3, 1, 1)
         self.label_2 = QtGui.QLabel(toolDlg)
+        self.label_2.setText("Tip Diameter:")
         self.label_2.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.label_2.setObjectName("label_2")
         self.gridLayout.addWidget(self.label_2, 1, 0, 1, 1)
@@ -39,6 +42,7 @@ class Ui_toolDlg(object):
         self.tipDiameterLineEdit.setObjectName("tipDiameterLineEdit")
         self.gridLayout.addWidget(self.tipDiameterLineEdit, 1, 1, 1, 1)
         self.label_7 = QtGui.QLabel(toolDlg)
+        self.label_7.setText("Pushout:")
         self.label_7.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.label_7.setObjectName("label_7")
         self.gridLayout.addWidget(self.label_7, 1, 2, 1, 1)
@@ -46,6 +50,7 @@ class Ui_toolDlg(object):
         self.pushoutLineEdit.setObjectName("pushoutLineEdit")
         self.gridLayout.addWidget(self.pushoutLineEdit, 1, 3, 1, 1)
         self.label_3 = QtGui.QLabel(toolDlg)
+        self.label_3.setText("Syringe Diameter:")
         self.label_3.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.label_3.setObjectName("label_3")
         self.gridLayout.addWidget(self.label_3, 2, 0, 1, 1)
@@ -56,6 +61,7 @@ class Ui_toolDlg(object):
         self.pathSpeedLineEdit.setObjectName("pathSpeedLineEdit")
         self.gridLayout.addWidget(self.pathSpeedLineEdit, 2, 3, 1, 1)
         self.label_4 = QtGui.QLabel(toolDlg)
+        self.label_4.setText("Path Width:")
         self.label_4.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.label_4.setObjectName("label_4")
         self.gridLayout.addWidget(self.label_4, 3, 0, 1, 1)
@@ -69,6 +75,7 @@ class Ui_toolDlg(object):
         self.pausePathsLineEdit.setObjectName("pausePathsLineEdit")
         self.gridLayout.addWidget(self.pausePathsLineEdit, 3, 3, 1, 1)
         self.label_5 = QtGui.QLabel(toolDlg)
+        self.label_5.setText("Path Height:")
         self.label_5.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.label_5.setObjectName("label_5")
         self.gridLayout.addWidget(self.label_5, 4, 0, 1, 1)
@@ -79,6 +86,7 @@ class Ui_toolDlg(object):
         self.clearanceLineEdit.setObjectName("clearanceLineEdit")
         self.gridLayout.addWidget(self.clearanceLineEdit, 4, 3, 1, 1)
         self.label_9 = QtGui.QLabel(toolDlg)
+        self.label_9.setText("Jog Speed:")
         self.label_9.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.label_9.setObjectName("label_9")
         self.gridLayout.addWidget(self.label_9, 5, 0, 1, 1)
@@ -89,18 +97,22 @@ class Ui_toolDlg(object):
         self.depositionLineEdit.setObjectName("depositionLineEdit")
         self.gridLayout.addWidget(self.depositionLineEdit, 5, 3, 1, 1)
         self.label_14 = QtGui.QLabel(toolDlg)
+        self.label_14.setText("Path Speed:")
         self.label_14.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.label_14.setObjectName("label_14")
         self.gridLayout.addWidget(self.label_14, 2, 2, 1, 1)
         self.label_13 = QtGui.QLabel(toolDlg)
+        self.label_13.setText("Clearance:")
         self.label_13.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.label_13.setObjectName("label_13")
         self.gridLayout.addWidget(self.label_13, 4, 2, 1, 1)
         self.label_15 = QtGui.QLabel(toolDlg)
+        self.label_15.setText("Pause Paths:")
         self.label_15.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.label_15.setObjectName("label_15")
         self.gridLayout.addWidget(self.label_15, 3, 2, 1, 1)
         self.label_12 = QtGui.QLabel(toolDlg)
+        self.label_12.setText("Deposition Rate:")
         self.label_12.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.label_12.setObjectName("label_12")
         self.gridLayout.addWidget(self.label_12, 5, 2, 1, 1)
@@ -132,9 +144,7 @@ class Ui_toolDlg(object):
     def retranslateUi(self, toolDlg):
         toolDlg.setWindowTitle(QtGui.QApplication.translate("toolDlg", "Tool Editor", None, QtGui.QApplication.UnicodeUTF8))
         self.label.setToolTip(QtGui.QApplication.translate("toolDlg", "Material name and color of the tip", None, QtGui.QApplication.UnicodeUTF8))
-        self.label.setText(QtGui.QApplication.translate("toolDlg", "Tool Name:", None, QtGui.QApplication.UnicodeUTF8))
         self.label_8.setToolTip(QtGui.QApplication.translate("toolDlg", "[seconds] early dispensing to start flow quickly", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_8.setText(QtGui.QApplication.translate("toolDlg", "SuckBack:", None, QtGui.QApplication.UnicodeUTF8))
         self.label_2.setToolTip(QtGui.QApplication.translate("toolDlg", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
@@ -147,32 +157,24 @@ class Ui_toolDlg(object):
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"> Green - 0.84 ||       Clear - 0.20</p>\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">    Pink - 0.61 || Lavender - 0.15</p>\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"> Purple - 0.51 ||     Yellow - 0.10</p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_2.setText(QtGui.QApplication.translate("toolDlg", "Tip Diameter:", None, QtGui.QApplication.UnicodeUTF8))
         self.label_7.setToolTip(QtGui.QApplication.translate("toolDlg", "[seconds] reverse plunger motion to stop flow quickly", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_7.setText(QtGui.QApplication.translate("toolDlg", "Pushout:", None, QtGui.QApplication.UnicodeUTF8))
         self.label_3.setToolTip(QtGui.QApplication.translate("toolDlg", "Internal syringe diameter [mm]\n"
 "Diameter of the filament in extrusion [mm]", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_3.setText(QtGui.QApplication.translate("toolDlg", "Syringe Diameter:", None, QtGui.QApplication.UnicodeUTF8))
         self.label_4.setToolTip(QtGui.QApplication.translate("toolDlg", "Width of stream of material deposited [mm]", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_4.setText(QtGui.QApplication.translate("toolDlg", "Path Width:", None, QtGui.QApplication.UnicodeUTF8))
         self.label_5.setToolTip(QtGui.QApplication.translate("toolDlg", "Heigth of layers of material deposited [mm]", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_5.setText(QtGui.QApplication.translate("toolDlg", "Path Height:", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_9.setText(QtGui.QApplication.translate("toolDlg", "Jog Speed:", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_9.setToolTip(QtGui.QApplication.translate("toolDlg", "Stepper motor frequency [Hz]\n"
+"(11400 for default motors)", None, QtGui.QApplication.UnicodeUTF8))
         self.label_14.setToolTip(QtGui.QApplication.translate("toolDlg", "[mm/s] speed along paths when depositing material", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_14.setText(QtGui.QApplication.translate("toolDlg", "Path Speed:", None, QtGui.QApplication.UnicodeUTF8))
         self.label_13.setToolTip(QtGui.QApplication.translate("toolDlg", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:\'Sans\'; font-size:10pt; font-weight:400; font-style:normal;\">\n"
 "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">[mm] between the last layer and the tip when tranversing</p>\n"
 "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">(usually two times path heigth)</p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_13.setText(QtGui.QApplication.translate("toolDlg", "Clearance:", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_15.setText(QtGui.QApplication.translate("toolDlg", "Pause Paths:", None, QtGui.QApplication.UnicodeUTF8))
         self.label_12.setToolTip(QtGui.QApplication.translate("toolDlg", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:\'Sans\'; font-size:10pt; font-weight:400; font-style:normal;\">\n"
 "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">[mm] plunger motiom per [mm] path length</p>\n"
 "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">(orientative value calculated from others)</p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_12.setText(QtGui.QApplication.translate("toolDlg", "Deposition Rate:", None, QtGui.QApplication.UnicodeUTF8))
 
