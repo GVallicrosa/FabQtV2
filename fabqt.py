@@ -9,17 +9,22 @@ from PyQt4.QtGui import *
 import ui.ui_fabqtDialog as ui_fabqtDialog
 import ui.ui_aboutDialog as ui_aboutDialog
 import ui.ui_toolDialog as ui_toolDialog
-#import ui.resources_rc as ui.resources_rc
 
+from core.python.functions import *
 from core.python.classes import *
 
 class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
     def __init__(self, parent = None):
+        print '\n* Initialising application...'
         super(FabQtMain, self).__init__(parent)
         self.setupUi(self)
 
 ## Initial values
         self.configToolName = None
+        toolList = loadTools()
+        self.populateToolComboBox(toolList)
+        self.syringe1ComboBox.setInsertPolicy(QComboBox.InsertAlphabetically)
+        self.syringe2ComboBox.setInsertPolicy(QComboBox.InsertAlphabetically)
 
 ## Load preferences (called at the main loop)
         self.resize(settings.value("MainWindow/Size",QVariant(QSize(600, 500))).toSize())
@@ -93,38 +98,48 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         self.connect(self.actionSpanish_Spain, SIGNAL("triggered()"), self.set_es_ES)
         self.connect(self.actionCatalan, SIGNAL("triggered()"), self.set_ca)
         self.connect(self.actionPortuguese_Brazil, SIGNAL("triggered()"), self.set_pt_BR)
-
-    ## I don't like this solution for the translation
-    def set_en(self):
-        self.updateTranslation('en')
-    def set_es_ES(self):
-        self.updateTranslation('es_ES')
-    def set_ca(self):
-        self.updateTranslation('ca')
-    def set_pt_BR(self):
-        self.updateTranslation('pt_BR')
-
-    def updateTranslation(self,lang):
-        settings.setValue("Language",QVariant('languages/fabqt_' + lang))
-        QMessageBox().about(self, self.tr("Translation Info"),self.tr("You need to restart the application to change the language"))
+        print '\n* End Initialisation'
 
     def closeEvent(self, event): # Save some settings before closing
         if self.okToContinue():
+            print '* Saving Settings before closing'
             settings = QSettings()
             settings.setValue("MainWindow/Size", QVariant(self.size()))
             settings.setValue("MainWindow/Position",QVariant(self.pos()))
             settings.setValue("MainWindow/State",QVariant(self.saveState()))
+            print '* End Saving Settings before closing'
         else:
             event.ignore()
 
     def okToContinue(self): # To implement not saved changes closing
         return True
 
-    @pyqtSignature("QCloseEvent")
     def on_mainDock_closeEvent(self, event): # It never enters here, I don't know why (it could be a solution to the dock problem)
-        print '***Entered close event!!' # For testing
+        print '***Entered mainDock close event!!' # For testing
         self.actionMain_tools.setChecked(False)
         event.accept()
+
+    def populateToolComboBox(self, toolList):
+        for tool in toolList:
+            self.syringe1ComboBox.addItem(tool.name)
+            self.syringe2ComboBox.addItem(tool.name)
+            self.syringe1ComboBox.setCurrentIndex(len(toolList)-1) # The no tool
+            self.syringe2ComboBox.setCurrentIndex(len(toolList)-1)
+
+    ## I don't like this solution for the translation
+    def set_ca(self):
+        self.updateTranslation('ca')
+        print '* Changed language to Catalan'
+    def set_en(self):
+        self.updateTranslation('en')
+        print '* Changed language to English'
+    def set_es_ES(self):
+        self.updateTranslation('es_ES')
+        print '* Changed language to Spanish'
+    def set_pt_BR(self):
+        self.updateTranslation('pt_BR')
+        print '* Changed language to Portuguese'
+    ## End translation
 
     def showAboutDialog(self):
         dialog = aboutDialog(self)
@@ -151,7 +166,7 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         self.modelMenu.exec_(QCursor.pos())
 
     def showToolDialog(self):
-        print '*** Showing tool edit dialog'
+        print '** Showing tool edit dialog'
         if self.configToolName is not None: # Editing a tool
             print '*** Edit Tool'
             pass
@@ -175,6 +190,11 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         self.u_Commanded.setSingleStep(self.u_IncrementLineEdit.text().toDouble()[0])
         self.v_Commanded.setSingleStep(self.v_IncrementLineEdit.text().toDouble()[0])
 
+    def updateTranslation(self,lang):
+        settings.setValue("Language",QVariant('languages/fabqt_' + lang))
+        QMessageBox().about(self, self.tr("Translation Info"),self.tr("You need to restart the application to change the language"))
+        print '* Language changed: you need to restart the application to apply changes'
+
 ## Execution of main program
 if __name__ == "__main__":
     app = QApplication(sys.argv)
@@ -186,8 +206,18 @@ if __name__ == "__main__":
     translator = QTranslator()
     translator.load(settings.value("Language",QVariant(QString("languages/fabqt_en"))).toString())
     app.installTranslator(translator)
+    lang = settings.value("Language",QVariant(QString("languages/fabqt_en"))).toString()
 
     form = FabQtMain()
     form.show()
     form.updateDialogs()
+    if lang == "languages/fabqt_en":
+        form.actionEnglish.setChecked(True)
+    elif lang == "languages/fabqt_es_ES":
+        form.actionSpanish.setChecked(True)
+    elif lang == "languages/fabqt_ca":
+        form.actionCatalan.setChecked(True)
+    elif lang == "languages/fabqt_pt_BR":
+        form.actionPortuguese_Brazil.setChecked(True)
+
     app.exec_()

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'fabqtDialog.ui'
+# Form implementation generated from reading ui file 'ui/fabqtDialog.ui'
 #
-# Created: Fri Aug 13 12:53:50 2010
+# Created: Mon Aug 16 11:53:00 2010
 #      by: PyQt4 UI code generator 4.7.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -26,9 +26,14 @@ class Ui_MainWindow(object):
         self.centralwidget.setObjectName("centralwidget")
         self.verticalLayout_2 = QtGui.QVBoxLayout(self.centralwidget)
         self.verticalLayout_2.setObjectName("verticalLayout_2")
-        self.graphicsView = QtGui.QGraphicsView(self.centralwidget)
-        self.graphicsView.setObjectName("graphicsView")
-        self.verticalLayout_2.addWidget(self.graphicsView)
+        self.qvtkWidget = QVTKRenderWindowInteractor(self.centralwidget)
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.MinimumExpanding, QtGui.QSizePolicy.MinimumExpanding)
+        sizePolicy.setHorizontalStretch(200)
+        sizePolicy.setVerticalStretch(200)
+        sizePolicy.setHeightForWidth(self.qvtkWidget.sizePolicy().hasHeightForWidth())
+        self.qvtkWidget.setSizePolicy(sizePolicy)
+        self.qvtkWidget.setObjectName("qvtkWidget")
+        self.verticalLayout_2.addWidget(self.qvtkWidget)
         self.logTextBrowser = QtGui.QTextBrowser(self.centralwidget)
         self.logTextBrowser.setMinimumSize(QtCore.QSize(300, 80))
         self.logTextBrowser.setMaximumSize(QtCore.QSize(16777215, 80))
@@ -968,4 +973,5 @@ class Ui_MainWindow(object):
         self.actionCatalan.setText(QtGui.QApplication.translate("MainWindow", "Catalan", None, QtGui.QApplication.UnicodeUTF8))
         self.actionPortuguese_Brazil.setText(QtGui.QApplication.translate("MainWindow", "Portuguese (Brazil)", None, QtGui.QApplication.UnicodeUTF8))
 
+from vtk.qt4.QVTKRenderWindowInteractor import QVTKRenderWindowInteractor
 import resources_rc

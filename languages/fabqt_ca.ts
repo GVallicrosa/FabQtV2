@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS><TS version="1.1">
+<!DOCTYPE TS><TS version="1.1" language="ca">
 <context>
     <name>AboutDlg</name>
     <message>
         <location filename="ui/aboutDialog.ui" line="23"/>
         <source>About FabQt</source>
-        <translation type="unfinished"></translation>
+        <translation>Sobre FabQt</translation>
     </message>
     <message>
         <location filename="ui/aboutDialog.ui" line="36"/>
@@ -23,7 +23,20 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Translations:&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;          Arnaldo L. Lixandrao Filho (pt_BR)&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;          Guillem Vallicrosa Massaguer (ca_ES, es_ES)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Sans&apos;; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;FabQt Revision:&lt;/span&gt; 0.0.0&lt;/p&gt;
+&lt;p align=&quot;center&quot; style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;/p&gt;
+&lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Copyright (C) 2010&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Main Program:&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;          Arnaldo L. Lixandrao Filho&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;          Guillem Vallicrosa Massaguer&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Translations:&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;          Arnaldo L. Lixandrao Filho (pt_BR)&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;          Guillem Vallicrosa Massaguer (ca_ES, es_ES)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="ui/aboutDialog.ui" line="66"/>
@@ -32,7 +45,11 @@ p, li { white-space: pre-wrap; }
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Sans&apos;; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;MS Shell Dlg&apos;; font-size:9pt;&quot;&gt;Home Page:<byte value="x9"/>&lt;/span&gt;&lt;a href=&quot;http://bitbucket.org/allfilho/fabqtv2/wiki/Home&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;http://bitbucket.org/allfilho/fabqtv2/wiki/Home&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Sans&apos;; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;MS Shell Dlg&apos;; font-size:9pt;&quot;&gt;Pàgina principal:<byte value="x9"/>&lt;/span&gt;&lt;a href=&quot;http://bitbucket.org/allfilho/fabqtv2/wiki/Home&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;http://bitbucket.org/allfilho/fabqtv2/wiki/Home&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
 </context>
 <context>
@@ -40,12 +57,12 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="fabqt.py" line="112"/>
         <source>Translation Info</source>
-        <translation type="unfinished"></translation>
+        <translation>Informacióde traducció</translation>
     </message>
     <message>
         <location filename="fabqt.py" line="112"/>
         <source>You need to restart the application to change the language</source>
-        <translation type="unfinished"></translation>
+        <translation>Necessites reiniciar perquè els canvis sorgeixin efecte</translation>
     </message>
 </context>
 <context>
@@ -53,52 +70,57 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="ui/fabqtDialog.ui" line="81"/>
         <source>File</source>
-        <translation type="unfinished"></translation>
+        <translation>Fitxer</translation>
     </message>
     <message>
         <location filename="ui/fabqtDialog.ui" line="95"/>
         <source>Show</source>
-        <translation type="unfinished"></translation>
+        <translation>Veure</translation>
     </message>
     <message>
         <location filename="ui/fabqtDialog.ui" line="105"/>
         <source>Help</source>
-        <translation type="unfinished"></translation>
+        <translation>Ajuda</translation>
+    </message>
+    <message>
+        <location filename="ui/fabqtDialog.ui" line="111"/>
+        <source>Language</source>
+        <translation>Llengua</translation>
     </message>
     <message>
         <location filename="ui/fabqtDialog.ui" line="178"/>
         <source>Move</source>
-        <translation type="unfinished"></translation>
+        <translation>Moure</translation>
     </message>
     <message>
         <location filename="ui/fabqtDialog.ui" line="193"/>
         <source>Incr.</source>
-        <translation type="unfinished"></translation>
+        <translation>Incr.</translation>
     </message>
     <message>
         <location filename="ui/fabqtDialog.ui" line="207"/>
         <source>Position</source>
-        <translation type="unfinished"></translation>
+        <translation>Posició</translation>
     </message>
     <message>
         <location filename="ui/fabqtDialog.ui" line="221"/>
         <source>Command</source>
-        <translation type="unfinished"></translation>
+        <translation>Ordre</translation>
     </message>
     <message>
         <location filename="ui/fabqtDialog.ui" line="819"/>
         <source>Syringe 1 (Left):</source>
-        <translation type="unfinished"></translation>
+        <translation>Xeringa 1 (Esquerra):</translation>
     </message>
     <message>
         <location filename="ui/fabqtDialog.ui" line="855"/>
         <source>Syringe 2 (Right):</source>
-        <translation type="unfinished"></translation>
+        <translation>Xeringa 2 (Dreta):</translation>
     </message>
     <message>
         <location filename="ui/fabqtDialog.ui" line="895"/>
         <source>Auto Calibrate</source>
-        <translation type="unfinished"></translation>
+        <translation>Auto Calibració</translation>
     </message>
     <message>
         <location filename="ui/fabqtDialog.ui" line="914"/>
@@ -133,97 +155,102 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="ui/fabqtDialog.ui" line="1575"/>
         <source>Model/Path</source>
-        <translation type="unfinished"></translation>
+        <translation>Model/Camí</translation>
     </message>
     <message>
         <location filename="ui/fabqtDialog.ui" line="1581"/>
         <source>Import Model</source>
-        <translation type="unfinished"></translation>
+        <translation>Importa Model</translation>
     </message>
     <message>
         <location filename="ui/fabqtDialog.ui" line="1607"/>
         <source>Models</source>
-        <translation type="unfinished"></translation>
+        <translation>Models</translation>
     </message>
     <message>
         <location filename="ui/fabqtDialog.ui" line="1616"/>
         <source>Config</source>
-        <translation type="unfinished"></translation>
+        <translation>Config</translation>
     </message>
     <message>
         <location filename="ui/fabqtDialog.ui" line="1630"/>
         <source>Printer Port:</source>
-        <translation type="unfinished"></translation>
+        <translation>Port Impresora:</translation>
     </message>
     <message>
         <location filename="ui/fabqtDialog.ui" line="1662"/>
         <source>Property</source>
-        <translation type="unfinished"></translation>
+        <translation>Propietat</translation>
     </message>
     <message>
         <location filename="ui/fabqtDialog.ui" line="1667"/>
         <source>Value</source>
-        <translation type="unfinished"></translation>
+        <translation>Valor</translation>
     </message>
     <message>
         <location filename="ui/fabqtDialog.ui" line="1672"/>
         <source>Printer</source>
-        <translation type="unfinished"></translation>
+        <translation>Impresora</translation>
     </message>
     <message>
         <location filename="ui/fabqtDialog.ui" line="1677"/>
         <source>Syringe 1</source>
-        <translation type="unfinished"></translation>
+        <translation>Xeringa 1</translation>
     </message>
     <message>
         <location filename="ui/fabqtDialog.ui" line="1685"/>
         <source>Syringe 2</source>
-        <translation type="unfinished"></translation>
+        <translation>Xeringa 2</translation>
+    </message>
+    <message>
+        <location filename="ui/fabqtDialog.ui" line="1690"/>
+        <source>Extruder</source>
+        <translation>Extrusor</translation>
     </message>
     <message>
         <location filename="ui/fabqtDialog.ui" line="1695"/>
         <source>Tools</source>
-        <translation type="unfinished"></translation>
+        <translation>Eines</translation>
     </message>
     <message>
         <location filename="ui/fabqtDialog.ui" line="1718"/>
         <source>Printing:</source>
-        <translation type="unfinished"></translation>
+        <translation>Impresió:</translation>
     </message>
     <message>
         <location filename="ui/fabqtDialog.ui" line="1725"/>
         <source>Pause at Tool Change</source>
-        <translation type="unfinished"></translation>
+        <translation>Pausa Canvi d&apos;Eina</translation>
     </message>
     <message>
         <location filename="ui/fabqtDialog.ui" line="1732"/>
         <source>Auto Resume</source>
-        <translation type="unfinished"></translation>
+        <translation>Auto Continua</translation>
     </message>
     <message>
         <location filename="ui/fabqtDialog.ui" line="1756"/>
         <source>Graphics:</source>
-        <translation type="unfinished"></translation>
+        <translation>Gràfics:</translation>
     </message>
     <message>
         <location filename="ui/fabqtDialog.ui" line="1782"/>
         <source>Show Model</source>
-        <translation type="unfinished"></translation>
+        <translation>Veure Model</translation>
     </message>
     <message>
         <location filename="ui/fabqtDialog.ui" line="1795"/>
         <source>Show Printer</source>
-        <translation type="unfinished"></translation>
+        <translation>Veure Impresora</translation>
     </message>
     <message>
         <location filename="ui/fabqtDialog.ui" line="1808"/>
         <source>Show Paths</source>
-        <translation type="unfinished"></translation>
+        <translation>Veure Camins</translation>
     </message>
     <message>
         <location filename="ui/fabqtDialog.ui" line="1821"/>
         <source>Show Traces</source>
-        <translation type="unfinished"></translation>
+        <translation>Veure Traços</translation>
     </message>
     <message>
         <location filename="ui/fabqtDialog.ui" line="1834"/>
@@ -233,77 +260,77 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="ui/fabqtDialog.ui" line="1841"/>
         <source>Reset View</source>
-        <translation type="unfinished"></translation>
+        <translation>Refer Vista</translation>
     </message>
     <message>
         <location filename="ui/fabqtDialog.ui" line="1865"/>
         <source>hardwareStatusDock</source>
-        <translation type="unfinished"></translation>
+        <translation>hardwareStatusDock</translation>
     </message>
     <message>
         <location filename="ui/fabqtDialog.ui" line="1896"/>
         <source>Hardware Status</source>
-        <translation type="unfinished"></translation>
+        <translation>Estat del Hardware</translation>
     </message>
     <message>
         <location filename="ui/fabqtDialog.ui" line="1919"/>
         <source>Build Info</source>
-        <translation type="unfinished"></translation>
+        <translation>Informació de Construcció</translation>
     </message>
     <message>
         <location filename="ui/fabqtDialog.ui" line="1950"/>
         <source>toolBar</source>
-        <translation type="unfinished"></translation>
+        <translation>toolBar</translation>
     </message>
     <message>
         <location filename="ui/fabqtDialog.ui" line="1981"/>
         <source>New</source>
-        <translation type="unfinished"></translation>
+        <translation>Nou</translation>
     </message>
     <message>
         <location filename="ui/fabqtDialog.ui" line="1986"/>
         <source>Open</source>
-        <translation type="unfinished"></translation>
+        <translation>Obrir</translation>
     </message>
     <message>
         <location filename="ui/fabqtDialog.ui" line="1991"/>
         <source>Save</source>
-        <translation type="unfinished"></translation>
+        <translation>Guardar</translation>
     </message>
     <message>
         <location filename="ui/fabqtDialog.ui" line="1996"/>
         <source>Save As...</source>
-        <translation type="unfinished"></translation>
+        <translation>Guardar com...</translation>
     </message>
     <message>
         <location filename="ui/fabqtDialog.ui" line="2001"/>
         <source>Open Recent</source>
-        <translation type="unfinished"></translation>
+        <translation>Obrir Recent</translation>
     </message>
     <message>
         <location filename="ui/fabqtDialog.ui" line="2006"/>
         <source>Quit</source>
-        <translation type="unfinished"></translation>
+        <translation>Sortir</translation>
     </message>
     <message>
         <location filename="ui/fabqtDialog.ui" line="2021"/>
         <source>Connect</source>
-        <translation type="unfinished"></translation>
+        <translation>Conectar</translation>
     </message>
     <message>
         <location filename="ui/fabqtDialog.ui" line="2024"/>
         <source>Connects to fab@home printer</source>
-        <translation type="unfinished"></translation>
+        <translation>Conecta amb la impresora fab@home</translation>
     </message>
     <message>
         <location filename="ui/fabqtDialog.ui" line="2036"/>
         <source>Import</source>
-        <translation type="unfinished"></translation>
+        <translation>Importa</translation>
     </message>
     <message>
         <location filename="ui/fabqtDialog.ui" line="2039"/>
         <source>Imports a model to print</source>
-        <translation type="unfinished"></translation>
+        <translation>Importa el model a imprimir</translation>
     </message>
     <message>
         <location filename="ui/fabqtDialog.ui" line="2051"/>
@@ -313,87 +340,77 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="ui/fabqtDialog.ui" line="2054"/>
         <source>Slices the model and does the path planning</source>
-        <translation type="unfinished"></translation>
+        <translation>Talla el model en capes i calcula elscamins</translation>
     </message>
     <message>
         <location filename="ui/fabqtDialog.ui" line="2066"/>
         <source>Print</source>
-        <translation type="unfinished"></translation>
+        <translation>Imprimir</translation>
     </message>
     <message>
         <location filename="ui/fabqtDialog.ui" line="2069"/>
         <source>Starts printing</source>
-        <translation type="unfinished"></translation>
+        <translation>Comença la impresió</translation>
     </message>
     <message>
         <location filename="ui/fabqtDialog.ui" line="2084"/>
         <source>Pause</source>
-        <translation type="unfinished"></translation>
+        <translation>Pausa</translation>
     </message>
     <message>
         <location filename="ui/fabqtDialog.ui" line="2087"/>
         <source>Pauses/Resumes printing</source>
-        <translation type="unfinished"></translation>
+        <translation>Pausa/Continua la impresió</translation>
     </message>
     <message>
         <location filename="ui/fabqtDialog.ui" line="2099"/>
         <source>Stop</source>
-        <translation type="unfinished"></translation>
+        <translation>Atura</translation>
     </message>
     <message>
         <location filename="ui/fabqtDialog.ui" line="2102"/>
         <source>Stops printing</source>
-        <translation type="unfinished"></translation>
+        <translation>Atura la impresió</translation>
     </message>
     <message>
         <location filename="ui/fabqtDialog.ui" line="2116"/>
         <source>Main tools</source>
-        <translation type="unfinished"></translation>
+        <translation>Eines principals</translation>
     </message>
     <message>
         <location filename="ui/fabqtDialog.ui" line="2127"/>
         <source>Status/Info</source>
-        <translation type="unfinished"></translation>
+        <translation>Estat/Informació</translation>
     </message>
     <message>
         <location filename="ui/fabqtDialog.ui" line="2138"/>
         <source>Toolbar</source>
-        <translation type="unfinished"></translation>
+        <translation>Barra d&apos;eines</translation>
     </message>
     <message>
         <location filename="ui/fabqtDialog.ui" line="2143"/>
         <source>About</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="ui/fabqtDialog.ui" line="1690"/>
-        <source>Extruder</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="ui/fabqtDialog.ui" line="111"/>
-        <source>Language</source>
-        <translation type="unfinished"></translation>
+        <translation>Sobre</translation>
     </message>
     <message>
         <location filename="ui/fabqtDialog.ui" line="2151"/>
         <source>English</source>
-        <translation type="unfinished"></translation>
+        <translation>Anglès</translation>
     </message>
     <message>
         <location filename="ui/fabqtDialog.ui" line="2159"/>
         <source>Spanish (Spain)</source>
-        <translation type="unfinished"></translation>
+        <translation>Castellà (Espanya)</translation>
     </message>
     <message>
         <location filename="ui/fabqtDialog.ui" line="2167"/>
         <source>Catalan</source>
-        <translation type="unfinished"></translation>
+        <translation>Català</translation>
     </message>
     <message>
         <location filename="ui/fabqtDialog.ui" line="2175"/>
         <source>Portuguese (Brazil)</source>
-        <translation type="unfinished"></translation>
+        <translation>Portuguès (Brasil)</translation>
     </message>
 </context>
 <context>
@@ -401,12 +418,12 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="core/python/classes.py" line="72"/>
         <source>Error</source>
-        <translation type="unfinished"></translation>
+        <translation>Error</translation>
     </message>
     <message>
         <location filename="core/python/classes.py" line="72"/>
         <source>Not all paramaters are filled</source>
-        <translation type="unfinished"></translation>
+        <translation>No has emplenat tots els paràmetres</translation>
     </message>
 </context>
 <context>
@@ -414,12 +431,12 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="ui/toolDialog.ui" line="14"/>
         <source>Tool Editor</source>
-        <translation type="unfinished"></translation>
+        <translation>Editor d&apos;eines</translation>
     </message>
     <message>
         <location filename="ui/toolDialog.ui" line="22"/>
         <source>Material name and color of the tip</source>
-        <translation type="unfinished"></translation>
+        <translation>Nom del material i color de la punta</translation>
     </message>
     <message>
         <location filename="ui/toolDialog.ui" line="38"/>

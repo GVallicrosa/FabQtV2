@@ -23,7 +23,7 @@ class Tool(object):
         self.pathSpeed = pathSpeed
         self.pausePaths = pausePaths
         self.clearance = clearance
-        self.depRate = depRate
+        self.depRate = depRate         
 
 class toolDialog(QDialog, ui_toolDialog.Ui_toolDlg):
     def __init__(self, parent = None, toolObject = None, newTool = True):
@@ -64,8 +64,12 @@ class toolDialog(QDialog, ui_toolDialog.Ui_toolDlg):
     def accept(self):
         if self.verify():
             self.toolObject = self.updateTool(self.toolObject)
-            saveTool(self.toolObject, self.newTool)
-            self.close()
+            if saveTool(self.toolObject, self.newTool):
+                toolList.insert(-1, self.toolObject)
+                self.toolObject = None
+                self.close()
+            else:
+                QMessageBox().about(self, self.tr("Error"),self.tr("Tool with same name already exists.\nChange the tool name."))
         else:
             QMessageBox().about(self, self.tr("Error"),self.tr("Not all paramaters are filled"))
 

@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'toolDialog.ui'
 #
-# Created: Fri Aug 13 12:53:51 2010
+# Created: Mon Aug 16 11:52:59 2010
 #      by: PyQt4 UI code generator 4.7.2
 #
 # WARNING! All changes made in this file will be lost!
