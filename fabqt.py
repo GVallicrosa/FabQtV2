@@ -7,11 +7,11 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
 import ui.ui_fabqtDialog as ui_fabqtDialog
-import ui.ui_aboutDialog as ui_aboutDialog
-import ui.ui_toolDialog as ui_toolDialog
+#import ui.ui_aboutDialog as ui_aboutDialog
+#import ui.ui_toolDialog as ui_toolDialog
 
-from core.python.functions import *
-from core.python.classes import *
+
+from core.python.tools import *
 
 class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
     def __init__(self, parent = None):
@@ -23,8 +23,9 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         self.configToolName = None
         toolList = loadTools()
         self.populateToolComboBox(toolList)
-        self.syringe1ComboBox.setInsertPolicy(QComboBox.InsertAlphabetically)
-        self.syringe2ComboBox.setInsertPolicy(QComboBox.InsertAlphabetically)
+
+## Config tree
+        self.loadToolTree(toolList)
 
 ## Load preferences (called at the main loop)
         self.resize(settings.value("MainWindow/Size",QVariant(QSize(600, 500))).toSize())
@@ -61,8 +62,8 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         self.toolMenu = QMenu()
         actionEditTool = self.toolMenu.addAction("Edit Tool")
         actionNewTool = self.toolMenu.addAction("New Tool")
-        self.connect(actionEditTool, SIGNAL('triggered()'), self.showToolDialog)
-        self.connect(actionNewTool, SIGNAL('triggered()'), self.showToolDialog)
+        self.connect(actionEditTool, SIGNAL('triggered()'), self.editToolDialog)
+        self.connect(actionNewTool, SIGNAL('triggered()'), self.newToolDialog)
         self.toolMenu.addAction(actionEditTool)
         self.toolMenu.addSeparator()
         self.toolMenu.addAction(actionNewTool)
@@ -100,6 +101,47 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         self.connect(self.actionPortuguese_Brazil, SIGNAL("triggered()"), self.set_pt_BR)
         print '\n* End Initialisation'
 
+    def loadToolTree(self, toolList):
+        self.toolTree = QTreeWidgetItem(self.configTreeWidget)
+        self.toolTree.setText(0, "Tools")
+        for tool in toolList:
+            if not tool.name == '## No Tool ##':
+                self.actualTool = QTreeWidgetItem(self.toolTree)
+                self.actualTool.setText(0, tool.name);
+                next = QStringList('TIPDIAM')
+                next.append(QString(tool.tipDiam))
+                self.actualTool.addChild(QTreeWidgetItem(next))
+                next = QStringList('SYRDIAM')
+                next.append(QString(tool.syrDiam))
+                self.actualTool.addChild(QTreeWidgetItem(next))
+                next = QStringList('PATHWIDTH')
+                next.append(QString(tool.pathWidth))
+                self.actualTool.addChild(QTreeWidgetItem(next))
+                next = QStringList('PATHHEIGHT')
+                next.append(QString(tool.pathHeight))
+                self.actualTool.addChild(QTreeWidgetItem(next))
+                next = QStringList('JOGSPEED')
+                next.append(QString(tool.jogSpeed))
+                self.actualTool.addChild(QTreeWidgetItem(next))
+                next = QStringList('SUCKBACK')
+                next.append(QString(tool.suckback))
+                self.actualTool.addChild(QTreeWidgetItem(next))
+                next = QStringList('PUSHOUT')
+                next.append(QString(tool.pushout))
+                self.actualTool.addChild(QTreeWidgetItem(next))
+                next = QStringList('PATHSPEED')
+                next.append(QString(tool.pathSpeed))
+                self.actualTool.addChild(QTreeWidgetItem(next))
+                next = QStringList('PAUSEPATHS')
+                next.append(QString(tool.pausePaths))
+                self.actualTool.addChild(QTreeWidgetItem(next))
+                next = QStringList('CLEARANCE')
+                next.append(QString(tool.clearance))
+                self.actualTool.addChild(QTreeWidgetItem(next))
+                next = QStringList('DEPRATE')
+                next.append(QString(tool.depRate))
+                self.actualTool.addChild(QTreeWidgetItem(next))
+
     def closeEvent(self, event): # Save some settings before closing
         if self.okToContinue():
             print '* Saving Settings before closing'
@@ -120,6 +162,8 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         event.accept()
 
     def populateToolComboBox(self, toolList):
+        self.syringe1ComboBox.clear()
+        self.syringe2ComboBox.clear()
         for tool in toolList:
             self.syringe1ComboBox.addItem(tool.name)
             self.syringe2ComboBox.addItem(tool.name)
@@ -145,14 +189,23 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         dialog = aboutDialog(self)
         dialog.exec_()
 
+    def newToolDialog(self):
+        self.showToolDialog(True)
+
+    def editToolDialog(self):
+        self.showToolDialog(False)
+
     def showConfigCustomContextMenu(self, pos):
+        print 'Entered tool config'
         index = self.configTreeWidget.indexAt(pos) 
         if not index.isValid(): # if not valid, nothing to edit
-            return 
+            return
         item = self.configTreeWidget.itemAt(pos) 
-        #if not item.parent() == 'Tools': # if it has parent, it is a slice, not a model
-         #   return
-        #self.configToolName = item.text(0)
+        if not item.parent().text(0) == 'Tools': # if it has parent, it is a slice, not a model
+            print 'No aceptable parent'
+            return
+        self.configToolName = item.text(0)
+        print self.configToolName + '-----------------'
         self.toolMenu.exec_(QCursor.pos())
 
     def showModelCustomContextMenu(self, pos):
@@ -165,15 +218,19 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         name = item.text(0)
         self.modelMenu.exec_(QCursor.pos())
 
-    def showToolDialog(self):
+    def showToolDialog(self, new):
         print '** Showing tool edit dialog'
-        if self.configToolName is not None: # Editing a tool
-            print '*** Edit Tool'
-            pass
-        else: # New tool
+        if new:
             print '*** New Tool'
             dialog = toolDialog(self)
-            dialog.exec_()
+        else:
+            print '*** Edit Tool'
+            tool = loadTool(self.configToolName + '.tool')
+            dialog = toolDialog(self, tool)
+        dialog.exec_() 
+        toolList = loadTools()
+        self.populateToolComboBox(toolList) # Reload data for comboboxes and tool tree
+        self.loadToolTree(toolList)
 
     def startPrinting(self): # need to be implemented
         pass

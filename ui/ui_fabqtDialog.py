@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/fabqtDialog.ui'
 #
-# Created: Mon Aug 16 11:53:00 2010
+# Created: Tue Aug 17 13:29:06 2010
 #      by: PyQt4 UI code generator 4.7.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -651,7 +651,6 @@ class Ui_MainWindow(object):
         item_0 = QtGui.QTreeWidgetItem(self.configTreeWidget)
         item_0 = QtGui.QTreeWidgetItem(self.configTreeWidget)
         item_0 = QtGui.QTreeWidgetItem(self.configTreeWidget)
-        item_0 = QtGui.QTreeWidgetItem(self.configTreeWidget)
         self.verticalLayout_10.addWidget(self.configTreeWidget)
         self.line_6 = QtGui.QFrame(self.configTab)
         self.line_6.setFrameShape(QtGui.QFrame.HLine)
@@ -929,7 +928,6 @@ class Ui_MainWindow(object):
         self.configTreeWidget.topLevelItem(1).setText(0, QtGui.QApplication.translate("MainWindow", "Syringe 1", None, QtGui.QApplication.UnicodeUTF8))
         self.configTreeWidget.topLevelItem(2).setText(0, QtGui.QApplication.translate("MainWindow", "Syringe 2", None, QtGui.QApplication.UnicodeUTF8))
         self.configTreeWidget.topLevelItem(3).setText(0, QtGui.QApplication.translate("MainWindow", "Extruder", None, QtGui.QApplication.UnicodeUTF8))
-        self.configTreeWidget.topLevelItem(4).setText(0, QtGui.QApplication.translate("MainWindow", "Tools", None, QtGui.QApplication.UnicodeUTF8))
         self.configTreeWidget.setSortingEnabled(__sortingEnabled)
         self.printConfigLabel.setText(QtGui.QApplication.translate("MainWindow", "Printing:", None, QtGui.QApplication.UnicodeUTF8))
         self.pauseAtToolChangeCheckBox.setText(QtGui.QApplication.translate("MainWindow", "Pause at Tool Change", None, QtGui.QApplication.UnicodeUTF8))
