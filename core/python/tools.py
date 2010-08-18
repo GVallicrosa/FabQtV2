@@ -37,7 +37,7 @@ def loadTools(): # look /tools and call loadTool to parse it, the put all in a l
     print '** Loading tools'
     dirList=os.listdir('tools/')
     toolList = list()
-    toolList.insert(-1, Tool('## No Tool ##'))
+#    toolList.insert(-1, Tool('## No Tool ##'))
     for fname in dirList:
         if fname[-5:] == '.tool':
             toolList.insert(-1, loadTool(fname))

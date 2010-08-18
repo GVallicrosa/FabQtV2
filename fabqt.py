@@ -24,10 +24,21 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         self.configToolName = None
         toolList = loadTools()
         self.populateToolComboBox(toolList)
+        self.actorDict = dict()
 
 ## Config tree
-        self.loadToolTree(toolList)
-
+        self.loadConfigTree(toolList)
+        
+## Render window
+        self.qvtkWidget.Initialize()
+        self.qvtkWidget.Start()    
+        self.ren = vtk.vtkRenderer()
+        self.qvtkWidget.GetRenderWindow().AddRenderer(self.ren)
+        
+## Import model file dialog
+        self.importDialog = QFileDialog(self, 'Import model', './', "3D Models (*.STL *.stl);;All files (*)")
+        self.connect(self.importDialog, SIGNAL('fileSelected(QString)'), self.importModel)
+        
 ## Load preferences (called at the main loop)
         self.resize(settings.value("MainWindow/Size",QVariant(QSize(600, 500))).toSize())
         self.move(settings.value("MainWindow/Position",QVariant(QPoint(0, 0))).toPoint())
@@ -52,7 +63,7 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
 ## General actions
         self.connect(self.actionQuit, SIGNAL("triggered()"), self.close)
         self.connect(self.actionAbout, SIGNAL("triggered()"), self.showAboutDialog)
-        self.connect(self.actionImport, SIGNAL("triggered()"), self.startPrinting)
+        self.connect(self.actionImport, SIGNAL("triggered()"), self.showImportDialog)
         self.connect(self.importModelButton, SIGNAL("triggered()"), self.startPrinting)
 
 ## Context menus
@@ -115,12 +126,36 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
 
     def editToolDialog(self):
         self.showToolDialog(False)
+        
+    def importModel(self, fname):
+        print '++ Importing model: ' + fname.split('/')[-1]
+        extension = fname.split('.')[1]
+        if extension == 'STL' or  extension == 'stl': 
+            stl = vtk.vtkSTLReader()
+            stl.SetFileName(str(fname))
+            stlMapper = vtk.vtkPolyDataMapper()
+            stlMapper.SetInput(stl.GetOutput())
+            stlActor = vtk.vtkActor()
+            stlActor.SetMapper(stlMapper)
+            self.actorDict[str(fname.split('/')[-1])] = stlActor
+            self.ren.AddActor(stlActor)
+        print self.ren.GetActors()
+        print self.actorDict
+        self.actorDict['HollowCone.STL'].RotateX(90)
 
+    def loadConfigTree(self, toolList):
+        print 'Delete config tree'
+        self.configTreeWidget.clear()
+        self.loadToolTree(toolList)
+#        self.loadPrinterTree(printerList)
+    
     def loadToolTree(self, toolList):
+        print 'New tool tree'
         self.toolTree = QTreeWidgetItem(self.configTreeWidget)
         self.toolTree.setText(0, "Tools")
         for tool in toolList:
             if not tool.name == '## No Tool ##':
+                print 'Adding tool: ' + tool.name
                 self.actualTool = QTreeWidgetItem(self.toolTree)
                 self.actualTool.setText(0, tool.name);
                 next = QStringList('TIPDIAM')
@@ -156,6 +191,8 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
                 next = QStringList('DEPRATE')
                 next.append(QString(tool.depRate))
                 self.actualTool.addChild(QTreeWidgetItem(next))
+        print 'Child count:' + str(self.toolTree.childCount())
+        print self.toolTree
 
     def newToolDialog(self):
         self.showToolDialog(True)
@@ -174,8 +211,8 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         for tool in toolList:
             self.syringe1ComboBox.addItem(tool.name)
             self.syringe2ComboBox.addItem(tool.name)
-            self.syringe1ComboBox.setCurrentIndex(len(toolList)-1) # The no tool
-            self.syringe2ComboBox.setCurrentIndex(len(toolList)-1)
+            self.syringe1ComboBox.setCurrentIndex(-1) # The no tool
+            self.syringe2ComboBox.setCurrentIndex(-1)
 
     ## I don't like this solution for the translation
     def set_ca(self):
@@ -208,6 +245,9 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         self.configToolName = item.text(0)
         print self.configToolName + '-----------------'
         self.toolMenu.exec_(QCursor.pos())
+        
+    def showImportDialog(self):
+        self.importDialog.exec_()
 
     def showModelCustomContextMenu(self, pos):
         index = self.modelTreeWidget.indexAt(pos) 
@@ -231,7 +271,7 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         dialog.exec_() 
         toolList = loadTools()
         self.populateToolComboBox(toolList) # Reload data for comboboxes and tool tree
-        self.loadToolTree(toolList)
+        self.loadConfigTree(toolList)
 
     def startPrinting(self): # need to be implemented
         pass
