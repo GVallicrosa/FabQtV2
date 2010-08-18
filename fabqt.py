@@ -3,6 +3,7 @@
 import os
 import platform
 import sys
+import vtk
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
@@ -10,7 +11,7 @@ import ui.ui_fabqtDialog as ui_fabqtDialog
 #import ui.ui_aboutDialog as ui_aboutDialog
 #import ui.ui_toolDialog as ui_toolDialog
 
-
+from core.python.about import *
 from core.python.tools import *
 
 class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
@@ -101,6 +102,20 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         self.connect(self.actionPortuguese_Brazil, SIGNAL("triggered()"), self.set_pt_BR)
         print '\n* End Initialisation'
 
+    def closeEvent(self, event): # Save some settings before closing
+        if self.okToContinue():
+            print '* Saving Settings before closing'
+            settings = QSettings()
+            settings.setValue("MainWindow/Size", QVariant(self.size()))
+            settings.setValue("MainWindow/Position",QVariant(self.pos()))
+            settings.setValue("MainWindow/State",QVariant(self.saveState()))
+            print '* End Saving Settings before closing'
+        else:
+            event.ignore()
+
+    def editToolDialog(self):
+        self.showToolDialog(False)
+
     def loadToolTree(self, toolList):
         self.toolTree = QTreeWidgetItem(self.configTreeWidget)
         self.toolTree.setText(0, "Tools")
@@ -142,16 +157,8 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
                 next.append(QString(tool.depRate))
                 self.actualTool.addChild(QTreeWidgetItem(next))
 
-    def closeEvent(self, event): # Save some settings before closing
-        if self.okToContinue():
-            print '* Saving Settings before closing'
-            settings = QSettings()
-            settings.setValue("MainWindow/Size", QVariant(self.size()))
-            settings.setValue("MainWindow/Position",QVariant(self.pos()))
-            settings.setValue("MainWindow/State",QVariant(self.saveState()))
-            print '* End Saving Settings before closing'
-        else:
-            event.ignore()
+    def newToolDialog(self):
+        self.showToolDialog(True)
 
     def okToContinue(self): # To implement not saved changes closing
         return True
@@ -188,12 +195,6 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
     def showAboutDialog(self):
         dialog = aboutDialog(self)
         dialog.exec_()
-
-    def newToolDialog(self):
-        self.showToolDialog(True)
-
-    def editToolDialog(self):
-        self.showToolDialog(False)
 
     def showConfigCustomContextMenu(self, pos):
         print 'Entered tool config'

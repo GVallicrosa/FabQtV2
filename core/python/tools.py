@@ -5,23 +5,9 @@ from PyQt4.QtXml import *
 import os
 import codecs
 
-import ui.ui_aboutDialog as ui_aboutDialog
 import ui.ui_toolDialog as ui_toolDialog
 
 CODEC = "UTF-8"
-
-def saveTool(tool, newTool):
-    fh = QFile('tools/' + tool.name + '.tool')
-    if newTool and fh.exists():
-        return False
-    if fh.open(QIODevice.WriteOnly):
-        stream = QTextStream(fh)
-        stream.setCodec(CODEC)
-        stream << ("<?xml version='1.0' encoding='%s'?>\n<!DOCTYPE TOOL>\n<TOOL\n" % CODEC)
-        stream << ("TIPDIAM='%s'\nSYRDIAM='%s'\nPATHWIDTH='%s'\nPATHHEIGHT='%s'\nJOGSPEED='%s'\nSUCKBACK='%s'\nPUSHOUT='%s'\nPATHSPEED='%s'\nPAUSEPATHS='%s'\nCLEARANCE='%s'\nDEPOSITIONRATE='%s'\n>" % (tool.tipDiam, tool.syrDiam, tool.pathWidth, tool.pathHeight, tool.jogSpeed, tool.suckback, tool.pushout, tool.pathSpeed, tool.pausePaths, tool.clearance, tool.depRate))
-        stream << ("\n</TOOL>")
-        fh.close()
-    return True
 
 def loadTool(fname):
     tool = Tool()
@@ -59,10 +45,18 @@ def loadTools(): # look /tools and call loadTool to parse it, the put all in a l
     print '** Finished loading tools\n'
     return toolList
 
-class aboutDialog(QDialog, ui_aboutDialog.Ui_AboutDlg):
-    def __init__(self, parent = None):
-        super(aboutDialog, self).__init__(parent)
-        self.setupUi(self)
+def saveTool(tool, newTool):
+    fh = QFile('tools/' + tool.name + '.tool')
+    if newTool and fh.exists():
+        return False
+    if fh.open(QIODevice.WriteOnly):
+        stream = QTextStream(fh)
+        stream.setCodec(CODEC)
+        stream << ("<?xml version='1.0' encoding='%s'?>\n<!DOCTYPE TOOL>\n<TOOL\n" % CODEC)
+        stream << ("TIPDIAM='%s'\nSYRDIAM='%s'\nPATHWIDTH='%s'\nPATHHEIGHT='%s'\nJOGSPEED='%s'\nSUCKBACK='%s'\nPUSHOUT='%s'\nPATHSPEED='%s'\nPAUSEPATHS='%s'\nCLEARANCE='%s'\nDEPOSITIONRATE='%s'\n>" % (tool.tipDiam, tool.syrDiam, tool.pathWidth, tool.pathHeight, tool.jogSpeed, tool.suckback, tool.pushout, tool.pathSpeed, tool.pausePaths, tool.clearance, tool.depRate))
+        stream << ("\n</TOOL>")
+        fh.close()
+    return True
 
 class Tool(object):
     def __init__(self, name = None, tipDiam = None, syrDiam = None, pathWidth = None, pathHeight = None, jogSpeed = None, suckback = None, pushout = None, pathSpeed = None, pausePaths = None, clearance = None, depRate = None):
@@ -79,16 +73,12 @@ class Tool(object):
         self.clearance = clearance
         self.depRate = depRate
 
-    def __repr__(self):
-        return self.name
-
-    def __str__(self) :
-        return self.name  
-
 class toolDialog(QDialog, ui_toolDialog.Ui_toolDlg):
     def __init__(self, parent = None, toolObject = None):
         super(toolDialog, self).__init__(parent)
         self.setupUi(self)
+        saveAs = self.toolButtonBox.addButton('Save As',QDialogButtonBox.ActionRole)
+        self.connect(saveAs, SIGNAL('clicked(bool)'), self.nameChangeable)
         if toolObject is not None: # if you edit you cannot change the tool name, and load the parameters
             self.toolNameLineEdit.setEnabled(False)
             self.toolNameLineEdit.setText(toolObject.name)
@@ -104,11 +94,12 @@ class toolDialog(QDialog, ui_toolDialog.Ui_toolDlg):
             self.clearanceLineEdit.setText(toolObject.clearance)
             self.depositionLineEdit.setText(toolObject.depRate)
             self.newTool = False
+            saveAs.setEnabled(True)
         else:
             toolObject = Tool()
-            self.newToll = True
+            self.newTool = True
+            saveAs.setEnabled(False)
         self.toolObject = toolObject
-
 ## Enable only to write numbers on the parameters
         self.tipDiameterLineEdit.setValidator(QDoubleValidator(0.000,10.000, 6, self.tipDiameterLineEdit));
         self.syringeDiameterLineEdit.setValidator(QDoubleValidator(0,10, 6,self.syringeDiameterLineEdit));
@@ -132,6 +123,10 @@ class toolDialog(QDialog, ui_toolDialog.Ui_toolDlg):
                 QMessageBox().about(self, self.tr("Error"),self.tr("Tool with same name already exists.\nChange the tool name."))
         else:
             QMessageBox().about(self, self.tr("Error"),self.tr("Not all paramaters are filled"))
+
+    def nameChangeable(self):
+        self.toolNameLineEdit.setEnabled(True)
+        self.newTool = True
 
     def updateTool(self, tool):
             tool.name = self.toolNameLineEdit.text()
