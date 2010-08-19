@@ -4,6 +4,8 @@ import os
 import platform
 import sys
 import vtk
+import random
+
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
@@ -32,8 +34,23 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
 ## Render window
         self.qvtkWidget.Initialize()
         self.qvtkWidget.Start()    
+        camera = vtk.vtkCamera()
+        camera.SetFocalPoint(100, 100, 0)
+        camera.SetPosition(400, 100, 100)
+        camera.SetViewUp(-1, 0, 0)
         self.ren = vtk.vtkRenderer()
+        self.ren.SetActiveCamera(camera)
         self.qvtkWidget.GetRenderWindow().AddRenderer(self.ren)
+        boundBox = vtk.vtkSTLReader()
+        boundBox.SetFileName('config/boudCube.stl')
+        boundBoxMapper = vtk.vtkPolyDataMapper()
+        boundBoxMapper.SetInput(boundBox.GetOutput())
+        boundBoxActor = vtk.vtkActor()
+        boundBoxActor.SetMapper(boundBoxMapper)
+        self.ren.AddActor(boundBoxActor)
+        self.qvtkWidget.Initialize()
+        self.qvtkWidget.GetRenderWindow().Render()
+        self.qvtkWidget.Start()    
         
 ## Import model file dialog
         self.importDialog = QFileDialog(self, 'Import model', './', "3D Models (*.STL *.stl);;All files (*)")
@@ -134,14 +151,13 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
             stl = vtk.vtkSTLReader()
             stl.SetFileName(str(fname))
             stlMapper = vtk.vtkPolyDataMapper()
+            stlMapper.SelectColorArray(2)
             stlMapper.SetInput(stl.GetOutput())
             stlActor = vtk.vtkActor()
             stlActor.SetMapper(stlMapper)
+            stlActor.GetProperty().SetColor(random.random(), random.random(), random.random())
             self.actorDict[str(fname.split('/')[-1])] = stlActor
             self.ren.AddActor(stlActor)
-        print self.ren.GetActors()
-        print self.actorDict
-        self.actorDict['HollowCone.STL'].RotateX(90)
 
     def loadConfigTree(self, toolList):
         print 'Delete config tree'
