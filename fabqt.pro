@@ -1,8 +1,10 @@
 FORMS	     += ui/aboutDialog.ui
 FORMS	     += ui/fabqtDialog.ui
 FORMS	     += ui/toolDialog.ui
-SOURCES	     += core/python/classes.py
-SOURCES	     += core/python/functions.py
+FORMS        += ui/propertiesDialog.ui
+SOURCES	     += core/python/tools.py
+SOURCES	     += core/python/about.py
+SOURCES	     += core/python/properties.py
 SOURCES	     += fabqt.py
 TRANSLATIONS += languages/fabqt_ca.ts
 TRANSLATIONS += languages/fabqt_pt_BR.ts

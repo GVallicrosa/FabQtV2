@@ -38,12 +38,12 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>FabQtMain</name>
     <message>
-        <location filename="fabqt.py" line="252"/>
+        <location filename="fabqt.py" line="322"/>
         <source>Translation Info</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="fabqt.py" line="252"/>
+        <location filename="fabqt.py" line="322"/>
         <source>You need to restart the application to change the language</source>
         <translation></translation>
     </message>
@@ -392,7 +392,78 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>propertiesDialog</name>
+    <message>
+        <location filename="ui/propertiesDialog.ui" line="20"/>
+        <source>Model Properties Dialog</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ui/propertiesDialog.ui" line="34"/>
+        <source>Model Material:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ui/propertiesDialog.ui" line="70"/>
+        <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Sans&apos;; font-size:10pt; font-weight:600; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:400;&quot;&gt;Enter new position [mm]&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ui/propertiesDialog.ui" line="77"/>
+        <source>Translate to:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ui/propertiesDialog.ui" line="168"/>
+        <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Sans&apos;; font-size:10pt; font-weight:600; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:400;&quot;&gt;Rotation in every axis [degrees]&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ui/propertiesDialog.ui" line="175"/>
+        <source>Rotate:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ui/propertiesDialog.ui" line="275"/>
+        <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Sans&apos;; font-size:10pt; font-weight:600; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:400;&quot;&gt;Scale in every axis (&amp;lt;1 reduce; &amp;gt;1 grow)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ui/propertiesDialog.ui" line="282"/>
+        <source>Scale:</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>toolDialog</name>
+    <message>
+        <location filename="core/python/tools.py" line="125"/>
+        <source>Error</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="core/python/tools.py" line="123"/>
+        <source>Tool with same name already exists.
+Change the tool name.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="core/python/tools.py" line="125"/>
+        <source>Not all paramaters are filled</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>toolDlg</name>
