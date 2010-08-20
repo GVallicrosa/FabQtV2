@@ -108,13 +108,15 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
 #        actionRotate = self.modelMenu.addAction("Rotate")
 #        actionScale = self.modelMenu.addAction("Scale")
         actionOrigin = self.modelMenu.addAction("Move to Origin")
+        actionDelete = self.modelMenu.addAction("Delete")
         self.connect(actionProperties, SIGNAL('triggered()'), self.showPropertiesDialog) # How to have the item clicked??
 #        self.connect(actionStandard, SIGNAL('triggered()'), self.???)
 #        self.connect(actionAdvanced, SIGNAL('triggered()'), self.???)
 #        self.connect(actionTranslate, SIGNAL('triggered()'), self.???)
 #        self.connect(actionRotate, SIGNAL('triggered()'), self.???)
 #        self.connect(actionScale, SIGNAL('triggered()'), self.???)
-#        self.connect(actionOrigin, SIGNAL('triggered()'), self.???)
+        self.connect(actionOrigin, SIGNAL('triggered()'), self.moveToOrigin)
+        self.connect(actionDelete, SIGNAL('triggered()'), self.deleteModel)
         self.modelMenu.addAction(actionProperties)
         self.modelMenu.addSeparator()
         self.modelMenu.addAction(actionStandard)
@@ -124,6 +126,8 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
 #        self.modelMenu.addAction(actionRotate)
 #        self.modelMenu.addAction(actionScale)
         self.modelMenu.addAction(actionOrigin)
+        self.modelMenu.addSeparator()
+        self.modelMenu.addAction(actionDelete)
 
 ## Translations (en, ca, es_ES, pt_BR)
         self.connect(self.actionEnglish, SIGNAL("triggered()"), self.set_en)
@@ -148,7 +152,13 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
             print '* Closing...'
         else:
             event.ignore()
-
+            
+    def deleteModel(self):
+        #delete from view, dictionary and reload model tree
+        self.ren.RemoveActor(self.actorDict[str(self.model)])
+        self.actorDict.pop(str(self.model))
+        self.loadModelTree()        
+    
     def editToolDialog(self):
         self.showToolDialog(False)
         
@@ -240,6 +250,10 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
                 next.append(QString(tool.depRate))
                 self.actualTool.addChild(QTreeWidgetItem(next))
 
+    def moveToOrigin(self):
+        print 'Moved to Origin'
+        self.actorDict[str(self.model)].SetPosition(0,0,0)
+        
     def newToolDialog(self):
         self.showToolDialog(True)
 
