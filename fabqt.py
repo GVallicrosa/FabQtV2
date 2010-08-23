@@ -16,6 +16,8 @@ import ui.ui_fabqtDialog as ui_fabqtDialog
 from core.python.about import *
 from core.python.tools import *
 from core.python.properties import *
+from core.python.printer import *
+
 
 class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
     def __init__(self, parent = None):
@@ -25,8 +27,9 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
 
 ## Initial values
         self.configToolName = None
+        self.configPrinterName = None
         self.toolList = loadTools()
-        self.printerList = list()
+        self.printerList = loadPrinters()
         self.actorDict = dict()
 
 ## Config tree and comboboxes
@@ -34,14 +37,13 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         self.populateToolComboBox()
         
 ## Render window
-        #self.qvtkWidget.Initialize()
-        #self.qvtkWidget.Start()    
-        camera = vtk.vtkCamera()
-        camera.SetFocalPoint(100, 100, 0)
-        camera.SetPosition(400, 100, 100)
-        camera.SetViewUp(-1, 0, 0)
+        self.camera = vtk.vtkCamera()
+        self.camera.SetFocalPoint(100, 100, 0)
+        self.camera.SetPosition(400, 100, 120)
+        self.camera.SetViewUp(-1, 0, 0)
         self.ren = vtk.vtkRenderer()
-        self.ren.SetActiveCamera(camera)
+        self.ren.SetActiveCamera(self.camera)
+        #self.qvtkWidget.SetInteractorStyle(None) ################## Disables interaction with the 3D window
         self.qvtkWidget.GetRenderWindow().AddRenderer(self.ren)
         boundBox = vtk.vtkSTLReader()
         boundBox.SetFileName('config/boudCube.stl')
@@ -55,7 +57,8 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         self.qvtkWidget.Start()    
         
 ## Import model file dialog
-        self.importDialog = QFileDialog(self, 'Import model', settings.value("Path/ModelDir", QVariant(QString('./'))).toString(), "3D Models (*.STL *.stl);;All files (*)")
+        self.importDialog = QFileDialog(self, 'Import model', settings.value("Path/ModelDir", QVariant(QString('./'))).toString(), 
+            "3D Models (*.STL *.stl);;All files (*)")
         self.connect(self.importDialog, SIGNAL('fileSelected(QString)'), self.importModel)
         
 ## Load preferences (called at the main loop)
@@ -89,7 +92,7 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         self.connect(self.modelTreeWidget, SIGNAL("customContextMenuRequested(QPoint)"), self.showModelCustomContextMenu)
         self.connect(self.configTreeWidget, SIGNAL("customContextMenuRequested(QPoint)"), self.showConfigCustomContextMenu)
 
-## The config context menu
+## The config tool context menu
         self.toolMenu = QMenu()
         actionEditTool = self.toolMenu.addAction("Edit Tool")
         actionNewTool = self.toolMenu.addAction("New Tool")
@@ -98,23 +101,27 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         self.toolMenu.addAction(actionEditTool)
         self.toolMenu.addSeparator()
         self.toolMenu.addAction(actionNewTool)
+        
+## The config printer context menu
+        self.printerMenu = QMenu()
+        actionEditPrinter = self.printerMenu.addAction("Edit Printer")
+        actionNewPrinter = self.printerMenu.addAction("New Printer")
+        self.connect(actionEditPrinter, SIGNAL('triggered()'), self.editPrinterDialog)
+        self.connect(actionNewPrinter, SIGNAL('triggered()'), self.newPrinterDialog)
+        self.printerMenu.addAction(actionEditPrinter)
+        self.printerMenu.addSeparator()
+        self.printerMenu.addAction(actionNewPrinter)
 
 ## The model context menu
         self.modelMenu = QMenu()
         actionProperties = self.modelMenu.addAction("Properties/Transform")
         actionStandard = self.modelMenu.addAction("Standard Path Planning")
         actionAdvanced = self.modelMenu.addAction("Advanced Path Planning")
-#        actionTranslate = self.modelMenu.addAction("Translate")
-#        actionRotate = self.modelMenu.addAction("Rotate")
-#        actionScale = self.modelMenu.addAction("Scale")
         actionOrigin = self.modelMenu.addAction("Move to Origin")
         actionDelete = self.modelMenu.addAction("Delete")
-        self.connect(actionProperties, SIGNAL('triggered()'), self.showPropertiesDialog) # How to have the item clicked??
+        self.connect(actionProperties, SIGNAL('triggered()'), self.showPropertiesDialog)
 #        self.connect(actionStandard, SIGNAL('triggered()'), self.???)
 #        self.connect(actionAdvanced, SIGNAL('triggered()'), self.???)
-#        self.connect(actionTranslate, SIGNAL('triggered()'), self.???)
-#        self.connect(actionRotate, SIGNAL('triggered()'), self.???)
-#        self.connect(actionScale, SIGNAL('triggered()'), self.???)
         self.connect(actionOrigin, SIGNAL('triggered()'), self.moveToOrigin)
         self.connect(actionDelete, SIGNAL('triggered()'), self.deleteModel)
         self.modelMenu.addAction(actionProperties)
@@ -122,9 +129,6 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         self.modelMenu.addAction(actionStandard)
         self.modelMenu.addAction(actionAdvanced)
         self.modelMenu.addSeparator()
-#        self.modelMenu.addAction(actionTranslate)
-#        self.modelMenu.addAction(actionRotate)
-#        self.modelMenu.addAction(actionScale)
         self.modelMenu.addAction(actionOrigin)
         self.modelMenu.addSeparator()
         self.modelMenu.addAction(actionDelete)
@@ -159,7 +163,12 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         self.actorDict.pop(str(self.model))
         self.loadModelTree()        
     
+    def editPrinterDialog(self):
+        print 'Edit printer'
+        self.showPrinterDialog(False)
+        
     def editToolDialog(self):
+        print 'Edit tool'
         self.showToolDialog(False)
         
     def importModel(self, fname):
@@ -173,32 +182,39 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
             stlMapper = vtk.vtkPolyDataMapper()
             stlMapper.SelectColorArray(2)
             stlMapper.SetInput(stl.GetOutput())
-            stlActor = vtk.vtkActor()
-            stlActor.SetMapper(stlMapper)
-            stlActor.GetProperty().SetColor(random.random(), random.random(), random.random())
-            if not str(fname.split('/')[-1]) in self.actorDict.keys():
-                self.actorDict[str(fname.split('/')[-1])] = stlActor
-            else:
-                print '++ Model name already used'
-                exists = True
-                name = str(fname.split('/')[-1])
-                num = 2
-                while exists:
-                    if not name + '(%s)' % str(num) in self.actorDict.keys():
-                        print '++ New name: ' + name + '(%s)' % str(num)
-                        self.actorDict[name + '(%s)' % str(num)] = stlActor
-                        exists = False
-                    else:
-                        num += 1
-            self.ren.AddActor(stlActor)
-        self.loadModelTree()
+            modActor = vtk.vtkActor()
+            modActor.SetMapper(stlMapper)
+            modActor.GetProperty().SetColor(random.random(), random.random(), random.random())
+        elif extension == '3ds': ## Need to know what actor is added
+            mod = vtk.vtk3DSImporter()
+            mod.ComputeNormalsOn()
+            mod.SetFileName(str(fname))
+            mod.Read()
+            #3ds.SetRenderWindow(renWin)
+        if not str(fname.split('/')[-1]) in self.actorDict.keys():
+            self.actorDict[str(fname.split('/')[-1])] = modActor
+        else:
+            print '++ Model name already used'
+            exists = True
+            name = str(fname.split('/')[-1])
+            num = 2
+            while exists:
+                if not name + '(%s)' % str(num) in self.actorDict.keys():
+                    print '++ New name: ' + name + '(%s)' % str(num)
+                    self.actorDict[name + '(%s)' % str(num)] = modActor
+                    exists = False
+                else:
+                    num += 1
+        self.ren.AddActor(modActor)
+        self.loadModelTree() 
 
     def loadConfigTree(self):
         print 'Delete config tree'
         self.configTreeWidget.clear()
         print 'Loading tools in config tree'
         self.loadToolTree()
-#        self.loadPrinterTree(printerList)
+        print 'Loading printers in config tree'
+        self.loadPrinterTree()
 
     def loadModelTree(self):
         print 'Loading/Reloading model tree'
@@ -207,6 +223,14 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
             print 'Adding model: ' + model
             modelItem = QTreeWidgetItem(self.modelTreeWidget)
             modelItem.setText(0, model)
+            
+    def loadPrinterTree(self):
+        self.printerTree = QTreeWidgetItem(self.configTreeWidget)
+        self.printerTree.setText(0, "Printers")
+        for printer in self.printerList:
+            print 'Adding printer: ' + printer.name
+            actualPrinter = QTreeWidgetItem(self.printerTree)
+            actualPrinter.setText(0, printer.name)
     
     def loadToolTree(self):
         self.toolTree = QTreeWidgetItem(self.configTreeWidget)
@@ -254,7 +278,12 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         print 'Moved to Origin'
         self.actorDict[str(self.model)].SetPosition(0,0,0)
         
+    def newPrinterDialog(self):
+        print 'New printer'
+        self.showPrinterDialog(True)
+        
     def newToolDialog(self):
+        print 'New tool'
         self.showToolDialog(True)
 
     def okToContinue(self): # To implement not saved changes closing
@@ -274,7 +303,7 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
             self.syringe1ComboBox.setCurrentIndex(-1) # The no tool
             self.syringe2ComboBox.setCurrentIndex(-1)
 
-    ## I don't like this solution for the translation
+###### I don't like this solution for the translation
     def set_ca(self):
         self.updateTranslation('ca')
         print '* Changed language to Catalan'
@@ -287,24 +316,31 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
     def set_pt_BR(self):
         self.updateTranslation('pt_BR')
         print '* Changed language to Portuguese'
-    ## End translation
+###### End translation
 
     def showAboutDialog(self):
         dialog = aboutDialog(self)
         dialog.exec_()
 
     def showConfigCustomContextMenu(self, pos):
-        print 'Entered tool config'
         index = self.configTreeWidget.indexAt(pos) 
         if not index.isValid(): # if not valid, nothing to edit
             return
         item = self.configTreeWidget.itemAt(pos)
-        if not item.parent().text(0) == 'Tools': # if it has parent, it is a slice, not a model
-            print 'No aceptable parent'
+        try:
+            if item.parent().text(0) == 'Tools': # if it has parent, it is a slice, not a model
+                self.configToolName = item.text(0)
+                print 'Clicked on tool: ' + str(self.configToolName)
+                self.toolMenu.exec_(QCursor.pos())
+            elif item.parent().text(0) == 'Printers':
+                self.configPrinterName = item.text(0)
+                print 'Clicked on printer: ' + str(self.configPrinterName)
+                self.printerMenu.exec_(QCursor.pos())
+            else:
+                return
+        except AttributeError:
             return
-        self.configToolName = item.text(0)
-        print 'Clicked on tool: ' + str(self.configToolName)
-        self.toolMenu.exec_(QCursor.pos())
+
         
     def showImportDialog(self):
         self.importDialog.exec_()
@@ -322,6 +358,18 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
     def showPropertiesDialog(self):
         dialog = propertiesDialog(self, self.model, self.actorDict, self.toolList)
         dialog.exec_()
+        
+    def showPrinterDialog(self, new):
+        print '** Showing printer edit dialog'
+        if new:
+            dialog = printerDialog(self)
+        else:
+            printer = loadPrinter(self.configPrinterName + '.printer')
+            dialog = printerDialog(self, printer)
+        dialog.exec_()
+        self.printerList = loadPrinters()
+        #self.populatePrinterCombobox()
+        self.loadConfigTree()
 
     def showToolDialog(self, new):
         print '** Showing tool edit dialog'

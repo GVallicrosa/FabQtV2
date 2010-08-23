@@ -6,9 +6,9 @@ cd ../ui
 pyuic4 -o ui_aboutDialog.py aboutDialog.ui
 pyuic4 -o ui_toolDialog.py toolDialog.ui
 pyuic4 -o ui_propertiesDialog.py propertiesDialog.ui
+pyuic4 -o ui_printerDialog.py printerDialog.ui
 cd ..
 pylupdate4 fabqt.pro
 python fixUI.py
 cd languages
 lrelease *.ts
-sleep 3
