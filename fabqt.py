@@ -1,22 +1,19 @@
 #!/usr/bin/env python
 
-import os
-import platform
 import sys
 import vtk
 import random
 
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
+from PyQt4.QtCore import QString, QVariant, QSettings, QTranslator, QStringList, QSize, QPoint, SIGNAL
+from PyQt4.QtGui import QTreeWidgetItem, QApplication, QMenu, QMainWindow, QFileDialog, QCursor, QMessageBox
 
 import ui.ui_fabqtDialog as ui_fabqtDialog
-#import ui.ui_aboutDialog as ui_aboutDialog
-#import ui.ui_toolDialog as ui_toolDialog
 
-from core.python.about import *
-from core.python.tools import *
-from core.python.properties import *
-from core.python.printer import *
+from core.python.about import aboutDialog
+from core.python.tools import toolDialog, loadTools, loadTool
+from core.python.properties import propertiesDialog
+from core.python.printer import printerDialog, loadPrinters, loadPrinter
+from core.python.render import generateAxes
 
 
 class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
@@ -28,6 +25,7 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
 ## Initial values
         self.configToolName = None
         self.configPrinterName = None
+        self.model = None
         self.toolList = loadTools()
         self.printerList = loadPrinters()
         self.actorDict = dict()
@@ -37,21 +35,31 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         self.populateToolComboBox()
         
 ## Render window
-        self.camera = vtk.vtkCamera()
-        self.camera.SetFocalPoint(100, 100, 0)
-        self.camera.SetPosition(400, 100, 120)
-        self.camera.SetViewUp(-1, 0, 0)
+        camera = vtk.vtkCamera()
+        camera.SetFocalPoint(100, 100, 0)
+        camera.SetPosition(400, 100, 120)
+        camera.SetViewUp(-1, 0, 0)
         self.ren = vtk.vtkRenderer()
-        self.ren.SetActiveCamera(self.camera)
+        self.ren.SetActiveCamera(camera)
         #self.qvtkWidget.SetInteractorStyle(None) ################## Disables interaction with the 3D window
         self.qvtkWidget.GetRenderWindow().AddRenderer(self.ren)
+        ## Building table representation
         boundBox = vtk.vtkSTLReader()
         boundBox.SetFileName('config/boudCube.stl')
         boundBoxMapper = vtk.vtkPolyDataMapper()
         boundBoxMapper.SetInput(boundBox.GetOutput())
         boundBoxActor = vtk.vtkActor()
         boundBoxActor.SetMapper(boundBoxMapper)
+        ## Origin Axes
+        axesActor, XActor, YActor, ZActor = generateAxes()
+        XActor.SetCamera(camera)
+        YActor.SetCamera(camera)
+        ZActor.SetCamera(camera)
         self.ren.AddActor(boundBoxActor)
+        self.ren.AddActor(axesActor)
+        self.ren.AddActor(XActor)
+        self.ren.AddActor(YActor)
+        self.ren.AddActor(ZActor)
         self.qvtkWidget.Initialize()
         self.qvtkWidget.GetRenderWindow().Render()
         self.qvtkWidget.Start()    
@@ -62,9 +70,9 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         self.connect(self.importDialog, SIGNAL('fileSelected(QString)'), self.importModel)
         
 ## Load preferences (called at the main loop)
-        self.resize(settings.value("MainWindow/Size",QVariant(QSize(600, 500))).toSize())
-        self.move(settings.value("MainWindow/Position",QVariant(QPoint(0, 0))).toPoint())
-        self.restoreState(settings.value("MainWindow/State").toByteArray());
+        self.resize(settings.value("MainWindow/Size", QVariant(QSize(600, 500))).toSize())
+        self.move(settings.value("MainWindow/Position", QVariant(QPoint(0, 0))).toPoint())
+        self.restoreState(settings.value("MainWindow/State").toByteArray())
 
 ## Show/hide dialogs from the menu
         self.connect(self.actionMain_tools, SIGNAL("toggled(bool)"), self.mainDock.setVisible)
@@ -144,10 +152,9 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         print 'Entered main window close event'
         if self.okToContinue():
             print '* Saving Settings before closing'
-            settings = QSettings()
             settings.setValue("MainWindow/Size", QVariant(self.size()))
-            settings.setValue("MainWindow/Position",QVariant(self.pos()))
-            settings.setValue("MainWindow/State",QVariant(self.saveState()))
+            settings.setValue("MainWindow/Position", QVariant(self.pos()))
+            settings.setValue("MainWindow/State", QVariant(self.saveState()))
 #            settings.setValue("Printer/Printer", QVariant())
 #            settings.setValue("Printer/Tool1", QVariant())
 #            settings.setValue("Printer/Tool2", QVariant())
@@ -158,7 +165,7 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
             event.ignore()
             
     def deleteModel(self):
-        #delete from view, dictionary and reload model tree
+        ''' Deletes the model from view and dictionary and reloads the model tree.'''
         self.ren.RemoveActor(self.actorDict[str(self.model)])
         self.actorDict.pop(str(self.model))
         self.loadModelTree()        
@@ -225,58 +232,58 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
             modelItem.setText(0, model)
             
     def loadPrinterTree(self):
-        self.printerTree = QTreeWidgetItem(self.configTreeWidget)
-        self.printerTree.setText(0, "Printers")
+        printerTree = QTreeWidgetItem(self.configTreeWidget)
+        printerTree.setText(0, "Printers")
         for printer in self.printerList:
             print 'Adding printer: ' + printer.name
-            actualPrinter = QTreeWidgetItem(self.printerTree)
+            actualPrinter = QTreeWidgetItem(printerTree)
             actualPrinter.setText(0, printer.name)
     
     def loadToolTree(self):
-        self.toolTree = QTreeWidgetItem(self.configTreeWidget)
-        self.toolTree.setText(0, "Tools")
+        toolTree = QTreeWidgetItem(self.configTreeWidget)
+        toolTree.setText(0, "Tools")
         for tool in self.toolList:
             if not tool.name == '## No Tool ##':
                 print 'Adding tool: ' + tool.name
-                self.actualTool = QTreeWidgetItem(self.toolTree)
-                self.actualTool.setText(0, tool.name);
-                next = QStringList('TIPDIAM')
-                next.append(QString(tool.tipDiam))
-                self.actualTool.addChild(QTreeWidgetItem(next))
-                next = QStringList('SYRDIAM')
-                next.append(QString(tool.syrDiam))
-                self.actualTool.addChild(QTreeWidgetItem(next))
-                next = QStringList('PATHWIDTH')
-                next.append(QString(tool.pathWidth))
-                self.actualTool.addChild(QTreeWidgetItem(next))
-                next = QStringList('PATHHEIGHT')
-                next.append(QString(tool.pathHeight))
-                self.actualTool.addChild(QTreeWidgetItem(next))
-                next = QStringList('JOGSPEED')
-                next.append(QString(tool.jogSpeed))
-                self.actualTool.addChild(QTreeWidgetItem(next))
-                next = QStringList('SUCKBACK')
-                next.append(QString(tool.suckback))
-                self.actualTool.addChild(QTreeWidgetItem(next))
-                next = QStringList('PUSHOUT')
-                next.append(QString(tool.pushout))
-                self.actualTool.addChild(QTreeWidgetItem(next))
-                next = QStringList('PATHSPEED')
-                next.append(QString(tool.pathSpeed))
-                self.actualTool.addChild(QTreeWidgetItem(next))
-                next = QStringList('PAUSEPATHS')
-                next.append(QString(tool.pausePaths))
-                self.actualTool.addChild(QTreeWidgetItem(next))
-                next = QStringList('CLEARANCE')
-                next.append(QString(tool.clearance))
-                self.actualTool.addChild(QTreeWidgetItem(next))
-                next = QStringList('DEPRATE')
-                next.append(QString(tool.depRate))
-                self.actualTool.addChild(QTreeWidgetItem(next))
+                actualTool = QTreeWidgetItem(toolTree)
+                actualTool.setText(0, tool.name)
+                nextattirb = QStringList('TIPDIAM')
+                nextattirb.append(QString(tool.tipDiam))
+                actualTool.addChild(QTreeWidgetItem(nextattirb))
+                nextattirb = QStringList('SYRDIAM')
+                nextattirb.append(QString(tool.syrDiam))
+                actualTool.addChild(QTreeWidgetItem(nextattirb))
+                nextattirb = QStringList('PATHWIDTH')
+                nextattirb.append(QString(tool.pathWidth))
+                actualTool.addChild(QTreeWidgetItem(nextattirb))
+                nextattirb = QStringList('PATHHEIGHT')
+                nextattirb.append(QString(tool.pathHeight))
+                actualTool.addChild(QTreeWidgetItem(nextattirb))
+                nextattirb = QStringList('JOGSPEED')
+                nextattirb.append(QString(tool.jogSpeed))
+                actualTool.addChild(QTreeWidgetItem(nextattirb))
+                nextattirb = QStringList('SUCKBACK')
+                nextattirb.append(QString(tool.suckback))
+                actualTool.addChild(QTreeWidgetItem(nextattirb))
+                nextattirb = QStringList('PUSHOUT')
+                nextattirb.append(QString(tool.pushout))
+                actualTool.addChild(QTreeWidgetItem(nextattirb))
+                nextattirb = QStringList('PATHSPEED')
+                nextattirb.append(QString(tool.pathSpeed))
+                actualTool.addChild(QTreeWidgetItem(nextattirb))
+                nextattirb = QStringList('PAUSEPATHS')
+                nextattirb.append(QString(tool.pausePaths))
+                actualTool.addChild(QTreeWidgetItem(nextattirb))
+                nextattirb = QStringList('CLEARANCE')
+                nextattirb.append(QString(tool.clearance))
+                actualTool.addChild(QTreeWidgetItem(nextattirb))
+                nextattirb = QStringList('DEPRATE')
+                nextattirb.append(QString(tool.depRate))
+                actualTool.addChild(QTreeWidgetItem(nextattirb))
 
     def moveToOrigin(self):
         print 'Moved to Origin'
-        self.actorDict[str(self.model)].SetPosition(0,0,0)
+        self.actorDict[str(self.model)].SetPosition(0, 0, 0)
         
     def newPrinterDialog(self):
         print 'New printer'
@@ -400,9 +407,9 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         self.u_Commanded.setSingleStep(self.u_IncrementLineEdit.text().toDouble()[0])
         self.v_Commanded.setSingleStep(self.v_IncrementLineEdit.text().toDouble()[0])
 
-    def updateTranslation(self,lang):
-        settings.setValue("Language",QVariant('languages/fabqt_' + lang))
-        QMessageBox().about(self, self.tr("Translation Info"),self.tr("You need to restart the application to change the language"))
+    def updateTranslation(self, lang):
+        settings.setValue("Language", QVariant('languages/fabqt_' + lang))
+        QMessageBox().about(self, self.tr("Translation Info"), self.tr("You need to restart the application to change the language"))
         print '* Language changed: you need to restart the application to apply changes'
 
 ## Execution of main program
@@ -414,20 +421,20 @@ if __name__ == "__main__":
     settings = QSettings()
 
     translator = QTranslator()
-    translator.load(settings.value("Language",QVariant(QString("languages/fabqt_en"))).toString())
+    translator.load(settings.value("Language", QVariant(QString("languages/fabqt_en"))).toString())
     app.installTranslator(translator)
-    lang = settings.value("Language",QVariant(QString("languages/fabqt_en"))).toString()
+    language = settings.value("Language", QVariant(QString("languages/fabqt_en"))).toString()
 
     form = FabQtMain()
     form.show()
     form.updateDialogs()
-    if lang == "languages/fabqt_en":
+    if language == "languages/fabqt_en":
         form.actionEnglish.setChecked(True)
-    elif lang == "languages/fabqt_es_ES":
+    elif language == "languages/fabqt_es_ES":
         form.actionSpanish.setChecked(True)
-    elif lang == "languages/fabqt_ca":
+    elif language == "languages/fabqt_ca":
         form.actionCatalan.setChecked(True)
-    elif lang == "languages/fabqt_pt_BR":
+    elif language == "languages/fabqt_pt_BR":
         form.actionPortuguese_Brazil.setChecked(True)
 
     app.exec_()

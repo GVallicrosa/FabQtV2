@@ -1,5 +1,5 @@
 import ui.ui_propertiesDialog as ui_propertiesDialog
-from PyQt4.QtGui import *
+from PyQt4.QtGui import QDialog
 
 class propertiesDialog(QDialog, ui_propertiesDialog.Ui_propertiesDialog):
     def __init__(self, parent, model, actorDict, toolList):

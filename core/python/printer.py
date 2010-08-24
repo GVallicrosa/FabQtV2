@@ -1,9 +1,9 @@
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
-from PyQt4.QtXml import *
+from PyQt4.QtCore import QFile, QIODevice, SIGNAL, QTextStream
+from PyQt4.QtGui import QDialog, QDialogButtonBox, QMessageBox
+from PyQt4.QtXml import QDomDocument
 
 import os
-import codecs
+#import codecs
 
 import ui.ui_printerDialog as ui_printerDialog
 
@@ -82,7 +82,7 @@ def loadPrinter(fname):
 
 def loadPrinters(): # ok
     print '** Loading printers'
-    dirList=os.listdir('config/')
+    dirList = os.listdir('config/')
     printerList = list()
 #    printerList.insert(-1, Tool('## No Printer ##'))
     for fname in dirList:
@@ -100,25 +100,33 @@ def savePrinter(printer, newPrinter): # ok
         stream = QTextStream(fh)
         stream.setCodec(CODEC)
         stream << ("<?xml version='1.0' encoding='%s'?>\n<!DOCTYPE PRINTER>\n<PRINTER\n" % CODEC)
-        stream << ("UPDATEPERIOD='%s'\nJOGSPEED='%s'\nMAXTOOLS='%s'\nTOOLLIMIT='%s'\nMAXACCEL='%s'\nXMAX='%s'\nYMAX='%s'\nZMAX='%s'\n>\n" % (printer.updatePeriod, printer.jogSpeed, printer.maxTools, printer.toolLimit, printer.maxAccel, printer.xMax, printer.yMax, printer.zMax))
+        stream << ("UPDATEPERIOD='%s'\nJOGSPEED='%s'\nMAXTOOLS='%s'\nTOOLLIMIT='%s'\nMAXACCEL='%s'\n"
+                "XMAX='%s'\nYMAX='%s'\nZMAX='%s'\n>\n" % (printer.updatePeriod, printer.jogSpeed, printer.maxTools,
+                printer.toolLimit, printer.maxAccel, printer.xMax, printer.yMax, printer.zMax))
         now = printer.base
-        stream << ("<BASE\nDIRECTION='%s'\nMOTOR='%s'\nRANGE='%s'\nLIMITS='%s'\nINCREMENT='%s'\n>\n" % (now.direction, now.motor, now.arange, now.limits, now.increment))
+        stream << ("<BASE\nDIRECTION='%s'\nMOTOR='%s'\nRANGE='%s'\nLIMITS='%s'\nINCREMENT='%s'\n>\n"
+                % (now.direction, now.motor, now.arange, now.limits, now.increment))
         stream << ("</BASE>\n")
         now = printer.x
-        stream << ("<XAXIS\nDIRECTION='%s'\nMOTOR='%s'\nRANGE='%s'\nLIMITS='%s'\nINCREMENT='%s'\n>\n" % (now.direction, now.motor, now.arange, now.limits, now.increment))
+        stream << ("<XAXIS\nDIRECTION='%s'\nMOTOR='%s'\nRANGE='%s'\nLIMITS='%s'\nINCREMENT='%s'\n>\n"
+                % (now.direction, now.motor, now.arange, now.limits, now.increment))
         stream << ("</XAXIS>\n")
         now = printer.y
-        stream << ("<YAXIS\nDIRECTION='%s'\nMOTOR='%s'\nRANGE='%s'\nLIMITS='%s'\nINCREMENT='%s'\n>\n" % (now.direction, now.motor, now.arange, now.limits, now.increment))
+        stream << ("<YAXIS\nDIRECTION='%s'\nMOTOR='%s'\nRANGE='%s'\nLIMITS='%s'\nINCREMENT='%s'\n>\n"
+                % (now.direction, now.motor, now.arange, now.limits, now.increment))
         stream << ("</YAXIS>\n")
         now = printer.z
-        stream << ("<ZAXIS\nDIRECTION='%s'\nMOTOR='%s'\nRANGE='%s'\nLIMITS='%s'\nINCREMENT='%s'\n>\n" % (now.direction, now.motor, now.arange, now.limits, now.increment))
+        stream << ("<ZAXIS\nDIRECTION='%s'\nMOTOR='%s'\nRANGE='%s'\nLIMITS='%s'\nINCREMENT='%s'\n>\n"
+                % (now.direction, now.motor, now.arange, now.limits, now.increment))
         stream << ("</ZAXIS>\n")
         now = printer.u
-        stream << ("<UAXIS\nDIRECTION='%s'\nMOTOR='%s'\nRANGE='%s'\nLIMITS='%s'\nINCREMENT='%s'\n>\n" % (now.direction, now.motor, now.arange, now.limits, now.increment))
+        stream << ("<UAXIS\nDIRECTION='%s'\nMOTOR='%s'\nRANGE='%s'\nLIMITS='%s'\nINCREMENT='%s'\n>\n"
+                % (now.direction, now.motor, now.arange, now.limits, now.increment))
         stream << ("</UAXIS>\n")
         if printer.maxTools > 1:
             now = printer.v
-            stream << ("<VAXIS\nDIRECTION='%s'\nMOTOR='%s'\nRANGE='%s'\nLIMITS='%s'\nINCREMENT='%s'\n>\n" % (now.direction, now.motor, now.arange, now.limits, now.increment))
+            stream << ("<VAXIS\nDIRECTION='%s'\nMOTOR='%s'\nRANGE='%s'\nLIMITS='%s'\nINCREMENT='%s'\n>\n"
+                    % (now.direction, now.motor, now.arange, now.limits, now.increment))
             stream << ("</VAXIS>\n")
         stream << ("</PRINTER>\n")
         fh.close()
@@ -133,7 +141,8 @@ class Axis(object): # ok
         self.increment = increment # number
 
 class Printer(object): # ok
-    def __init__(self, name = None, updatePeriod = None, jogSpeed = None, maxTools = None, toolLimit = None, maxAccel = None, xMax = None, yMax = None, zMax = None, base = None, x = None, y = None, z = None, u = None, v = None):
+    def __init__(self, name = None, updatePeriod = None, jogSpeed = None, maxTools = None, toolLimit = None, maxAccel = None,
+            xMax = None, yMax = None, zMax = None, base = None, x = None, y = None, z = None, u = None, v = None):
         self.name = name
         self.updatePeriod = updatePeriod
         self.jogSpeed = jogSpeed
@@ -162,7 +171,7 @@ class printerDialog(QDialog, ui_printerDialog.Ui_printerDlg):
     def __init__(self, parent = None, printer = None): # ok
         super(printerDialog, self).__init__(parent)
         self.setupUi(self)
-        saveAs = self.printerButtonBox.addButton('Save As',QDialogButtonBox.ActionRole)
+        saveAs = self.printerButtonBox.addButton('Save As', QDialogButtonBox.ActionRole)
         self.connect(saveAs, SIGNAL('clicked(bool)'), self.nameChangeable)
         if printer is not None: # if you edit you cannot change the printer name, and load the parameters
             self.printerNameLineEdit.setEnabled(False)
@@ -227,62 +236,62 @@ class printerDialog(QDialog, ui_printerDialog.Ui_printerDlg):
                 self.printer = None
                 self.close()
             else:
-                QMessageBox().about(self, self.tr("Error"),self.tr("Printer with same name already exists.\nChange the printer name."))
+                QMessageBox().about(self, self.tr("Error"), self.tr("Printer with same name already exists.\nChange the printer name."))
         else:
-            QMessageBox().about(self, self.tr("Error"),self.tr("Not all paramaters are filled"))
+            QMessageBox().about(self, self.tr("Error"), self.tr("Not all paramaters are filled"))
 
     def nameChangeable(self): # ok
         self.printerNameLineEdit.setEnabled(True)
         self.new = True
 
     def updatePrinter(self, printer): # ok
-            printer.name = self.printerNameLineEdit.text()
-            printer.updatePeriod = self.updatePeriodLineEdit.text()
-            printer.jogSpeed = self.jogSpeedLineEdit.text()
-            printer.maxTools = self.maxToolsLineEdit.text()
-            printer.toolLimit = self.toolLimitLineEdit.text()
-            printer.maxAccel = self.maxAccelLineEdit.text()
-            printer.xMax = self.xMaxLineEdit.text()
-            printer.yMax = self.yMaxLineEdit.text()
-            printer.zMax = self.zMaxLineEdit.text()
-            ## Base
-            printer.base.direction = self.baseDirection.text()
-            printer.base.motor = self.baseMotor.text()
-            printer.base.arange = self.baseRange.text()
-            printer.base.limits = self.baseLimit.text()
-            printer.base.increment = self.baseIncrement.text()
-            ## X
-            printer.x.direction = self.xDirection.text()
-            printer.x.motor = self.xMotor.text()
-            printer.x.arange = self.xRange.text()
-            printer.x.limits = self.xLimit.text()
-            printer.x.increment = self.xIncrement.text()
-            ## Y
-            printer.y.direction = self.yDirection.text()
-            printer.y.motor = self.yMotor.text()
-            printer.y.arange = self.yRange.text()
-            printer.y.limits = self.yLimit.text()
-            printer.y.increment = self.yIncrement.text()
-            ## Z
-            printer.z.direction = self.zDirection.text()
-            printer.z.motor = self.zMotor.text()
-            printer.z.arange = self.zRange.text()
-            printer.z.limits = self.zLimit.text()
-            printer.z.increment = self.zIncrement.text()
-            ## U
-            printer.u.direction = self.uDirection.text()
-            printer.u.motor = self.uMotor.text()
-            printer.u.arange = self.uRange.text()
-            printer.u.limits = self.uLimit.text()
-            printer.u.increment = self.uIncrement.text()
-            ## V
-            if int(printer.maxTools) > 1:
-                printer.v.direction = self.vDirection.text()
-                printer.v.motor = self.vMotor.text()
-                printer.v.arange = self.vRange.text()
-                printer.v.limits = self.vLimit.text()
-                printer.v.increment = self.vIncrement.text()
-            return printer
+        printer.name = self.printerNameLineEdit.text()
+        printer.updatePeriod = self.updatePeriodLineEdit.text()
+        printer.jogSpeed = self.jogSpeedLineEdit.text()
+        printer.maxTools = self.maxToolsLineEdit.text()
+        printer.toolLimit = self.toolLimitLineEdit.text()
+        printer.maxAccel = self.maxAccelLineEdit.text()
+        printer.xMax = self.xMaxLineEdit.text()
+        printer.yMax = self.yMaxLineEdit.text()
+        printer.zMax = self.zMaxLineEdit.text()
+        ## Base
+        printer.base.direction = self.baseDirection.text()
+        printer.base.motor = self.baseMotor.text()
+        printer.base.arange = self.baseRange.text()
+        printer.base.limits = self.baseLimit.text()
+        printer.base.increment = self.baseIncrement.text()
+        ## X
+        printer.x.direction = self.xDirection.text()
+        printer.x.motor = self.xMotor.text()
+        printer.x.arange = self.xRange.text()
+        printer.x.limits = self.xLimit.text()
+        printer.x.increment = self.xIncrement.text()
+        ## Y
+        printer.y.direction = self.yDirection.text()
+        printer.y.motor = self.yMotor.text()
+        printer.y.arange = self.yRange.text()
+        printer.y.limits = self.yLimit.text()
+        printer.y.increment = self.yIncrement.text()
+        ## Z
+        printer.z.direction = self.zDirection.text()
+        printer.z.motor = self.zMotor.text()
+        printer.z.arange = self.zRange.text()
+        printer.z.limits = self.zLimit.text()
+        printer.z.increment = self.zIncrement.text()
+        ## U
+        printer.u.direction = self.uDirection.text()
+        printer.u.motor = self.uMotor.text()
+        printer.u.arange = self.uRange.text()
+        printer.u.limits = self.uLimit.text()
+        printer.u.increment = self.uIncrement.text()
+        ## V
+        if int(printer.maxTools) > 1:
+            printer.v.direction = self.vDirection.text()
+            printer.v.motor = self.vMotor.text()
+            printer.v.arange = self.vRange.text()
+            printer.v.limits = self.vLimit.text()
+            printer.v.increment = self.vIncrement.text()
+        return printer
         
 
     def verify(self): # ok
