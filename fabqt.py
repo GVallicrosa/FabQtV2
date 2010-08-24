@@ -33,6 +33,7 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
 ## Config tree and comboboxes
         self.loadConfigTree()
         self.populateToolComboBox()
+        self.populatePrinterComboBox()
         
 ## Render window
         camera = vtk.vtkCamera()
@@ -300,6 +301,12 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         print '***Entered mainDock close event!!' # For testing
         self.actionMain_tools.setChecked(False)
         event.accept()
+        
+    def populatePrinterComboBox(self):
+        self.printerComboBox.clear()
+        for printer in self.printerList:
+            self.printerComboBox.addItem(printer.name)
+            self.printerComboBox.setCurrentIndex(-1)
 
     def populateToolComboBox(self):
         self.syringe1ComboBox.clear()
@@ -375,7 +382,7 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
             dialog = printerDialog(self, printer)
         dialog.exec_()
         self.printerList = loadPrinters()
-        #self.populatePrinterCombobox()
+        self.populatePrinterComboBox()
         self.loadConfigTree()
 
     def showToolDialog(self, new):
