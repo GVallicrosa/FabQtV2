@@ -13,7 +13,7 @@ from core.python.about import aboutDialog
 from core.python.tools import toolDialog, loadTools, loadTool
 from core.python.properties import propertiesDialog
 from core.python.printer import printerDialog, loadPrinters, loadPrinter
-from core.python.render import generateAxes
+from core.python.render import generateAxes, moveToOrigin, validateMove
 
 
 class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
@@ -36,13 +36,13 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         self.populatePrinterComboBox()
         
 ## Render window
-        camera = vtk.vtkCamera()
-        camera.SetFocalPoint(100, 100, 0)
-        camera.SetPosition(400, 100, 120)
-        camera.SetViewUp(-1, 0, 0)
+        self.camera = vtk.vtkCamera()
+        self.camera.SetFocalPoint(100, 100, 0)
+        self.camera.SetPosition(400, 100, 120)
+        self.camera.SetViewUp(-1, 0, 0)
         self.ren = vtk.vtkRenderer()
-        self.ren.SetActiveCamera(camera)
-        #self.qvtkWidget.SetInteractorStyle(None) ################## Disables interaction with the 3D window
+        self.ren.SetActiveCamera(self.camera)
+        self.qvtkWidget.SetInteractorStyle(vtk.vtkInteractorStyleTrackballCamera())
         self.qvtkWidget.GetRenderWindow().AddRenderer(self.ren)
         ## Building table representation
         boundBox = vtk.vtkSTLReader()
@@ -53,9 +53,9 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         boundBoxActor.SetMapper(boundBoxMapper)
         ## Origin Axes
         axesActor, XActor, YActor, ZActor = generateAxes()
-        XActor.SetCamera(camera)
-        YActor.SetCamera(camera)
-        ZActor.SetCamera(camera)
+        XActor.SetCamera(self.camera)
+        YActor.SetCamera(self.camera)
+        ZActor.SetCamera(self.camera)
         self.ren.AddActor(boundBoxActor)
         self.ren.AddActor(axesActor)
         self.ren.AddActor(XActor)
@@ -96,6 +96,7 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         self.connect(self.actionAbout, SIGNAL("triggered()"), self.showAboutDialog)
         self.connect(self.actionImport, SIGNAL("triggered()"), self.showImportDialog)
         self.connect(self.importModelButton, SIGNAL("clicked()"), self.showImportDialog)
+        self.connect(self.resetViewButton, SIGNAL("clicked()"), self.resetView)
 
 ## Context menus
         self.connect(self.modelTreeWidget, SIGNAL("customContextMenuRequested(QPoint)"), self.showModelCustomContextMenu)
@@ -214,6 +215,7 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
                 else:
                     num += 1
         self.ren.AddActor(modActor)
+        moveToOrigin(modActor) # When adding, ensure correct position in the printer origin without exceeding table limits
         self.loadModelTree() 
 
     def loadConfigTree(self):
@@ -284,8 +286,8 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
 
     def moveToOrigin(self):
         print 'Moved to Origin'
-        self.actorDict[str(self.model)].SetPosition(0, 0, 0)
-        
+        moveToOrigin(self.actorDict[str(self.model)])
+
     def newPrinterDialog(self):
         print 'New printer'
         self.showPrinterDialog(True)
@@ -316,6 +318,12 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
             self.syringe2ComboBox.addItem(tool.name)
             self.syringe1ComboBox.setCurrentIndex(-1) # The no tool
             self.syringe2ComboBox.setCurrentIndex(-1)
+            
+    def resetView(self):
+        self.camera.SetFocalPoint(100, 100, 0)
+        self.camera.SetPosition(400, 100, 120)
+        self.camera.SetViewUp(-1, 0, 0)
+        self.qvtkWidget.GetRenderWindow().Render()
 
 ###### I don't like this solution for the translation
     def set_ca(self):

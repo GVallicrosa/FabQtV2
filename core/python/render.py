@@ -1,5 +1,9 @@
 import vtk
 
+XMAX = 203.2
+YMAX = 203.2
+ZMAX = 203.2
+
 def generateAxes():
     axes = vtk.vtkAxes()
     axes.SetOrigin(0, 0, 0)
@@ -40,3 +44,44 @@ def generateAxes():
     ZActor.SetPosition(-20, -20, 40)
     ZActor.GetProperty().SetColor(0, 1, 0)
     return axesActor, XActor, YActor, ZActor
+    
+def moveToOrigin(actor):
+    actor.SetPosition(0, 0, 0)
+    xmin, xmax = actor.GetXRange()
+    ymin, ymax = actor.GetYRange()
+    zmin, zmax = actor.GetZRange()
+    actor.SetPosition(-xmin, -ymin, -zmin)
+    
+def validateMove(actor):
+    x, y, z = actor.GetPosition()
+    xmin, xmax = actor.GetXRange()
+    ymin, ymax = actor.GetYRange()
+    zmin, zmax = actor.GetZRange()
+    if xmin < 0 and not xmax > XMAX:
+        newx = x - xmin
+    elif xmax > XMAX and not xmin < 0:
+        newx = x - (xmax - XMAX)
+    elif xmin >= 0 and xmax <= XMAX:
+        newx = x
+    else:
+        return False # Model too big
+    if ymin < 0 and not ymax > YMAX:
+        newy = y - ymin
+    elif ymax > YMAX and not ymin < 0:
+        newy = y - (ymax - YMAX)
+    elif ymin >= 0 and ymax <= YMAX:
+        newy = y
+    else:
+        return False # Model too big
+    if zmin < 0 and not zmax > ZMAX:
+        newz = z - zmin
+    elif zmax > ZMAX and not zmin < 0:
+        newz = z - zmin # Always touching the table
+    elif zmin >= 0 and zmax <= ZMAX:
+        newz = z - zmin
+    else:
+        return False # Model too big
+    actor.SetPosition(newx, newy, newz)
+    return True    
+    
+    

@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/fabqtDialog.ui'
 #
-# Created: Tue Aug 24 12:46:21 2010
+# Created: Thu Aug 26 11:20:31 2010
 #      by: PyQt4 UI code generator 4.7.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -745,6 +745,7 @@ class Ui_MainWindow(object):
         self.renderWireframeCheckBox.setObjectName("renderWireframeCheckBox")
         self.gridLayout_2.addWidget(self.renderWireframeCheckBox, 3, 0, 1, 2)
         self.resetViewButton = QtGui.QPushButton(self.configTab)
+        self.resetViewButton.setShortcut("Ctrl+R")
         self.resetViewButton.setObjectName("resetViewButton")
         self.gridLayout_2.addWidget(self.resetViewButton, 4, 0, 1, 2)
         self.verticalLayout_3.addLayout(self.gridLayout_2)

@@ -1,5 +1,6 @@
 import ui.ui_propertiesDialog as ui_propertiesDialog
-from PyQt4.QtGui import QDialog
+from PyQt4.QtGui import QDialog, QMessageBox
+from core.python.render import validateMove
 
 class propertiesDialog(QDialog, ui_propertiesDialog.Ui_propertiesDialog):
     def __init__(self, parent, model, actorDict, toolList):
@@ -15,7 +16,6 @@ class propertiesDialog(QDialog, ui_propertiesDialog.Ui_propertiesDialog):
         self.x_scale.setValue(scale[0])
         self.y_scale.setValue(scale[1])
         self.z_scale.setValue(scale[2])
-        #print actorDict[str(model)].GetXRange() #Ranges in axis can be compared to ensure correct positioning in the table
         for tool in toolList:
             self.modelMaterialComboBox.addItem(tool.name)
             self.modelMaterialComboBox.setCurrentIndex(-1) # No tool
@@ -27,4 +27,6 @@ class propertiesDialog(QDialog, ui_propertiesDialog.Ui_propertiesDialog):
         actor.RotateY(self.y_rotate.value())
         actor.RotateZ(self.z_rotate.value())
         actor.SetScale(self.x_scale.value(), self.y_scale.value(), self.z_scale.value())
+        if not validateMove(actor):
+            QMessageBox().about(self, self.tr("Error"), self.tr("Model exceeds limits. Need to be scaled."))
         self.close()
