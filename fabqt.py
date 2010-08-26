@@ -4,7 +4,7 @@ import sys
 import vtk
 import random
 
-from PyQt4.QtCore import QString, QVariant, QSettings, QTranslator, QStringList, QSize, QPoint, SIGNAL
+from PyQt4.QtCore import QString, QVariant, QSettings, QTranslator, QStringList, QSize, QPoint, SIGNAL, pyqtSignature
 from PyQt4.QtGui import QTreeWidgetItem, QApplication, QMenu, QMainWindow, QFileDialog, QCursor, QMessageBox
 
 import ui.ui_fabqtDialog as ui_fabqtDialog
@@ -157,9 +157,9 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
             settings.setValue("MainWindow/Size", QVariant(self.size()))
             settings.setValue("MainWindow/Position", QVariant(self.pos()))
             settings.setValue("MainWindow/State", QVariant(self.saveState()))
-#            settings.setValue("Printer/Printer", QVariant())
-#            settings.setValue("Printer/Tool1", QVariant())
-#            settings.setValue("Printer/Tool2", QVariant())
+            settings.setValue("Printer/Printer", QVariant(self.printerComboBox.currentText()))
+            settings.setValue("Printer/Tool1", QVariant(self.syringe1ComboBox.currentText()))
+            settings.setValue("Printer/Tool2", QVariant(self.syringe2ComboBox.currentText()))
 #            settings.setValue("Printer/PrinterPort", QVariant())
 #            settings.setValue("Path/ModelDir", QVariant())
             print '* Closing...'
@@ -298,26 +298,33 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
 
     def okToContinue(self): # To implement not saved changes closing
         return True
-
+        
+    @pyqtSignature("QCloseEvent")
     def on_mainDock_closeEvent(self, event): # It never enters here, I don't know why (it could be a solution to the dock problem)
         print '***Entered mainDock close event!!' # For testing
         self.actionMain_tools.setChecked(False)
         event.accept()
-        
+                
     def populatePrinterComboBox(self):
         self.printerComboBox.clear()
+        self.printerComboBox.addItem('## No Printer ##')
         for printer in self.printerList:
             self.printerComboBox.addItem(printer.name)
-            self.printerComboBox.setCurrentIndex(-1)
+            index = self.printerComboBox.findText(settings.value("Printer/Printer", QVariant('## No Printer ##')).toString())
+            self.printerComboBox.setCurrentIndex(index)
 
     def populateToolComboBox(self):
         self.syringe1ComboBox.clear()
         self.syringe2ComboBox.clear()
+        self.syringe1ComboBox.addItem('## No Tool ##')
+        self.syringe2ComboBox.addItem('## No Tool ##')
         for tool in self.toolList:
             self.syringe1ComboBox.addItem(tool.name)
             self.syringe2ComboBox.addItem(tool.name)
-            self.syringe1ComboBox.setCurrentIndex(-1) # The no tool
-            self.syringe2ComboBox.setCurrentIndex(-1)
+            index = self.syringe1ComboBox.findText(settings.value("Printer/Tool1", QVariant('## No Tool ##')).toString())
+            self.syringe1ComboBox.setCurrentIndex(index)
+            index = self.syringe2ComboBox.findText(settings.value("Printer/Tool2", QVariant('## No Tool ##')).toString())
+            self.syringe2ComboBox.setCurrentIndex(index)
             
     def resetView(self):
         self.camera.SetFocalPoint(100, 100, 0)
@@ -345,22 +352,28 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         dialog.exec_()
 
     def showConfigCustomContextMenu(self, pos):
+        ## Save some settings, because of reloading comboboxes
+        settings.setValue("Printer/Printer", QVariant(self.printerComboBox.currentText()))
+        settings.setValue("Printer/Tool1", QVariant(self.syringe1ComboBox.currentText()))
+        settings.setValue("Printer/Tool2", QVariant(self.syringe2ComboBox.currentText()))
+        ## Only menu in an item
         index = self.configTreeWidget.indexAt(pos) 
         if not index.isValid(): # if not valid, nothing to edit
             return
         item = self.configTreeWidget.itemAt(pos)
+        ## What kind of item --> kind of context menu
         try:
-            if item.parent().text(0) == 'Tools': # if it has parent, it is a slice, not a model
+            if item.parent().text(0) == 'Tools': # It's a tool
                 self.configToolName = item.text(0)
                 print 'Clicked on tool: ' + str(self.configToolName)
                 self.toolMenu.exec_(QCursor.pos())
-            elif item.parent().text(0) == 'Printers':
+            elif item.parent().text(0) == 'Printers': # It's a printer
                 self.configPrinterName = item.text(0)
                 print 'Clicked on printer: ' + str(self.configPrinterName)
                 self.printerMenu.exec_(QCursor.pos())
             else:
                 return
-        except AttributeError:
+        except AttributeError: # When clicking on root items, nothing to do
             return
 
         

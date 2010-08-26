@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/fabqtDialog.ui'
 #
-# Created: Thu Aug 26 11:20:31 2010
+# Created: Thu Aug 26 11:33:14 2010
 #      by: PyQt4 UI code generator 4.7.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -745,7 +745,6 @@ class Ui_MainWindow(object):
         self.renderWireframeCheckBox.setObjectName("renderWireframeCheckBox")
         self.gridLayout_2.addWidget(self.renderWireframeCheckBox, 3, 0, 1, 2)
         self.resetViewButton = QtGui.QPushButton(self.configTab)
-        self.resetViewButton.setShortcut("Ctrl+R")
         self.resetViewButton.setObjectName("resetViewButton")
         self.gridLayout_2.addWidget(self.resetViewButton, 4, 0, 1, 2)
         self.verticalLayout_3.addLayout(self.gridLayout_2)
@@ -955,6 +954,7 @@ class Ui_MainWindow(object):
         self.showTracesCheckBox.setText(QtGui.QApplication.translate("MainWindow", "Show Traces", None, QtGui.QApplication.UnicodeUTF8))
         self.renderWireframeCheckBox.setText(QtGui.QApplication.translate("MainWindow", "Render Wireframe", None, QtGui.QApplication.UnicodeUTF8))
         self.resetViewButton.setText(QtGui.QApplication.translate("MainWindow", "Reset View", None, QtGui.QApplication.UnicodeUTF8))
+        self.resetViewButton.setShortcut(QtGui.QApplication.translate("MainWindow", "Ctrl+R", None, QtGui.QApplication.UnicodeUTF8))
         self.mainTabWidget.setTabText(self.mainTabWidget.indexOf(self.configTab), QtGui.QApplication.translate("MainWindow", "Config", None, QtGui.QApplication.UnicodeUTF8))
         self.infoDock.setAccessibleName(QtGui.QApplication.translate("MainWindow", "hardwareStatusDock", None, QtGui.QApplication.UnicodeUTF8))
         self.build_hardwareTabWidget.setTabText(self.build_hardwareTabWidget.indexOf(self.hardwareStatusTab), QtGui.QApplication.translate("MainWindow", "Hardware Status", None, QtGui.QApplication.UnicodeUTF8))

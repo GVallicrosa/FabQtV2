@@ -390,6 +390,11 @@ p, li { white-space: pre-wrap; }
         <source>Printer:</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <location filename="ui/fabqtDialog.ui" line="1867"/>
+        <source>Ctrl+R</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>printerDialog</name>

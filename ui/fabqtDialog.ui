@@ -1864,7 +1864,7 @@
               <string>Reset View</string>
              </property>
              <property name="shortcut">
-              <string notr="true">Ctrl+R</string>
+              <string>Ctrl+R</string>
              </property>
             </widget>
            </item>
