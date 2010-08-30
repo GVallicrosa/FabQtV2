@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'propertiesDialog.ui'
 #
-# Created: Thu Aug 26 11:33:13 2010
+# Created: Fri Aug 27 09:32:58 2010
 #      by: PyQt4 UI code generator 4.7.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -57,7 +57,8 @@ class Ui_propertiesDialog(object):
         self.gridLayout = QtGui.QGridLayout()
         self.gridLayout.setObjectName("gridLayout")
         self.x_translate = QtGui.QDoubleSpinBox(propertiesDialog)
-        self.x_translate.setMaximum(200.0)
+        self.x_translate.setMinimum(-100.0)
+        self.x_translate.setMaximum(300.0)
         self.x_translate.setProperty("value", 0.0)
         self.x_translate.setObjectName("x_translate")
         self.gridLayout.addWidget(self.x_translate, 0, 2, 1, 1)
@@ -70,7 +71,8 @@ class Ui_propertiesDialog(object):
         self.label_6.setObjectName("label_6")
         self.gridLayout.addWidget(self.label_6, 1, 1, 1, 1)
         self.y_translate = QtGui.QDoubleSpinBox(propertiesDialog)
-        self.y_translate.setMaximum(200.0)
+        self.y_translate.setMinimum(-100.0)
+        self.y_translate.setMaximum(300.0)
         self.y_translate.setObjectName("y_translate")
         self.gridLayout.addWidget(self.y_translate, 1, 2, 1, 1)
         self.label_7 = QtGui.QLabel(propertiesDialog)
@@ -82,7 +84,8 @@ class Ui_propertiesDialog(object):
         self.label_7.setObjectName("label_7")
         self.gridLayout.addWidget(self.label_7, 2, 1, 1, 1)
         self.z_translate = QtGui.QDoubleSpinBox(propertiesDialog)
-        self.z_translate.setMaximum(200.0)
+        self.z_translate.setMinimum(-100.0)
+        self.z_translate.setMaximum(300.0)
         self.z_translate.setObjectName("z_translate")
         self.gridLayout.addWidget(self.z_translate, 2, 2, 1, 1)
         self.label_5 = QtGui.QLabel(propertiesDialog)

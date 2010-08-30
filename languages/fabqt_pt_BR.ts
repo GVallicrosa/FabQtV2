@@ -38,12 +38,12 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>FabQtMain</name>
     <message>
-        <location filename="fabqt.py" line="427"/>
+        <location filename="fabqt.py" line="441"/>
         <source>Translation Info</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="fabqt.py" line="427"/>
+        <location filename="fabqt.py" line="441"/>
         <source>You need to restart the application to change the language</source>
         <translation type="unfinished"></translation>
     </message>
@@ -395,6 +395,21 @@ p, li { white-space: pre-wrap; }
         <source>Ctrl+R</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <location filename="ui/fabqtDialog.ui" line="2083"/>
+        <source>Ctrl+D</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ui/fabqtDialog.ui" line="2116"/>
+        <source>Ctrl+H</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ui/fabqtDialog.ui" line="2131"/>
+        <source>Ctrl+S</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>printerDialog</name>
@@ -639,7 +654,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ui/propertiesDialog.ui" line="168"/>
+        <location filename="ui/propertiesDialog.ui" line="177"/>
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
@@ -648,12 +663,12 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ui/propertiesDialog.ui" line="175"/>
+        <location filename="ui/propertiesDialog.ui" line="184"/>
         <source>Rotate:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ui/propertiesDialog.ui" line="275"/>
+        <location filename="ui/propertiesDialog.ui" line="284"/>
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
@@ -662,7 +677,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ui/propertiesDialog.ui" line="282"/>
+        <location filename="ui/propertiesDialog.ui" line="291"/>
         <source>Scale:</source>
         <translation type="unfinished"></translation>
     </message>

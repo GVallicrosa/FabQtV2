@@ -3,6 +3,7 @@
 import sys
 import vtk
 import random
+import time
 
 from PyQt4.QtCore import QString, QVariant, QSettings, QTranslator, QStringList, QSize, QPoint, SIGNAL, pyqtSignature
 from PyQt4.QtGui import QTreeWidgetItem, QApplication, QMenu, QMainWindow, QFileDialog, QCursor, QMessageBox
@@ -15,6 +16,8 @@ from core.python.properties import propertiesDialog
 from core.python.printer import printerDialog, loadPrinters, loadPrinter
 from core.python.render import generateAxes, moveToOrigin, validateMove
 
+from core.skeinforge.skeinforge_application import skeinforge
+from core.skeinforge.skeinforge_application.skeinforge_plugins.craft_plugins import export
 
 class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
     def __init__(self, parent = None):
@@ -51,6 +54,7 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         boundBoxMapper.SetInput(boundBox.GetOutput())
         boundBoxActor = vtk.vtkActor()
         boundBoxActor.SetMapper(boundBoxMapper)
+        boundBoxActor.PickableOff()
         ## Origin Axes
         axesActor, XActor, YActor, ZActor = generateAxes()
         XActor.SetCamera(self.camera)
@@ -130,7 +134,7 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         actionOrigin = self.modelMenu.addAction("Move to Origin")
         actionDelete = self.modelMenu.addAction("Delete")
         self.connect(actionProperties, SIGNAL('triggered()'), self.showPropertiesDialog)
-#        self.connect(actionStandard, SIGNAL('triggered()'), self.???)
+        self.connect(actionStandard, SIGNAL('triggered()'), self.exportSTL) # testing save STL
 #        self.connect(actionAdvanced, SIGNAL('triggered()'), self.???)
         self.connect(actionOrigin, SIGNAL('triggered()'), self.moveToOrigin)
         self.connect(actionDelete, SIGNAL('triggered()'), self.deleteModel)
@@ -171,6 +175,7 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         self.ren.RemoveActor(self.actorDict[str(self.model)])
         self.actorDict.pop(str(self.model))
         self.loadModelTree()        
+        self.qvtkWidget.GetRenderWindow().Render()
     
     def editPrinterDialog(self):
         print 'Edit printer'
@@ -180,17 +185,46 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         print 'Edit tool'
         self.showToolDialog(False)
         
+    def exportSTL(self):
+        actor = self.actorDict[str(self.model)]
+        fname = str(self.model)
+        print 'Exporting temp STL of model %s...' % fname
+        if '(' in fname:
+            fname = fname[0:fname.find('(')]
+            print 'Model repeated, real file name: ' + fname
+        # Extract transformations done to the actor
+        matrix = vtk.vtkMatrix4x4() 
+        actor.GetMatrix(matrix)
+        # Get original data
+        reader = vtk.vtkSTLReader() 
+        reader.SetFileName(str(settings.value("Path/ModelDir").toString()) + fname)
+        # Apply transformation
+        transform = vtk.vtkTransform()
+        transform.SetMatrix(matrix)
+        t_filter = vtk.vtkTransformPolyDataFilter()
+        t_filter.SetInputConnection(reader.GetOutputPort())
+        t_filter.SetTransform(transform)
+        # Save data to a STL file
+        writer = vtk.vtkSTLWriter()
+        writer.SetFileName('temp.stl')
+        writer.SetInputConnection(t_filter.GetOutputPort())
+        writer.SetFileTypeToBinary()
+        writer.Write()
+        print 'End exporting...'
+        # Path planning
+        #export.writeOutput('temp.stl')
+        
     def importModel(self, fname):
         fname = str(fname)
         settings.setValue("Path/ModelDir", QVariant(fname[0:fname.find(fname.split('/')[-1])]))
         print '++ Importing model: ' + fname.split('/')[-1]
         extension = fname.split('.')[1]
-        if extension == 'STL' or  extension == 'stl': 
-            stl = vtk.vtkSTLReader()
-            stl.SetFileName(str(fname))
+        if extension.lower() == 'stl': 
+            reader = vtk.vtkSTLReader()
+            reader.SetFileName(str(fname))
+            #reader.Update()
             stlMapper = vtk.vtkPolyDataMapper()
-            stlMapper.SelectColorArray(2)
-            stlMapper.SetInput(stl.GetOutput())
+            stlMapper.SetInputConnection(reader.GetOutputPort())
             modActor = vtk.vtkActor()
             modActor.SetMapper(stlMapper)
             modActor.GetProperty().SetColor(random.random(), random.random(), random.random())
@@ -214,9 +248,18 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
                     exists = False
                 else:
                     num += 1
+        modActor.PickableOn()
+        modActor.DragableOn() # Seems that has no effect
         self.ren.AddActor(modActor)
-        moveToOrigin(modActor) # When adding, ensure correct position in the printer origin without exceeding table limits
+        validateMove(modActor) # When adding, ensure correct position in the printer origin without exceeding table limits
+        self.qvtkWidget.GetRenderWindow().Render()
         self.loadModelTree() 
+        
+        #self.ren.GetActiveCamera().OrthogonalizeViewUp()
+        #for i in range(0,360):
+        #    time.sleep(0.03)
+        #    self.qvtkWidget.GetRenderWindow().Render()
+        #    self.ren.GetActiveCamera().Azimuth( 1 )
 
     def loadConfigTree(self):
         print 'Delete config tree'

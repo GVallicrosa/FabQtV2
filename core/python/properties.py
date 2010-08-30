@@ -23,9 +23,9 @@ class propertiesDialog(QDialog, ui_propertiesDialog.Ui_propertiesDialog):
     def accept(self):
         actor = self.actorDict[str(self.model)]
         actor.SetPosition(self.x_translate.value(), self.y_translate.value(), self.z_translate.value())
-        actor.RotateX(self.x_rotate.value())
-        actor.RotateY(self.y_rotate.value())
-        actor.RotateZ(self.z_rotate.value())
+        actor.RotateWXYZ(self.x_rotate.value(), 1, 0, 0)
+        actor.RotateWXYZ(self.y_rotate.value(), 0, 1, 0)
+        actor.RotateWXYZ(self.z_rotate.value(), 0, 0, 1)
         actor.SetScale(self.x_scale.value(), self.y_scale.value(), self.z_scale.value())
         if not validateMove(actor):
             QMessageBox().about(self, self.tr("Error"), self.tr("Model exceeds limits. Need to be scaled."))
