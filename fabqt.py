@@ -1,44 +1,45 @@
 #!/usr/bin/env python
-
 import sys
 import vtk
 import random
 import time
-
+# Import Qt
 from PyQt4.QtCore import QString, QVariant, QSettings, QTranslator, QStringList, QSize, QPoint, SIGNAL, pyqtSignature
 from PyQt4.QtGui import QTreeWidgetItem, QApplication, QMenu, QMainWindow, QFileDialog, QCursor, QMessageBox
-
+# Main dialog to reimplement functions
 import ui.ui_fabqtDialog as ui_fabqtDialog
-
-from core.python.about import aboutDialog
-from core.python.tools import toolDialog, loadTools, loadTool
-from core.python.properties import propertiesDialog
-from core.python.printer import printerDialog, loadPrinters, loadPrinter
+# Other dialogs
+from core.python.dialogs.printerDialog import printerDialog
+from core.python.dialogs.propertiesDialog import propertiesDialog
+from core.python.dialogs.toolDialog import toolDialog
+from core.python.dialogs.aboutDialog import aboutDialog
+# All other modules needed
+from core.python.tool import loadTools, Tool
+from core.python.printer import loadPrinters, Printer
 from core.python.render import generateAxes, moveToOrigin, validateMove
-
-from core.skeinforge.skeinforge_application import skeinforge
-from core.skeinforge.skeinforge_application.skeinforge_plugins.craft_plugins import export
+from core.python.model import Model
+# Skeinforge modules
+#from core.skeinforge.skeinforge_application import skeinforge
+#from core.skeinforge.skeinforge_application.skeinforge_plugins.craft_plugins import export
 
 class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
     def __init__(self, parent = None):
+        ## Init parent and make connections
         print '\nInitialising application...'
         super(FabQtMain, self).__init__(parent)
         self.setupUi(self)
-
-## Initial values
+        ## Initial values
         self.configToolName = None
         self.configPrinterName = None
         self.model = None
-        self.toolList = loadTools()
+        self.toolList = loadTools() # --> Can use dicts to easy acces 
         self.printerList = loadPrinters()
-        self.actorDict = dict()
-
-## Config tree and comboboxes
+        self.modelDict = dict()
+        ## Config tree and comboboxes, load initial values
         self.loadConfigTree()
         self.populateToolComboBox()
         self.populatePrinterComboBox()
-        
-## Render window
+        ## Render window using VTK lib
         self.camera = vtk.vtkCamera()
         self.camera.SetFocalPoint(100, 100, 0)
         self.camera.SetPosition(400, 100, 120)
@@ -47,7 +48,7 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         self.ren.SetActiveCamera(self.camera)
         self.qvtkWidget.SetInteractorStyle(vtk.vtkInteractorStyleTrackballCamera())
         self.qvtkWidget.GetRenderWindow().AddRenderer(self.ren)
-        ## Building table representation
+        ## Building table representation --> IMPROVEMENT: set dimensions in the config (also affects camera position)
         boundBox = vtk.vtkSTLReader()
         boundBox.SetFileName('config/boudCube.stl')
         boundBoxMapper = vtk.vtkPolyDataMapper()
@@ -60,53 +61,48 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         XActor.SetCamera(self.camera)
         YActor.SetCamera(self.camera)
         ZActor.SetCamera(self.camera)
+        ## Add all initial actors
         self.ren.AddActor(boundBoxActor)
         self.ren.AddActor(axesActor)
         self.ren.AddActor(XActor)
         self.ren.AddActor(YActor)
         self.ren.AddActor(ZActor)
+        ## Start rendering
         self.qvtkWidget.Initialize()
         self.qvtkWidget.GetRenderWindow().Render()
         self.qvtkWidget.Start()    
-        
-## Import model file dialog
+## CONNECTIONS AND MENUS
+        ## Import model file dialog
         self.importDialog = QFileDialog(self, 'Import model', settings.value("Path/ModelDir", QVariant(QString('./'))).toString(), 
             "3D Models (*.STL *.stl);;All files (*)")
         self.connect(self.importDialog, SIGNAL('fileSelected(QString)'), self.importModel)
-        
-## Load preferences (called at the main loop)
+        ## Load preferences (called at the main loop)
         self.resize(settings.value("MainWindow/Size", QVariant(QSize(600, 500))).toSize())
         self.move(settings.value("MainWindow/Position", QVariant(QPoint(0, 0))).toPoint())
         self.restoreState(settings.value("MainWindow/State").toByteArray())
-
-## Show/hide dialogs from the menu
+        ## Show/hide dialogs from the menu
         self.connect(self.actionMain_tools, SIGNAL("toggled(bool)"), self.mainDock.setVisible)
         self.connect(self.actionStatus_Info, SIGNAL("toggled(bool)"), self.infoDock.setVisible)
         self.connect(self.actionToolbar, SIGNAL("toggled(bool)"), self.toolBar.setVisible)
-
-## If you close a dialog, update in the menu
+        ## If you close a dialog, update in the menu
         self.connect(self.mainDock, SIGNAL("visibilityChanged(bool)"), self.actionMain_tools.setChecked) # PROBLEM: when minimized, it loses the docks
         self.connect(self.infoDock, SIGNAL("visibilityChanged(bool)"), self.actionStatus_Info.setChecked)
-
-## Update movements
+        ## Update movements
         self.connect(self.x_IncrementLineEdit, SIGNAL("textEdited(QString)"), self.updateMovement)
         self.connect(self.y_IncrementLineEdit, SIGNAL("textEdited(QString)"), self.updateMovement)
         self.connect(self.z_IncrementLineEdit, SIGNAL("textEdited(QString)"), self.updateMovement)
         self.connect(self.u_IncrementLineEdit, SIGNAL("textEdited(QString)"), self.updateMovement)
         self.connect(self.v_IncrementLineEdit, SIGNAL("textEdited(QString)"), self.updateMovement)
-
-## General actions
+        ## General actions
         self.connect(self.actionQuit, SIGNAL("triggered()"), self.close)
         self.connect(self.actionAbout, SIGNAL("triggered()"), self.showAboutDialog)
         self.connect(self.actionImport, SIGNAL("triggered()"), self.showImportDialog)
         self.connect(self.importModelButton, SIGNAL("clicked()"), self.showImportDialog)
         self.connect(self.resetViewButton, SIGNAL("clicked()"), self.resetView)
-
-## Context menus
+        ## Context menus
         self.connect(self.modelTreeWidget, SIGNAL("customContextMenuRequested(QPoint)"), self.showModelCustomContextMenu)
         self.connect(self.configTreeWidget, SIGNAL("customContextMenuRequested(QPoint)"), self.showConfigCustomContextMenu)
-
-## The config tool context menu
+        ## The config tool context menu
         self.toolMenu = QMenu()
         actionEditTool = self.toolMenu.addAction("Edit Tool")
         actionNewTool = self.toolMenu.addAction("New Tool")
@@ -115,8 +111,7 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         self.toolMenu.addAction(actionEditTool)
         self.toolMenu.addSeparator()
         self.toolMenu.addAction(actionNewTool)
-        
-## The config printer context menu
+        ## The config printer context menu
         self.printerMenu = QMenu()
         actionEditPrinter = self.printerMenu.addAction("Edit Printer")
         actionNewPrinter = self.printerMenu.addAction("New Printer")
@@ -125,8 +120,7 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         self.printerMenu.addAction(actionEditPrinter)
         self.printerMenu.addSeparator()
         self.printerMenu.addAction(actionNewPrinter)
-
-## The model context menu
+        ## The model context menu
         self.modelMenu = QMenu()
         actionProperties = self.modelMenu.addAction("Properties/Transform")
         actionStandard = self.modelMenu.addAction("Standard Path Planning")
@@ -134,7 +128,7 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         actionOrigin = self.modelMenu.addAction("Move to Origin")
         actionDelete = self.modelMenu.addAction("Delete")
         self.connect(actionProperties, SIGNAL('triggered()'), self.showPropertiesDialog)
-        self.connect(actionStandard, SIGNAL('triggered()'), self.exportSTL) # testing save STL
+        self.connect(actionStandard, SIGNAL('triggered()'), self.pathPlanning) # testing save STL
 #        self.connect(actionAdvanced, SIGNAL('triggered()'), self.???)
         self.connect(actionOrigin, SIGNAL('triggered()'), self.moveToOrigin)
         self.connect(actionDelete, SIGNAL('triggered()'), self.deleteModel)
@@ -146,8 +140,7 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         self.modelMenu.addAction(actionOrigin)
         self.modelMenu.addSeparator()
         self.modelMenu.addAction(actionDelete)
-
-## Translations (en, ca, es_ES, pt_BR)
+        ## Translations (en, ca, es_ES, pt_BR)
         self.connect(self.actionEnglish, SIGNAL("triggered()"), self.set_en)
         self.connect(self.actionSpanish_Spain, SIGNAL("triggered()"), self.set_es_ES)
         self.connect(self.actionCatalan, SIGNAL("triggered()"), self.set_ca)
@@ -172,89 +165,42 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
             
     def deleteModel(self):
         ''' Deletes the model from view and dictionary and reloads the model tree.'''
-        self.ren.RemoveActor(self.actorDict[str(self.model)])
-        self.actorDict.pop(str(self.model))
+        self.ren.RemoveActor(self.model.readActor())
+        self.modelDict.pop(str(self.model.name))
         self.loadModelTree()        
         self.qvtkWidget.GetRenderWindow().Render()
     
     def editPrinterDialog(self):
+        '''Edits printer configuration, general options and axes options.'''
         print 'Edit printer'
         self.showPrinterDialog(False)
         
     def editToolDialog(self):
         print 'Edit tool'
         self.showToolDialog(False)
-        
-    def exportSTL(self):
-        actor = self.actorDict[str(self.model)]
-        fname = str(self.model)
-        print 'Exporting temp STL of model %s...' % fname
-        if '(' in fname:
-            fname = fname[0:fname.find('(')]
-            print 'Model repeated, real file name: ' + fname
-        # Extract transformations done to the actor
-        matrix = vtk.vtkMatrix4x4() 
-        actor.GetMatrix(matrix)
-        # Get original data
-        reader = vtk.vtkSTLReader() 
-        reader.SetFileName(str(settings.value("Path/ModelDir").toString()) + fname)
-        # Apply transformation
-        transform = vtk.vtkTransform()
-        transform.SetMatrix(matrix)
-        t_filter = vtk.vtkTransformPolyDataFilter()
-        t_filter.SetInputConnection(reader.GetOutputPort())
-        t_filter.SetTransform(transform)
-        # Save data to a STL file
-        writer = vtk.vtkSTLWriter()
-        writer.SetFileName('temp.stl')
-        writer.SetInputConnection(t_filter.GetOutputPort())
-        writer.SetFileTypeToBinary()
-        writer.Write()
-        print 'End exporting...'
-        # Path planning
-        #export.writeOutput('temp.stl')
-        
+             
     def importModel(self, fname):
         fname = str(fname)
         settings.setValue("Path/ModelDir", QVariant(fname[0:fname.find(fname.split('/')[-1])]))
-        print '++ Importing model: ' + fname.split('/')[-1]
-        extension = fname.split('.')[1]
-        if extension.lower() == 'stl': 
-            reader = vtk.vtkSTLReader()
-            reader.SetFileName(str(fname))
-            #reader.Update()
-            stlMapper = vtk.vtkPolyDataMapper()
-            stlMapper.SetInputConnection(reader.GetOutputPort())
-            modActor = vtk.vtkActor()
-            modActor.SetMapper(stlMapper)
-            modActor.GetProperty().SetColor(random.random(), random.random(), random.random())
-        elif extension == '3ds': ## Need to know what actor is added
-            mod = vtk.vtk3DSImporter()
-            mod.ComputeNormalsOn()
-            mod.SetFileName(str(fname))
-            mod.Read()
-            #3ds.SetRenderWindow(renWin)
-        if not str(fname.split('/')[-1]) in self.actorDict.keys():
-            self.actorDict[str(fname.split('/')[-1])] = modActor
-        else:
+        model = Model()
+        model.load(fname)
+        if str(model.name) in self.modelDict.keys():
             print '++ Model name already used'
             exists = True
-            name = str(fname.split('/')[-1])
+            name = str(model.name)
             num = 2
             while exists:
-                if not name + '(%s)' % str(num) in self.actorDict.keys():
+                if not name + '(%s)' % str(num) in self.modelDict.keys():
                     print '++ New name: ' + name + '(%s)' % str(num)
-                    self.actorDict[name + '(%s)' % str(num)] = modActor
+                    model.name = name + '(%s)' % str(num)
                     exists = False
                 else:
                     num += 1
-        modActor.PickableOn()
-        modActor.DragableOn() # Seems that has no effect
-        self.ren.AddActor(modActor)
-        validateMove(modActor) # When adding, ensure correct position in the printer origin without exceeding table limits
+        self.modelDict[str(model.name)] = model
+        self.ren.AddActor(model.readActor())
+        validateMove(model.readActor())
         self.qvtkWidget.GetRenderWindow().Render()
         self.loadModelTree() 
-        
         #self.ren.GetActiveCamera().OrthogonalizeViewUp()
         #for i in range(0,360):
         #    time.sleep(0.03)
@@ -272,7 +218,7 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
     def loadModelTree(self):
         print 'Loading/Reloading model tree'
         self.modelTreeWidget.clear()
-        for model in self.actorDict.keys():
+        for model in self.modelDict.keys():
             print 'Adding model: ' + model
             modelItem = QTreeWidgetItem(self.modelTreeWidget)
             modelItem.setText(0, model)
@@ -329,7 +275,8 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
 
     def moveToOrigin(self):
         print 'Moved to Origin'
-        moveToOrigin(self.actorDict[str(self.model)])
+        moveToOrigin(self.model.readActor())
+        self.qvtkWidget.GetRenderWindow().Render()
 
     def newPrinterDialog(self):
         print 'New printer'
@@ -342,11 +289,14 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
     def okToContinue(self): # To implement not saved changes closing
         return True
         
-    @pyqtSignature("QCloseEvent")
+    #@pyqtSignature("QCloseEvent")
     def on_mainDock_closeEvent(self, event): # It never enters here, I don't know why (it could be a solution to the dock problem)
         print '***Entered mainDock close event!!' # For testing
         self.actionMain_tools.setChecked(False)
         event.accept()
+        
+    def pathPlanning(self):
+        self.model.Slice()
                 
     def populatePrinterComboBox(self):
         self.printerComboBox.clear()
@@ -370,25 +320,27 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
             self.syringe2ComboBox.setCurrentIndex(index)
             
     def resetView(self):
+        '''Resets the camera to its initial position'''
         self.camera.SetFocalPoint(100, 100, 0)
         self.camera.SetPosition(400, 100, 120)
         self.camera.SetViewUp(-1, 0, 0)
         self.qvtkWidget.GetRenderWindow().Render()
 
-###### I don't like this solution for the translation
     def set_ca(self):
         self.updateTranslation('ca')
         print '* Changed language to Catalan'
+
     def set_en(self):
         self.updateTranslation('en')
         print '* Changed language to English'
+
     def set_es_ES(self):
         self.updateTranslation('es_ES')
         print '* Changed language to Spanish'
+
     def set_pt_BR(self):
         self.updateTranslation('pt_BR')
         print '* Changed language to Portuguese'
-###### End translation
 
     def showAboutDialog(self):
         dialog = aboutDialog(self)
@@ -430,11 +382,12 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         item = self.modelTreeWidget.itemAt(pos) 
         if item.parent(): # if it has parent, it is a slice, not a model
             return
-        self.model = item.text(0)
+        modelName = item.text(0)
+        self.model = self.modelDict[str(modelName)]
         self.modelMenu.exec_(QCursor.pos())
         
     def showPropertiesDialog(self):
-        dialog = propertiesDialog(self, self.model, self.actorDict, self.toolList)
+        dialog = propertiesDialog(self, self.model, self.toolList)
         dialog.exec_()
         
     def showPrinterDialog(self, new):
@@ -442,7 +395,8 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         if new:
             dialog = printerDialog(self)
         else:
-            printer = loadPrinter(self.configPrinterName + '.printer')
+            printer = Printer()
+            printer.load(self.configPrinterName + '.printer')
             dialog = printerDialog(self, printer)
         dialog.exec_()
         self.printerList = loadPrinters()
@@ -456,7 +410,8 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
             dialog = toolDialog(self)
         else:
             print '*** Edit Tool'
-            tool = loadTool(self.configToolName + '.tool')
+            tool = Tool()
+            tool.load(self.configToolName + '.tool')
             dialog = toolDialog(self, tool)
         dialog.exec_() 
         self.toolList = loadTools()
@@ -488,14 +443,13 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
     app.setApplicationName("FabQt") # Need to save settings
     app.setOrganizationName("FabQt") # Need to save settings
-
+    ## Load settings and update translation
     settings = QSettings()
-
     translator = QTranslator()
     translator.load(settings.value("Language", QVariant(QString("languages/fabqt_en"))).toString())
     app.installTranslator(translator)
     language = settings.value("Language", QVariant(QString("languages/fabqt_en"))).toString()
-
+    ## Start the GUI
     form = FabQtMain()
     form.show()
     form.updateDialogs()
@@ -507,5 +461,5 @@ if __name__ == "__main__":
         form.actionCatalan.setChecked(True)
     elif language == "languages/fabqt_pt_BR":
         form.actionPortuguese_Brazil.setChecked(True)
-
+    ## Start application event loop
     app.exec_()
