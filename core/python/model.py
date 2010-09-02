@@ -4,7 +4,7 @@ import random
 from core.skeinforge.skeinforge_application.skeinforge_plugins.craft_plugins import export
 
 class Model(object):
-    def __init__(self, name = None, actor = None, mapper = None, supportMaterial = None, modelMaterial = None, layer = None, vtkpolydata = None):
+    def __init__(self, name = None, actor = None, mapper = None, supportMaterial = None, modelMaterial = None, layer = list(), vtkpolydata = None):
         self.name = name
         self._actor = actor
         self._mapper = mapper

@@ -3,7 +3,7 @@ from PyQt4.QtGui import QDialog, QMessageBox
 from core.python.render import validateMove
 
 class propertiesDialog(QDialog, ui_propertiesDialog.Ui_propertiesDialog):
-    def __init__(self, parent, model, toolList):
+    def __init__(self, parent, model, toolDict):
         super(propertiesDialog, self).__init__(parent)
         self.setupUi(self)
         self.model = model
@@ -15,8 +15,8 @@ class propertiesDialog(QDialog, ui_propertiesDialog.Ui_propertiesDialog):
         self.x_scale.setValue(scale[0])
         self.y_scale.setValue(scale[1])
         self.z_scale.setValue(scale[2])
-        for tool in toolList:
-            self.modelMaterialComboBox.addItem(tool.name)
+        for toolname in toolDict.keys():
+            self.modelMaterialComboBox.addItem(toolname)
         if self.model.readModelMaterial() is None:
             self.modelMaterialComboBox.setCurrentIndex(-1) # No tool
         else:

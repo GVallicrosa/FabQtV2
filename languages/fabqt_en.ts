@@ -32,18 +32,18 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Translations:&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;          Arnaldo L. Lixandrao Filho (pt_BR)&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;          Guillem Vallicrosa Massaguer (ca, es_ES)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>
     <name>FabQtMain</name>
     <message>
-        <location filename="fabqt.py" line="441"/>
+        <location filename="fabqt.py" line="438"/>
         <source>Translation Info</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="fabqt.py" line="441"/>
+        <location filename="fabqt.py" line="438"/>
         <source>You need to restart the application to change the language</source>
         <translation></translation>
     </message>
@@ -388,46 +388,46 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="ui/fabqtDialog.ui" line="1719"/>
         <source>Printer:</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="ui/fabqtDialog.ui" line="1867"/>
         <source>Ctrl+R</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="ui/fabqtDialog.ui" line="2083"/>
         <source>Ctrl+D</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="ui/fabqtDialog.ui" line="2116"/>
         <source>Ctrl+H</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="ui/fabqtDialog.ui" line="2131"/>
         <source>Ctrl+S</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>
     <name>printerDialog</name>
     <message>
-        <location filename="core/python/printer.py" line="241"/>
+        <location filename="core/python/dialogs/printerDialog.py" line="77"/>
         <source>Error</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="core/python/printer.py" line="241"/>
+        <location filename="core/python/dialogs/printerDialog.py" line="77"/>
         <source>Not all paramaters are filled</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="core/python/printer.py" line="239"/>
+        <location filename="core/python/dialogs/printerDialog.py" line="75"/>
         <source>Printer with same name already exists.
 Change the printer name.</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -435,117 +435,99 @@ Change the printer name.</source>
     <message>
         <location filename="ui/printerDialog.ui" line="14"/>
         <source>Dialog</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="ui/printerDialog.ui" line="24"/>
         <source>General</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="ui/printerDialog.ui" line="32"/>
         <source>Name to identify the printer configuration</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="ui/printerDialog.ui" line="35"/>
         <source>Printer name:</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="ui/printerDialog.ui" line="56"/>
-        <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Sans&apos;; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; background-color:#000000;&quot;&gt;&lt;span style=&quot; font-family:&apos;Arial&apos;; font-size:11pt; color:#000000; background-color:#000000;&quot;&gt;Time that the micro-controller communicates with the software [ms]&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="ui/printerDialog.ui" line="63"/>
+        <location filename="ui/printerDialog.ui" line="59"/>
         <source>Status update period:</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="ui/printerDialog.ui" line="73"/>
-        <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Sans&apos;; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; background-color:#000000;&quot;&gt;&lt;span style=&quot; font-family:&apos;Arial&apos;; font-size:11pt; color:#000000; background-color:#000000;&quot;&gt;Speed when no deposition [mm/s]&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="ui/printerDialog.ui" line="80"/>
+        <location filename="ui/printerDialog.ui" line="72"/>
         <source>Jog speed:</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="ui/printerDialog.ui" line="90"/>
+        <location filename="ui/printerDialog.ui" line="82"/>
         <source>Tools that can be mounted at the same time, usually 1 or 2</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="ui/printerDialog.ui" line="93"/>
+        <location filename="ui/printerDialog.ui" line="85"/>
         <source>Max tools:</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="ui/printerDialog.ui" line="824"/>
+        <location filename="ui/printerDialog.ui" line="793"/>
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Sans&apos;; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; background-color:#000000;&quot;&gt;&lt;a name=&quot;internal-source-marker_0.4259963477961719&quot;&gt;&lt;/a&gt;&lt;span style=&quot; font-family:&apos;Arial&apos;; font-size:11pt; color:#000000; background-color:#000000;&quot;&gt;+&lt;/span&gt;&lt;span style=&quot; font-family:&apos;Arial&apos;; font-size:11pt; color:#000000; background-color:#000000;&quot;&gt;direction -direction (0 -&amp;gt; limit switch not connected; 1 if it is)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="ui/printerDialog.ui" line="110"/>
+        <location filename="ui/printerDialog.ui" line="98"/>
         <source>Tool limit switch:</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message encoding="UTF-8">
-        <location filename="ui/printerDialog.ui" line="120"/>
+        <location filename="ui/printerDialog.ui" line="108"/>
         <source>[mm/s²]</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="ui/printerDialog.ui" line="123"/>
+        <location filename="ui/printerDialog.ui" line="111"/>
         <source>Max accel:</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="ui/printerDialog.ui" line="206"/>
+        <location filename="ui/printerDialog.ui" line="194"/>
         <source>[mm]</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="ui/printerDialog.ui" line="160"/>
+        <location filename="ui/printerDialog.ui" line="148"/>
         <source>X axis:</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="ui/printerDialog.ui" line="183"/>
+        <location filename="ui/printerDialog.ui" line="171"/>
         <source>Y axis:</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="ui/printerDialog.ui" line="209"/>
+        <location filename="ui/printerDialog.ui" line="197"/>
         <source>Z axis:</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="ui/printerDialog.ui" line="219"/>
+        <location filename="ui/printerDialog.ui" line="207"/>
         <source>Maximum printing dimensions:</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="ui/printerDialog.ui" line="232"/>
+        <location filename="ui/printerDialog.ui" line="220"/>
         <source>Base</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="ui/printerDialog.ui" line="775"/>
+        <location filename="ui/printerDialog.ui" line="744"/>
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
@@ -555,76 +537,108 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; background-color:#000000;&quot;&gt;&lt;span style=&quot; font-family:&apos;Arial&apos;; font-size:11pt; color:#000000; background-color:#000000;&quot;&gt;     for Z is 0 0 0 1&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; background-color:#000000;&quot;&gt;&lt;span style=&quot; font-family:&apos;Arial&apos;; font-size:11pt; color:#000000; background-color:#000000;&quot;&gt;     for Y is 1 0 1 0&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="ui/printerDialog.ui" line="786"/>
+        <location filename="ui/printerDialog.ui" line="755"/>
         <source>Direction:</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="ui/printerDialog.ui" line="796"/>
+        <location filename="ui/printerDialog.ui" line="765"/>
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Sans&apos;; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; background-color:#000000;&quot;&gt;&lt;span style=&quot; font-family:&apos;Arial&apos;; font-size:11pt; color:#000000; background-color:#000000;&quot;&gt;Axis direction +-[mm] per (1/8) step&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="ui/printerDialog.ui" line="804"/>
+        <location filename="ui/printerDialog.ui" line="773"/>
         <source>Motor:</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="ui/printerDialog.ui" line="814"/>
+        <location filename="ui/printerDialog.ui" line="783"/>
         <source>Range:</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="ui/printerDialog.ui" line="831"/>
+        <location filename="ui/printerDialog.ui" line="800"/>
         <source>Limit switch:</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="ui/printerDialog.ui" line="841"/>
+        <location filename="ui/printerDialog.ui" line="810"/>
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Sans&apos;; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; background-color:#000000;&quot;&gt;&lt;a name=&quot;internal-source-marker_0.4259963477961719&quot;&gt;&lt;/a&gt;&lt;span style=&quot; font-family:&apos;Arial&apos;; font-size:11pt; color:#000000; background-color:#000000;&quot;&gt;[&lt;/span&gt;&lt;span style=&quot; font-family:&apos;Arial&apos;; font-size:11pt; color:#000000; background-color:#000000;&quot;&gt;mm] default distance to move plunger in manual jog&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="ui/printerDialog.ui" line="848"/>
+        <location filename="ui/printerDialog.ui" line="817"/>
         <source>Increment:</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="ui/printerDialog.ui" line="339"/>
+        <location filename="ui/printerDialog.ui" line="308"/>
         <source>X axis</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="ui/printerDialog.ui" line="446"/>
+        <location filename="ui/printerDialog.ui" line="415"/>
         <source>Y axis</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="ui/printerDialog.ui" line="553"/>
+        <location filename="ui/printerDialog.ui" line="522"/>
         <source>Z axis</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="ui/printerDialog.ui" line="660"/>
+        <location filename="ui/printerDialog.ui" line="629"/>
         <source>U axis</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="ui/printerDialog.ui" line="767"/>
+        <location filename="ui/printerDialog.ui" line="736"/>
         <source>V axis</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="ui/printerDialog.ui" line="56"/>
+        <source>Time that the micro-controller communicates with the software [ms]</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="ui/printerDialog.ui" line="69"/>
+        <source>Speed when no deposition [mm/s]</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="ui/printerDialog.ui" line="266"/>
+        <source>direction -direction (0 = limit switch not connected; 1 if it is)</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="ui/printerDialog.ui" line="228"/>
+        <source>Direction vector for movement
+Example: for Z is 0 0 0 1
+                for Y is 1 0 1 0</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="ui/printerDialog.ui" line="243"/>
+        <source>Axis direction +-[mm] per (1/8) step</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="ui/printerDialog.ui" line="279"/>
+        <source>[mm] default distance to move plunger in manual jog</source>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -632,12 +646,12 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="ui/propertiesDialog.ui" line="20"/>
         <source>Model Properties Dialog</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="ui/propertiesDialog.ui" line="34"/>
         <source>Model Material:</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="ui/propertiesDialog.ui" line="70"/>
@@ -646,12 +660,12 @@ p, li { white-space: pre-wrap; }
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Sans&apos;; font-size:10pt; font-weight:600; font-style:normal;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:400;&quot;&gt;Enter new position [mm]&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="ui/propertiesDialog.ui" line="77"/>
         <source>Translate to:</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="ui/propertiesDialog.ui" line="177"/>
@@ -660,12 +674,12 @@ p, li { white-space: pre-wrap; }
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Sans&apos;; font-size:10pt; font-weight:600; font-style:normal;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:400;&quot;&gt;Rotation in every axis [degrees]&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="ui/propertiesDialog.ui" line="184"/>
         <source>Rotate:</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="ui/propertiesDialog.ui" line="284"/>
@@ -674,41 +688,41 @@ p, li { white-space: pre-wrap; }
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Sans&apos;; font-size:10pt; font-weight:600; font-style:normal;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:400;&quot;&gt;Scale in every axis (&amp;lt;1 reduce; &amp;gt;1 grow)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="ui/propertiesDialog.ui" line="291"/>
         <source>Scale:</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="core/python/properties.py" line="31"/>
+        <location filename="core/python/dialogs/propertiesDialog.py" line="35"/>
         <source>Error</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="core/python/properties.py" line="31"/>
+        <location filename="core/python/dialogs/propertiesDialog.py" line="35"/>
         <source>Model exceeds limits. Need to be scaled.</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>
     <name>toolDialog</name>
     <message>
-        <location filename="core/python/tools.py" line="128"/>
+        <location filename="core/python/dialogs/toolDialog.py" line="55"/>
         <source>Error</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="core/python/tools.py" line="126"/>
+        <location filename="core/python/dialogs/toolDialog.py" line="53"/>
         <source>Tool with same name already exists.
 Change the tool name.</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="core/python/tools.py" line="128"/>
+        <location filename="core/python/dialogs/toolDialog.py" line="55"/>
         <source>Not all paramaters are filled</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -794,7 +808,7 @@ p, li { white-space: pre-wrap; }
         <location filename="ui/toolDialog.ui" line="165"/>
         <source>Stepper motor frequency [Hz]
 (11400 for default motors)</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 </TS>

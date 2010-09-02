@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'printerDialog.ui'
 #
-# Created: Fri Aug 27 09:32:58 2010
+# Created: Wed Sep  1 13:30:23 2010
 #      by: PyQt4 UI code generator 4.7.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -401,25 +401,13 @@ class Ui_printerDlg(object):
         printerDlg.setWindowTitle(QtGui.QApplication.translate("printerDlg", "Dialog", None, QtGui.QApplication.UnicodeUTF8))
         self.label_10.setToolTip(QtGui.QApplication.translate("printerDlg", "Name to identify the printer configuration", None, QtGui.QApplication.UnicodeUTF8))
         self.label_10.setText(QtGui.QApplication.translate("printerDlg", "Printer name:", None, QtGui.QApplication.UnicodeUTF8))
-        self.label.setToolTip(QtGui.QApplication.translate("printerDlg", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:\'Sans\'; font-size:10pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; background-color:#000000;\"><span style=\" font-family:\'Arial\'; font-size:11pt; color:#000000; background-color:#000000;\">Time that the micro-controller communicates with the software [ms]</span></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
+        self.label.setToolTip(QtGui.QApplication.translate("printerDlg", "Time that the micro-controller communicates with the software [ms]", None, QtGui.QApplication.UnicodeUTF8))
         self.label.setText(QtGui.QApplication.translate("printerDlg", "Status update period:", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_2.setToolTip(QtGui.QApplication.translate("printerDlg", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:\'Sans\'; font-size:10pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; background-color:#000000;\"><span style=\" font-family:\'Arial\'; font-size:11pt; color:#000000; background-color:#000000;\">Speed when no deposition [mm/s]</span></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_2.setToolTip(QtGui.QApplication.translate("printerDlg", "Speed when no deposition [mm/s]", None, QtGui.QApplication.UnicodeUTF8))
         self.label_2.setText(QtGui.QApplication.translate("printerDlg", "Jog speed:", None, QtGui.QApplication.UnicodeUTF8))
         self.label_3.setToolTip(QtGui.QApplication.translate("printerDlg", "Tools that can be mounted at the same time, usually 1 or 2", None, QtGui.QApplication.UnicodeUTF8))
         self.label_3.setText(QtGui.QApplication.translate("printerDlg", "Max tools:", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_4.setToolTip(QtGui.QApplication.translate("printerDlg", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:\'Sans\'; font-size:10pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; background-color:#000000;\"><a name=\"internal-source-marker_0.4259963477961719\"></a><span style=\" font-family:\'Arial\'; font-size:11pt; color:#000000; background-color:#000000;\">+</span><span style=\" font-family:\'Arial\'; font-size:11pt; color:#000000; background-color:#000000;\">direction -direction (0 -&gt; limit switch not connected; 1 if it is)</span></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_4.setToolTip(QtGui.QApplication.translate("printerDlg", "direction -direction (0 = limit switch not connected; 1 if it is)", None, QtGui.QApplication.UnicodeUTF8))
         self.label_4.setText(QtGui.QApplication.translate("printerDlg", "Tool limit switch:", None, QtGui.QApplication.UnicodeUTF8))
         self.label_5.setToolTip(QtGui.QApplication.translate("printerDlg", "[mm/s²]", None, QtGui.QApplication.UnicodeUTF8))
         self.label_5.setText(QtGui.QApplication.translate("printerDlg", "Max accel:", None, QtGui.QApplication.UnicodeUTF8))
@@ -431,35 +419,16 @@ class Ui_printerDlg(object):
         self.label_9.setText(QtGui.QApplication.translate("printerDlg", "Z axis:", None, QtGui.QApplication.UnicodeUTF8))
         self.label_6.setText(QtGui.QApplication.translate("printerDlg", "Maximum printing dimensions:", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.general), QtGui.QApplication.translate("printerDlg", "General", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_11.setToolTip(QtGui.QApplication.translate("printerDlg", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:\'Sans\'; font-size:10pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; background-color:#000000;\"><a name=\"internal-source-marker_0.4259963477961719\"></a><span style=\" font-family:\'Arial\'; font-size:11pt; color:#000000; background-color:#000000;\">D</span><span style=\" font-family:\'Arial\'; font-size:11pt; color:#000000; background-color:#000000;\">irection vector for movement</span></p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; background-color:#000000;\"><span style=\" font-family:\'Arial\'; font-size:11pt; color:#000000; background-color:#000000;\">Example:</span></p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; background-color:#000000;\"><span style=\" font-family:\'Arial\'; font-size:11pt; color:#000000; background-color:#000000;\">     for Z is 0 0 0 1</span></p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; background-color:#000000;\"><span style=\" font-family:\'Arial\'; font-size:11pt; color:#000000; background-color:#000000;\">     for Y is 1 0 1 0</span></p>\n"
-"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_11.setToolTip(QtGui.QApplication.translate("printerDlg", "Direction vector for movement\n"
+"Example: for Z is 0 0 0 1\n"
+"                for Y is 1 0 1 0", None, QtGui.QApplication.UnicodeUTF8))
         self.label_11.setText(QtGui.QApplication.translate("printerDlg", "Direction:", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_16.setToolTip(QtGui.QApplication.translate("printerDlg", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:\'Sans\'; font-size:10pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; background-color:#000000;\"><span style=\" font-family:\'Arial\'; font-size:11pt; color:#000000; background-color:#000000;\">Axis direction +-[mm] per (1/8) step</span></p>\n"
-"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_16.setToolTip(QtGui.QApplication.translate("printerDlg", "Axis direction +-[mm] per (1/8) step", None, QtGui.QApplication.UnicodeUTF8))
         self.label_16.setText(QtGui.QApplication.translate("printerDlg", "Motor:", None, QtGui.QApplication.UnicodeUTF8))
         self.label_17.setText(QtGui.QApplication.translate("printerDlg", "Range:", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_18.setToolTip(QtGui.QApplication.translate("printerDlg", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:\'Sans\'; font-size:10pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; background-color:#000000;\"><a name=\"internal-source-marker_0.4259963477961719\"></a><span style=\" font-family:\'Arial\'; font-size:11pt; color:#000000; background-color:#000000;\">+</span><span style=\" font-family:\'Arial\'; font-size:11pt; color:#000000; background-color:#000000;\">direction -direction (0 -&gt; limit switch not connected; 1 if it is)</span></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_18.setToolTip(QtGui.QApplication.translate("printerDlg", "direction -direction (0 = limit switch not connected; 1 if it is)", None, QtGui.QApplication.UnicodeUTF8))
         self.label_18.setText(QtGui.QApplication.translate("printerDlg", "Limit switch:", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_19.setToolTip(QtGui.QApplication.translate("printerDlg", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:\'Sans\'; font-size:10pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; background-color:#000000;\"><a name=\"internal-source-marker_0.4259963477961719\"></a><span style=\" font-family:\'Arial\'; font-size:11pt; color:#000000; background-color:#000000;\">[</span><span style=\" font-family:\'Arial\'; font-size:11pt; color:#000000; background-color:#000000;\">mm] default distance to move plunger in manual jog</span></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_19.setToolTip(QtGui.QApplication.translate("printerDlg", "[mm] default distance to move plunger in manual jog", None, QtGui.QApplication.UnicodeUTF8))
         self.label_19.setText(QtGui.QApplication.translate("printerDlg", "Increment:", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), QtGui.QApplication.translate("printerDlg", "Base", None, QtGui.QApplication.UnicodeUTF8))
         self.label_20.setToolTip(QtGui.QApplication.translate("printerDlg", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"

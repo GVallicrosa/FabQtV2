@@ -53,11 +53,7 @@
          <item row="0" column="0" colspan="3">
           <widget class="QLabel" name="label">
            <property name="toolTip">
-            <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Sans'; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; background-color:#000000;&quot;&gt;&lt;span style=&quot; font-family:'Arial'; font-size:11pt; color:#000000; background-color:#000000;&quot;&gt;Time that the micro-controller communicates with the software [ms]&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>Time that the micro-controller communicates with the software [ms]</string>
            </property>
            <property name="text">
             <string>Status update period:</string>
@@ -70,11 +66,7 @@ p, li { white-space: pre-wrap; }
          <item row="1" column="0">
           <widget class="QLabel" name="label_2">
            <property name="toolTip">
-            <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Sans'; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; background-color:#000000;&quot;&gt;&lt;span style=&quot; font-family:'Arial'; font-size:11pt; color:#000000; background-color:#000000;&quot;&gt;Speed when no deposition [mm/s]&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>Speed when no deposition [mm/s]</string>
            </property>
            <property name="text">
             <string>Jog speed:</string>
@@ -100,11 +92,7 @@ p, li { white-space: pre-wrap; }
          <item row="3" column="0" colspan="2">
           <widget class="QLabel" name="label_4">
            <property name="toolTip">
-            <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Sans'; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; background-color:#000000;&quot;&gt;&lt;a name=&quot;internal-source-marker_0.4259963477961719&quot;&gt;&lt;/a&gt;&lt;span style=&quot; font-family:'Arial'; font-size:11pt; color:#000000; background-color:#000000;&quot;&gt;+&lt;/span&gt;&lt;span style=&quot; font-family:'Arial'; font-size:11pt; color:#000000; background-color:#000000;&quot;&gt;direction -direction (0 -&amp;gt; limit switch not connected; 1 if it is)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>direction -direction (0 = limit switch not connected; 1 if it is)</string>
            </property>
            <property name="text">
             <string>Tool limit switch:</string>
@@ -237,15 +225,9 @@ p, li { white-space: pre-wrap; }
          <item row="0" column="0" colspan="2">
           <widget class="QLabel" name="label_11">
            <property name="toolTip">
-            <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Sans'; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; background-color:#000000;&quot;&gt;&lt;a name=&quot;internal-source-marker_0.4259963477961719&quot;&gt;&lt;/a&gt;&lt;span style=&quot; font-family:'Arial'; font-size:11pt; color:#000000; background-color:#000000;&quot;&gt;D&lt;/span&gt;&lt;span style=&quot; font-family:'Arial'; font-size:11pt; color:#000000; background-color:#000000;&quot;&gt;irection vector for movement&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; background-color:#000000;&quot;&gt;&lt;span style=&quot; font-family:'Arial'; font-size:11pt; color:#000000; background-color:#000000;&quot;&gt;Example:&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; background-color:#000000;&quot;&gt;&lt;span style=&quot; font-family:'Arial'; font-size:11pt; color:#000000; background-color:#000000;&quot;&gt;     for Z is 0 0 0 1&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; background-color:#000000;&quot;&gt;&lt;span style=&quot; font-family:'Arial'; font-size:11pt; color:#000000; background-color:#000000;&quot;&gt;     for Y is 1 0 1 0&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>Direction vector for movement
+Example: for Z is 0 0 0 1
+                for Y is 1 0 1 0</string>
            </property>
            <property name="text">
             <string>Direction:</string>
@@ -258,12 +240,7 @@ p, li { white-space: pre-wrap; }
          <item row="1" column="0" colspan="2">
           <widget class="QLabel" name="label_16">
            <property name="toolTip">
-            <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Sans'; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; background-color:#000000;&quot;&gt;&lt;span style=&quot; font-family:'Arial'; font-size:11pt; color:#000000; background-color:#000000;&quot;&gt;Axis direction +-[mm] per (1/8) step&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>Axis direction +-[mm] per (1/8) step</string>
            </property>
            <property name="text">
             <string>Motor:</string>
@@ -286,11 +263,7 @@ p, li { white-space: pre-wrap; }
          <item row="3" column="0" colspan="2">
           <widget class="QLabel" name="label_18">
            <property name="toolTip">
-            <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Sans'; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; background-color:#000000;&quot;&gt;&lt;a name=&quot;internal-source-marker_0.4259963477961719&quot;&gt;&lt;/a&gt;&lt;span style=&quot; font-family:'Arial'; font-size:11pt; color:#000000; background-color:#000000;&quot;&gt;+&lt;/span&gt;&lt;span style=&quot; font-family:'Arial'; font-size:11pt; color:#000000; background-color:#000000;&quot;&gt;direction -direction (0 -&amp;gt; limit switch not connected; 1 if it is)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>direction -direction (0 = limit switch not connected; 1 if it is)</string>
            </property>
            <property name="text">
             <string>Limit switch:</string>
@@ -303,11 +276,7 @@ p, li { white-space: pre-wrap; }
          <item row="4" column="0" colspan="2">
           <widget class="QLabel" name="label_19">
            <property name="toolTip">
-            <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Sans'; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; background-color:#000000;&quot;&gt;&lt;a name=&quot;internal-source-marker_0.4259963477961719&quot;&gt;&lt;/a&gt;&lt;span style=&quot; font-family:'Arial'; font-size:11pt; color:#000000; background-color:#000000;&quot;&gt;[&lt;/span&gt;&lt;span style=&quot; font-family:'Arial'; font-size:11pt; color:#000000; background-color:#000000;&quot;&gt;mm] default distance to move plunger in manual jog&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>[mm] default distance to move plunger in manual jog</string>
            </property>
            <property name="text">
             <string>Increment:</string>

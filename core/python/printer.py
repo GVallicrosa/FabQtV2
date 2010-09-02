@@ -9,15 +9,15 @@ CODEC = "UTF-8"
 def loadPrinters(): # ok
     print '** Loading printers'
     dirList = os.listdir('config/')
-    printerList = list()
+    printerDict = dict()
     for fname in dirList:
         if fname[-8:] == '.printer':
             printer = Printer()
             printer.load(fname)
-            printerList.insert(-1, printer)
+            printerDict[printer.name] = printer
             print '*** Loading printer: ' + fname.split('.')[0]
     print '** Finished loading printers\n'
-    return printerList
+    return printerDict
 
 class Axis(object): # ok
     def __init__(self, direction = None, motor = None, arange = None, limits = None, increment = None):
@@ -29,7 +29,7 @@ class Axis(object): # ok
 
 class Printer(object): # ok
     def __init__(self, name = None, updatePeriod = None, jogSpeed = None, maxTools = None, toolLimit = None, maxAccel = None,
-            xMax = None, yMax = None, zMax = None, base = None, x = None, y = None, z = None, u = None, v = None):
+            xMax = None, yMax = None, zMax = None, base = Axis(), x = Axis(), y = Axis(), z = Axis(), u = Axis(), v = Axis()):
         self.name = name
         self.updatePeriod = updatePeriod
         self.jogSpeed = jogSpeed
@@ -39,21 +39,13 @@ class Printer(object): # ok
         self.xMax = xMax # number
         self.yMax = yMax # number
         self.zMax = zMax # number
-        if updatePeriod is not None:
-            self.base = base # Axis()
-            self.x = x # Axis()
-            self.y = y # Axis()
-            self.z = z # Axis()
-            self.u = u # Axis()
-            self.v = v # Axis()
-        else:
-            self.base = Axis()
-            self.x = Axis()
-            self.y = Axis()
-            self.z = Axis()
-            self.u = Axis()
-            self.v = Axis()
-            
+        self.base = base # Axis()
+        self.x = x # Axis()
+        self.y = y # Axis()
+        self.z = z # Axis()
+        self.u = u # Axis()
+        self.v = v # Axis()
+                    
     def load(self, fname):
         self.name = fname.split('.')[0]
         fh = QFile('config/' + fname)

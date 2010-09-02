@@ -8,15 +8,15 @@ CODEC = "UTF-8"
 def loadTools(): # look /tools and call loadTool to parse it, the put all in a list
     print '** Loading tools'
     dirList = os.listdir('tools/')
-    toolList = list()
+    toolDict = dict()
     for fname in dirList:
         if fname[-5:] == '.tool':
             tool = Tool()
             tool.load(fname)
-            toolList.insert(-1, tool)
+            toolDict[tool.name] = tool
             print '*** Loading tool: ' + fname.split('.')[0]
     print '** Finished loading tools\n'
-    return toolList
+    return toolDict
 
 class Tool(object):
     def __init__(self, name = None, tipDiam = None, syrDiam = None, pathWidth = None, pathHeight = None, jogSpeed = None,

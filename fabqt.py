@@ -6,9 +6,8 @@ import time
 # Import Qt
 from PyQt4.QtCore import QString, QVariant, QSettings, QTranslator, QStringList, QSize, QPoint, SIGNAL, pyqtSignature
 from PyQt4.QtGui import QTreeWidgetItem, QApplication, QMenu, QMainWindow, QFileDialog, QCursor, QMessageBox
-# Main dialog to reimplement functions
+# Dialogs
 import ui.ui_fabqtDialog as ui_fabqtDialog
-# Other dialogs
 from core.python.dialogs.printerDialog import printerDialog
 from core.python.dialogs.propertiesDialog import propertiesDialog
 from core.python.dialogs.toolDialog import toolDialog
@@ -18,9 +17,6 @@ from core.python.tool import loadTools, Tool
 from core.python.printer import loadPrinters, Printer
 from core.python.render import generateAxes, moveToOrigin, validateMove
 from core.python.model import Model
-# Skeinforge modules
-#from core.skeinforge.skeinforge_application import skeinforge
-#from core.skeinforge.skeinforge_application.skeinforge_plugins.craft_plugins import export
 
 class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
     def __init__(self, parent = None):
@@ -32,9 +28,9 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         self.configToolName = None
         self.configPrinterName = None
         self.model = None
-        self.toolList = loadTools() # --> Can use dicts to easy acces 
-        self.printerList = loadPrinters()
-        self.modelDict = dict()
+        self.toolDict = loadTools() # toolname: Tool()
+        self.printerDict = loadPrinters() # printername: Printer()
+        self.modelDict = dict() # modelname: Model()
         ## Config tree and comboboxes, load initial values
         self.loadConfigTree()
         self.populateToolComboBox()
@@ -145,7 +141,7 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         self.connect(self.actionSpanish_Spain, SIGNAL("triggered()"), self.set_es_ES)
         self.connect(self.actionCatalan, SIGNAL("triggered()"), self.set_ca)
         self.connect(self.actionPortuguese_Brazil, SIGNAL("triggered()"), self.set_pt_BR)
-        print '\n* End Initialisation'
+        print '* End Initialisation\n'
 
     def closeEvent(self, event): # Save some settings before closing
         print 'Entered main window close event'
@@ -226,7 +222,7 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
     def loadPrinterTree(self):
         printerTree = QTreeWidgetItem(self.configTreeWidget)
         printerTree.setText(0, "Printers")
-        for printer in self.printerList:
+        for printer in self.printerDict.values():
             print 'Adding printer: ' + printer.name
             actualPrinter = QTreeWidgetItem(printerTree)
             actualPrinter.setText(0, printer.name)
@@ -234,7 +230,7 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
     def loadToolTree(self):
         toolTree = QTreeWidgetItem(self.configTreeWidget)
         toolTree.setText(0, "Tools")
-        for tool in self.toolList:
+        for tool in self.toolDict.values():
             if not tool.name == '## No Tool ##':
                 print 'Adding tool: ' + tool.name
                 actualTool = QTreeWidgetItem(toolTree)
@@ -301,8 +297,8 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
     def populatePrinterComboBox(self):
         self.printerComboBox.clear()
         self.printerComboBox.addItem('## No Printer ##')
-        for printer in self.printerList:
-            self.printerComboBox.addItem(printer.name)
+        for printername in self.printerDict.keys():
+            self.printerComboBox.addItem(printername)
             index = self.printerComboBox.findText(settings.value("Printer/Printer", QVariant('## No Printer ##')).toString())
             self.printerComboBox.setCurrentIndex(index)
 
@@ -311,9 +307,9 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         self.syringe2ComboBox.clear()
         self.syringe1ComboBox.addItem('## No Tool ##')
         self.syringe2ComboBox.addItem('## No Tool ##')
-        for tool in self.toolList:
-            self.syringe1ComboBox.addItem(tool.name)
-            self.syringe2ComboBox.addItem(tool.name)
+        for toolname in self.toolDict.keys():
+            self.syringe1ComboBox.addItem(toolname)
+            self.syringe2ComboBox.addItem(toolname)
             index = self.syringe1ComboBox.findText(settings.value("Printer/Tool1", QVariant('## No Tool ##')).toString())
             self.syringe1ComboBox.setCurrentIndex(index)
             index = self.syringe2ComboBox.findText(settings.value("Printer/Tool2", QVariant('## No Tool ##')).toString())
@@ -387,7 +383,7 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         self.modelMenu.exec_(QCursor.pos())
         
     def showPropertiesDialog(self):
-        dialog = propertiesDialog(self, self.model, self.toolList)
+        dialog = propertiesDialog(self, self.model, self.toolDict)
         dialog.exec_()
         
     def showPrinterDialog(self, new):
@@ -399,7 +395,7 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
             printer.load(self.configPrinterName + '.printer')
             dialog = printerDialog(self, printer)
         dialog.exec_()
-        self.printerList = loadPrinters()
+        self.printerDict = loadPrinters()
         self.populatePrinterComboBox()
         self.loadConfigTree()
 
@@ -414,7 +410,7 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
             tool.load(self.configToolName + '.tool')
             dialog = toolDialog(self, tool)
         dialog.exec_() 
-        self.toolList = loadTools()
+        self.toolDict = loadTools()
         self.populateToolComboBox() # Reload data for comboboxes and tool tree
         self.loadConfigTree()
 
