@@ -2,11 +2,13 @@
 from PyQt4.QtCore import QFile, QIODevice, QTextStream
 from PyQt4.QtXml import QDomDocument
 import os
+import logging
 
 CODEC = "UTF-8"
+logger = logging.getLogger('core.python.tool')
 
 def loadTools(): # look /tools and call loadTool to parse it, the put all in a list
-    print '** Loading tools'
+    logger.debug('** Loading tools')
     dirList = os.listdir('tools/')
     toolDict = dict()
     for fname in dirList:
@@ -14,8 +16,8 @@ def loadTools(): # look /tools and call loadTool to parse it, the put all in a l
             tool = Tool()
             tool.load(fname)
             toolDict[tool.name] = tool
-            print '*** Loading tool: ' + fname.split('.')[0]
-    print '** Finished loading tools\n'
+            logger.debug('*** Loading tool: ' + fname.split('.')[0])
+    logger.debug('** Finished loading tools')
     return toolDict
 
 class Tool(object):
