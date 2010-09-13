@@ -17,6 +17,8 @@ from core.python.tool import loadTools, Tool
 from core.python.printer import loadPrinters, Printer
 from core.python.render import generateAxes, moveToOrigin, validateMove
 from core.python.model import Model
+from core.python import printerports
+from core.python.taskexecutor import Worker, ThreadPool
 
 class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
     def __init__(self, parent = None):
@@ -35,6 +37,7 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         self.loadConfigTree()
         self.populateToolComboBox()
         self.populatePrinterComboBox()
+        self.populatePrinterPort()
         ## Render window using VTK lib
         self.camera = vtk.vtkCamera()
         self.camera.SetFocalPoint(100, 100, 0)
@@ -153,8 +156,7 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
             settings.setValue("Printer/Printer", QVariant(self.printerComboBox.currentText()))
             settings.setValue("Printer/Tool1", QVariant(self.syringe1ComboBox.currentText()))
             settings.setValue("Printer/Tool2", QVariant(self.syringe2ComboBox.currentText()))
-#            settings.setValue("Printer/PrinterPort", QVariant())
-#            settings.setValue("Path/ModelDir", QVariant())
+            settings.setValue("Printer/Port", QVariant(self.portComboBox.currentText()))
             print '* Closing...'
         else:
             event.ignore()
@@ -285,7 +287,6 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
     def okToContinue(self): # To implement not saved changes closing
         return True
         
-    #@pyqtSignature("QCloseEvent")
     def on_mainDock_closeEvent(self, event): # It never enters here, I don't know why (it could be a solution to the dock problem)
         print '***Entered mainDock close event!!' # For testing
         self.actionMain_tools.setChecked(False)
@@ -293,6 +294,13 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         
     def pathPlanning(self):
         self.model.Slice()
+        
+    def populatePrinterPort(self):
+        ports = printerports.scan()
+        for port in ports:
+            self.portComboBox.addItem(port[1])
+            index = self.portComboBox.findText(settings.value("Printer/Port", QVariant('')).toString())
+            self.portComboBox.setCurrentIndex(index)
                 
     def populatePrinterComboBox(self):
         self.printerComboBox.clear()
@@ -391,8 +399,7 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         if new:
             dialog = printerDialog(self)
         else:
-            printer = Printer()
-            printer.load(self.configPrinterName + '.printer')
+            printer = self.printerDict[str(self.configPrinterName)]
             dialog = printerDialog(self, printer)
         dialog.exec_()
         self.printerDict = loadPrinters()
@@ -406,8 +413,7 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
             dialog = toolDialog(self)
         else:
             print '*** Edit Tool'
-            tool = Tool()
-            tool.load(self.configToolName + '.tool')
+            tool = self.toolDict[str(self.configToolName)]
             dialog = toolDialog(self, tool)
         dialog.exec_() 
         self.toolDict = loadTools()
