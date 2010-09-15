@@ -1,11 +1,10 @@
 #!/usr/bin/env python
 import sys
 import vtk
-import random
 from time import gmtime, strftime
 import logging
 # Import Qt
-from PyQt4.QtCore import QString, QVariant, QSettings, QTranslator, QStringList, QSize, QPoint, SIGNAL, pyqtSignature
+from PyQt4.QtCore import QString, QVariant, QSettings, QTranslator, QStringList, QSize, QPoint, SIGNAL
 from PyQt4.QtGui import QTreeWidgetItem, QApplication, QMenu, QMainWindow, QFileDialog, QCursor, QMessageBox
 # Dialogs
 import ui.ui_fabqtDialog as ui_fabqtDialog
@@ -14,12 +13,12 @@ from core.python.dialogs.propertiesDialog import propertiesDialog
 from core.python.dialogs.toolDialog import toolDialog
 from core.python.dialogs.aboutDialog import aboutDialog
 # All other modules needed
-from core.python.tool import loadTools, Tool
-from core.python.printer import loadPrinters, Printer
+from core.python.tool import loadTools
+from core.python.printer import loadPrinters
 from core.python.render import generateAxes, moveToOrigin, validateMove
 from core.python.model import Model
 from core.python import printerports
-from core.python.taskexecutor import Worker, ThreadPool
+from core.python.taskexecutor import ThreadPool
 
 LOG_FILE = 'log ' + strftime("%a, %d %b %Y %H:%M:%S", gmtime())
 logging.basicConfig(filename=LOG_FILE, level=logging.DEBUG)
@@ -298,6 +297,9 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         
     def pathPlanning(self):
         self.model.Slice()
+        actor = self.model.getPathActor()
+        self.ren.AddActor(actor)
+        self.qvtkWidget.GetRenderWindow().Render()
         
     def populatePrinterPort(self):
         ports = printerports.scan()
