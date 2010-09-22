@@ -47,6 +47,7 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         self.populateToolComboBox()
         self.populatePrinterComboBox()
         self.populatePrinterPort()
+        self.currentPrinter = self.printerDict[str(self.printerComboBox.currentText())]
         ## Render window using VTK lib
         self.camera = vtk.vtkCamera()
         self.camera.SetFocalPoint(0, 0, 0)
@@ -57,14 +58,9 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         self.qvtkWidget.SetInteractorStyle(vtk.vtkInteractorStyleTrackballCamera())
         self.qvtkWidget.GetRenderWindow().AddRenderer(self.ren)
         ## Building table representation
-        printer = str(self.printerComboBox.currentText())
         base = vtk.vtkCubeSource()
-        if not printer == '## No Printer ##':
-            printer = self.printerDict[printer]
-            xmax, ymax, zmax = printer.getPrintingDimensions()
-            base.SetBounds(-xmax/2, xmax/2, -ymax/2, ymax/2, -5, 0)
-        else:
-            base.SetBounds(-100, 100, -100, 100, -5, 0)
+        xmax, ymax, zmax = self.currentPrinter.getPrintingDimensions()
+        base.SetBounds(-xmax/2, xmax/2, -ymax/2, ymax/2, -5, 0)
         baseMapper = vtk.vtkPolyDataMapper()
         baseMapper.SetInput(base.GetOutput())
         baseActor = vtk.vtkActor()
@@ -107,6 +103,11 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         self.connect(self.z_IncrementLineEdit, SIGNAL("textEdited(QString)"), self.updateMovement)
         self.connect(self.u_IncrementLineEdit, SIGNAL("textEdited(QString)"), self.updateMovement)
         self.connect(self.v_IncrementLineEdit, SIGNAL("textEdited(QString)"), self.updateMovement)
+        ## Comboboxes
+        self.connect(self.printerComboBox, SIGNAL("currentIndexChanged(QString"), self.updateCurrentPrinter)
+        ## Double clicks
+        #self.connect(self.modelTreeWidget, SIGNAL("itemDoubleClicked(QTreeWidgetItem)"), self.modelDoubleClicked)   
+        self.connect(self.modelTreeWidget, SIGNAL("doubleClicked(QModelIndex)"), self.modelDoubleClicked)   
         ## General actions
         self.connect(self.actionQuit, SIGNAL("triggered()"), self.close)
         self.connect(self.actionAbout, SIGNAL("triggered()"), self.showAboutDialog)
@@ -211,8 +212,10 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
                 else:
                     num += 1
         self.modelDict[str(model.name)] = model
+        printer = str(self.printerComboBox.currentText())
+        printer = self.printerDict[printer]
         self.ren.AddActor(model.readActor())
-        validateMove(model.readActor())
+        validateMove(model.readActor(), printer)
         self.qvtkWidget.GetRenderWindow().Render()
         self.loadModelTree() 
         #self.ren.GetActiveCamera().OrthogonalizeViewUp()
@@ -245,9 +248,10 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         printerTree = QTreeWidgetItem(self.configTreeWidget)
         printerTree.setText(0, "Printers")
         for printer in self.printerDict.values():
-            logging.debug('Adding printer: ' + printer.name)
-            actualPrinter = QTreeWidgetItem(printerTree)
-            actualPrinter.setText(0, printer.name)
+            if not printer.name == '## No Printer ##':
+                logging.debug('Adding printer: ' + printer.name)
+                actualPrinter = QTreeWidgetItem(printerTree)
+                actualPrinter.setText(0, printer.name)
     
     def loadToolTree(self):
         toolTree = QTreeWidgetItem(self.configTreeWidget)
@@ -290,6 +294,35 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
                 nextattirb = QStringList('DEPRATE')
                 nextattirb.append(QString(tool.depRate))
                 actualTool.addChild(QTreeWidgetItem(nextattirb))
+
+    def modelDoubleClicked(self, index):########################################
+        item = self.modelTreeWidget.itemFromIndex(index)
+        if not item.parent(): # its a model
+            modelName = item.text(0)
+            logging.debug('Double clicked on model: ' + modelName)
+            model = self.modelDict[str(modelName)]
+            actor = model.readActor()
+            center = actor.GetCenter()
+            self.camera.SetFocalPoint(center)
+        else: # is 'Model' or 'Toolpath'
+            parent = item.parent()
+            modelName = parent.text(0)
+            model = self.modelDict[str(modelName)]
+            if str(item.text(0)) == 'Model':
+                actor = model.readActor()
+                num = actor.GetProperty().GetOpacity()
+                if num == 0:
+                    actor.GetProperty().SetOpacity(0.5)
+                else:
+                    actor.GetProperty().SetOpacity(0)
+            else: # == 'Toolpath'
+                actor = model.getPathActor()
+                num = actor.GetProperty().GetOpacity()
+                if num == 0:
+                    actor.GetProperty().SetOpacity(1)
+                else:
+                    actor.GetProperty().SetOpacity(0)
+        self.qvtkWidget.GetRenderWindow().Render()
 
     def moveToOrigin(self):
         moveToOrigin(self.model.readActor())
@@ -335,7 +368,6 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
                 
     def populatePrinterComboBox(self):
         self.printerComboBox.clear()
-        self.printerComboBox.addItem('## No Printer ##')
         for printername in self.printerDict.keys():
             self.printerComboBox.addItem(printername)
             index = self.printerComboBox.findText(settings.value("Printer/Printer", QVariant('## No Printer ##')).toString())
@@ -427,7 +459,7 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         
     def showPropertiesDialog(self):
         logging.debug('Showing model properties dialog')
-        dialog = propertiesDialog(self, self.model, self.toolDict)
+        dialog = propertiesDialog(self, self.model, self.toolDict, self.currentPrinter)
         dialog.exec_()
         
     def showPrinterDialog(self, new):
@@ -459,6 +491,10 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
     def startPrinting(self): # need to be implemented
         logging.debug('Starting printing process')
         pass
+        
+    def updateCurrentPrinter(self, printerName):
+        self.currentPrinter = self.printerDict[str(printerName)]
+        # Change printer base on the renderer also
 
     def updateDialogs(self): # Needed at the startup
         self.actionMain_tools.setChecked(self.mainDock.isVisible())

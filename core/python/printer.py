@@ -12,6 +12,12 @@ def loadPrinters(): # ok
     logger.debug('** Loading printers')
     dirList = os.listdir('config/')
     printerDict = dict()
+    printer = Printer()
+    printer.name = '## No Printer ##'
+    printer.xMax = 200
+    printer.yMax = 200
+    printer.zMax = 200
+    printerDict[printer.name] = printer
     for fname in dirList:
         if fname[-8:] == '.printer':
             printer = Printer()

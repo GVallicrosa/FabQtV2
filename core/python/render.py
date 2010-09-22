@@ -1,9 +1,5 @@
 import vtk
 
-XMAX = 203.2
-YMAX = 203.2
-ZMAX = 203.2
-
 def generateAxes():
     axes = vtk.vtkAxes()
     axes.SetOrigin(0, 0, 0)
@@ -53,6 +49,7 @@ def moveToOrigin(actor):
     actor.SetPosition(-xmin, -ymin, -zmin)
     
 def validateMove(actor, printer):
+    XMAX, YMAX, ZMAX = printer.getPrintingDimensions()
     x, y, z = actor.GetPosition()
     xmin, xmax = actor.GetXRange()
     ymin, ymax = actor.GetYRange()

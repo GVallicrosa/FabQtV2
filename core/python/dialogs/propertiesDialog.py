@@ -3,10 +3,11 @@ from PyQt4.QtGui import QDialog, QMessageBox
 from core.python.render import validateMove
 
 class propertiesDialog(QDialog, ui_propertiesDialog.Ui_propertiesDialog):
-    def __init__(self, parent, model, toolDict):
+    def __init__(self, parent, model, toolDict, printer):
         super(propertiesDialog, self).__init__(parent)
         self.setupUi(self)
         self.model = model
+        self.printer = printer
         pos = self.model.readActor().GetPosition()
         self.x_translate.setValue(pos[0])
         self.y_translate.setValue(pos[1])
@@ -31,6 +32,6 @@ class propertiesDialog(QDialog, ui_propertiesDialog.Ui_propertiesDialog):
         actor.RotateWXYZ(self.y_rotate.value(), 0, 1, 0)
         actor.RotateWXYZ(self.z_rotate.value(), 0, 0, 1)
         actor.SetScale(self.x_scale.value(), self.y_scale.value(), self.z_scale.value())
-        if not validateMove(actor):
+        if not validateMove(actor, self.printer):
             QMessageBox().about(self, self.tr("Error"), self.tr("Model exceeds limits. Need to be scaled."))
         self.close()
