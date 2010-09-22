@@ -116,6 +116,9 @@ class Printer(object): # ok
             self.v.limits = str(child.attribute("LIMITS"))
             self.v.increment = str(child.attribute("INCREMENT"))
     
+    def getPrintingDimensions(self):
+        return int(self.xMax), int(self.yMax), int(self.zMax)
+    
     def save(self, new):
         fh = QFile('config/' + self.name + '.printer')
         if new and fh.exists():

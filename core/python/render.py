@@ -52,7 +52,7 @@ def moveToOrigin(actor):
     zmin, zmax = actor.GetZRange()
     actor.SetPosition(-xmin, -ymin, -zmin)
     
-def validateMove(actor):
+def validateMove(actor, printer):
     x, y, z = actor.GetPosition()
     xmin, xmax = actor.GetXRange()
     ymin, ymax = actor.GetYRange()

@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+from __future__ import division
 import sys
 import os
 import vtk
@@ -55,9 +56,15 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         self.ren.SetActiveCamera(self.camera)
         self.qvtkWidget.SetInteractorStyle(vtk.vtkInteractorStyleTrackballCamera())
         self.qvtkWidget.GetRenderWindow().AddRenderer(self.ren)
-        ## Building table representation --> IMPROVEMENT: set dimensions in the config (also affects camera position)
+        ## Building table representation
+        printer = str(self.printerComboBox.currentText())
         base = vtk.vtkCubeSource()
-        base.SetBounds(-100, 100, -100, 100, -5, 0)
+        if not printer == '## No Printer ##':
+            printer = self.printerDict[printer]
+            xmax, ymax, zmax = printer.getPrintingDimensions()
+            base.SetBounds(-xmax/2, xmax/2, -ymax/2, ymax/2, -5, 0)
+        else:
+            base.SetBounds(-100, 100, -100, 100, -5, 0)
         baseMapper = vtk.vtkPolyDataMapper()
         baseMapper.SetInput(base.GetOutput())
         baseActor = vtk.vtkActor()
@@ -351,8 +358,8 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
             
     def resetView(self):
         '''Resets the camera to its initial position'''
-        self.camera.SetFocalPoint(100, 100, 0)
-        self.camera.SetPosition(400, 100, 120)
+        self.camera.SetFocalPoint(0, 0, 0)
+        self.camera.SetPosition(300, 0, 100)
         self.camera.SetViewUp(-1, 0, 0)
         self.qvtkWidget.GetRenderWindow().Render()
         logging.debug('Reseted camera position to initial postion')
