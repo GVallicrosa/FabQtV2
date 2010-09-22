@@ -12,7 +12,7 @@ class Model(object):
             
     _slice_vtkpolydata = None
     _slice_mapper = None
-    _slice_Actor = None
+    _slice_actor = None
     
     def __init__(self, name = None, actor = None, mapper = None, supportMaterial = None, modelMaterial = None, layer = list(), vtkpolydata = None):
         self.name = name
@@ -22,10 +22,16 @@ class Model(object):
         self._modelMaterial = modelMaterial
         self._layer = layer
         self._vtkpolydata = vtkpolydata
+        
+    def hasPath(self):
+        if self._slice_actor is not None:
+            return True
+        else:
+            return False
 
     def load(self, fname): # from source, returns vtkPolydata, mapper and actor
         self.name = fname.split('/')[-1] # name with extension
-        logger.debug('++ Importing model: ' + self.name)
+        logger.debug('Importing model: ' + self.name)
         extension = fname.split('.')[1]
         if extension.lower() == 'stl': 
             reader = vtk.vtkSTLReader()
@@ -42,7 +48,7 @@ class Model(object):
             actor.GetProperty()
             self.setActor(actor)
         else:
-            logger.debug('No valid file extension')
+            logger.debug('No valid file extension for model import')
         
     def save(self): # writer to new file
         logger.debug('Exporting temp STL of model %s...' % self.name)
@@ -61,7 +67,7 @@ class Model(object):
         writer.SetInputConnection(t_filter.GetOutputPort())
         writer.SetFileTypeToBinary()
         writer.Write()
-        logger.debug('End exporting...')
+        logger.debug('End exporting')
             
     def readActor(self): # if no one set yet return false or null
         return self._actor
@@ -99,11 +105,14 @@ class Model(object):
     def Slice(self): # calls skeinforge
         self.save()
         export.writeOutput('temp.stl')
+        logging.debug('Creating GCode...')
         os.remove('temp.stl')
         ok, layers = readGcode('temp_export.gcode')
+        logging.debug('Reading GCode...')
         #os.remove('temp_export.gcode')
         if ok:
             self.setLayers(layers)
+            logging.debug('GCode correctly readed')
         else:
             logger.debug('Error importing GCode')
         self.generatePaths(layers)

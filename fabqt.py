@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 import sys
+import os
 import vtk
-from time import gmtime, strftime
+from time import localtime, asctime
 import logging
 # Import Qt
-from PyQt4.QtCore import QString, QVariant, QSettings, QTranslator, QStringList, QSize, QPoint, SIGNAL
+from PyQt4.QtCore import QString, QVariant, QSettings, QTranslator, QStringList, QSize, QPoint, SIGNAL, QStringList
 from PyQt4.QtGui import QTreeWidgetItem, QApplication, QMenu, QMainWindow, QFileDialog, QCursor, QMessageBox
 # Dialogs
 import ui.ui_fabqtDialog as ui_fabqtDialog
@@ -20,13 +21,17 @@ from core.python.model import Model
 from core.python import printerports
 from core.python.taskexecutor import ThreadPool
 
-LOG_FILE = 'log ' + strftime("%a, %d %b %Y %H:%M:%S", gmtime())
+if os.path.exists('log.txt'):
+    if os.path.getsize('log.txt') >= 1024*1024: # 1MB
+        os.remove('log.txt')
+LOG_FILE = 'log.txt'
 logging.basicConfig(filename=LOG_FILE, level=logging.DEBUG)
+logging.debug('\n\n' + str(asctime(localtime())) + '\n')
 
 class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
     def __init__(self, parent = None):
         ## Init parent and make connections
-        logging.debug('Initialising application...')
+        logging.debug('Initialising application')
         super(FabQtMain, self).__init__(parent)
         self.setupUi(self)
         ## Initial values
@@ -148,11 +153,11 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         self.connect(self.actionCatalan, SIGNAL("triggered()"), self.set_ca)
         self.connect(self.actionPortuguese_Brazil, SIGNAL("triggered()"), self.set_pt_BR)
         logging.debug('* End Initialisation')
-
+        
     def closeEvent(self, event): # Save some settings before closing
-        logging.debug('Entered main window close event')
+        logging.debug('Main window close event')
         if self.okToContinue():
-            logging.debug('* Saving Settings before closing')
+            logging.debug('Saving Settings before closing')
             settings.setValue("MainWindow/Size", QVariant(self.size()))
             settings.setValue("MainWindow/Position", QVariant(self.pos()))
             settings.setValue("MainWindow/State", QVariant(self.saveState()))
@@ -160,7 +165,7 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
             settings.setValue("Printer/Tool1", QVariant(self.syringe1ComboBox.currentText()))
             settings.setValue("Printer/Tool2", QVariant(self.syringe2ComboBox.currentText()))
             settings.setValue("Printer/Port", QVariant(self.portComboBox.currentText()))
-            logging.debug('* Closing...')
+            logging.debug('Closing...')
         else:
             event.ignore()
             
@@ -170,14 +175,15 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         self.modelDict.pop(str(self.model.name))
         self.loadModelTree()        
         self.qvtkWidget.GetRenderWindow().Render()
+        logging.debug('Deleted model: ' + self.model.name)
     
     def editPrinterDialog(self):
         '''Edits printer configuration, general options and axes options.'''
-        logging.debug('Edit printer')
+        logging.debug('Edit printer dialog')
         self.showPrinterDialog(False)
         
     def editToolDialog(self):
-        logging.debug('Edit tool')
+        logging.debug('Edit tool dialog')
         self.showToolDialog(False)
              
     def importModel(self, fname):
@@ -217,12 +223,16 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         self.loadPrinterTree()
 
     def loadModelTree(self):
-        logging.debug('Loading/Reloading model tree')
+        logging.debug('Loading model tree')
         self.modelTreeWidget.clear()
         for model in self.modelDict.keys():
             logging.debug('Adding model: ' + model)
             modelItem = QTreeWidgetItem(self.modelTreeWidget)
             modelItem.setText(0, model)
+            modelItem.addChild(QTreeWidgetItem(QStringList('Model')))
+            if self.modelDict[model].hasPath():
+                modelItem.addChild(QTreeWidgetItem(QStringList('Toolpath')))
+        self.modelTreeWidget.expandAll()
             
     def loadPrinterTree(self):
         printerTree = QTreeWidgetItem(self.configTreeWidget)
@@ -275,31 +285,37 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
                 actualTool.addChild(QTreeWidgetItem(nextattirb))
 
     def moveToOrigin(self):
-        logging.debug('Moved to Origin')
         moveToOrigin(self.model.readActor())
         self.qvtkWidget.GetRenderWindow().Render()
+        logging.debug('Moved to Origin, model: ' + self.model.name)
 
     def newPrinterDialog(self):
-        logging.debug('New printer')
+        logging.debug('New printer dialog')
         self.showPrinterDialog(True)
         
     def newToolDialog(self):
-        logging.debug('New tool')
+        logging.debug('New tool dialog')
         self.showToolDialog(True)
 
     def okToContinue(self): # To implement not saved changes closing
+        logging.debug("It's ok to continue")
         return True
         
     def on_mainDock_closeEvent(self, event): # It never enters here, I don't know why (it could be a solution to the dock problem)
-        print '***Entered mainDock close event!!' # For testing
+        print 'Entered mainDock close event' # For testing
         self.actionMain_tools.setChecked(False)
         event.accept()
         
     def pathPlanning(self):
+        logging.debug('Starting path planning')
         self.model.Slice()
-        actor = self.model.getPathActor()
-        self.ren.AddActor(actor)
+        pathActor = self.model.getPathActor()
+        self.ren.AddActor(pathActor)
+        logging.debug('Added path actor to the scene')
+        modelActor = self.model.readActor()
+        modelActor.GetProperty().SetVisibility(0)
         self.qvtkWidget.GetRenderWindow().Render()
+        self.loadModelTree()
         
     def populatePrinterPort(self):
         ports = printerports.scan()
@@ -307,6 +323,7 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
             self.portComboBox.addItem(port[1])
             index = self.portComboBox.findText(settings.value("Printer/Port", QVariant('')).toString())
             self.portComboBox.setCurrentIndex(index)
+        logging.debug('Adding serial ports to port combobox')
                 
     def populatePrinterComboBox(self):
         self.printerComboBox.clear()
@@ -315,6 +332,7 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
             self.printerComboBox.addItem(printername)
             index = self.printerComboBox.findText(settings.value("Printer/Printer", QVariant('## No Printer ##')).toString())
             self.printerComboBox.setCurrentIndex(index)
+        logging.debug('Adding printers to printer combobox')
 
     def populateToolComboBox(self):
         self.syringe1ComboBox.clear()
@@ -328,6 +346,7 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
             self.syringe1ComboBox.setCurrentIndex(index)
             index = self.syringe2ComboBox.findText(settings.value("Printer/Tool2", QVariant('## No Tool ##')).toString())
             self.syringe2ComboBox.setCurrentIndex(index)
+        logging.debug('Adding tools to tool comboboxes')
             
     def resetView(self):
         '''Resets the camera to its initial position'''
@@ -335,22 +354,23 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         self.camera.SetPosition(400, 100, 120)
         self.camera.SetViewUp(-1, 0, 0)
         self.qvtkWidget.GetRenderWindow().Render()
+        logging.debug('Reseted camera position to initial postion')
 
     def set_ca(self):
         self.updateTranslation('ca')
-        logging.debug('* Changed language to Catalan')
+        logging.debug('Changed language to Catalan')
 
     def set_en(self):
         self.updateTranslation('en')
-        logging.debug('* Changed language to English')
+        logging.debug('Changed language to English')
 
     def set_es_ES(self):
         self.updateTranslation('es_ES')
-        logging.debug('* Changed language to Spanish')
+        logging.debug('Changed language to Spanish')
 
     def set_pt_BR(self):
         self.updateTranslation('pt_BR')
-        logging.debug('* Changed language to Portuguese')
+        logging.debug('Changed language to Portuguese')
 
     def showAboutDialog(self):
         dialog = aboutDialog(self)
@@ -380,9 +400,9 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
                 return
         except AttributeError: # When clicking on root items, nothing to do
             return
-
         
     def showImportDialog(self):
+        logging.debug('Showing import dialog')
         self.importDialog.exec_()
 
     def showModelCustomContextMenu(self, pos):
@@ -393,15 +413,17 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         if item.parent(): # if it has parent, it is a slice, not a model
             return
         modelName = item.text(0)
+        logging.debug('Clicked on model: ' + modelName)
         self.model = self.modelDict[str(modelName)]
         self.modelMenu.exec_(QCursor.pos())
         
     def showPropertiesDialog(self):
+        logging.debug('Showing model properties dialog')
         dialog = propertiesDialog(self, self.model, self.toolDict)
         dialog.exec_()
         
     def showPrinterDialog(self, new):
-        logging.debug('** Showing printer edit dialog')
+        logging.debug('Showing printer edit dialog')
         if new:
             dialog = printerDialog(self)
         else:
@@ -413,12 +435,12 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         self.loadConfigTree()
 
     def showToolDialog(self, new):
-        logging.debug('** Showing tool edit dialog')
+        logging.debug('Showing tool edit dialog')
         if new:
-            logging.debug('*** New Tool')
+            logging.debug('New Tool')
             dialog = toolDialog(self)
         else:
-            logging.debug('*** Edit Tool')
+            logging.debug('Edit Tool')
             tool = self.toolDict[str(self.configToolName)]
             dialog = toolDialog(self, tool)
         dialog.exec_() 
@@ -427,6 +449,7 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         self.loadConfigTree()
 
     def startPrinting(self): # need to be implemented
+        logging.debug('Starting printing process')
         pass
 
     def updateDialogs(self): # Needed at the startup

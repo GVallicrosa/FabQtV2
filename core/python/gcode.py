@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 from core.python.layer import Layer
 from core.python.path import Path
-from core.python.vector3 import Vector3
+from core.skeinforge.fabmetheus_utilities.vector3 import Vector3
 import codecs
 
 CODEC = 'UTF8'
@@ -41,7 +41,7 @@ def readGcode(fname):
                 #G28 Go Home Implemented. (X = -135mm, Y = 100mm, Z = 0mm)
                 #G90 Absolute Positioning Implemented. V1.0.5
                 #G92 Set current as home Implemented V1.0.5
-                    g, x, y, z, f = line.split(' ')
+                    g, x, y, z = line.split(' ') #!!!!!add f if velocity is in gcode
                     x = float(x[1:]) # Avoids the character X, and return a float
                     y = float(y[1:])
                     z = float(z[1:])
@@ -58,6 +58,7 @@ def readGcode(fname):
             line = fh.readline()
     except (IOError, OSError, ValueError), e:
         error = "Failed to load: %s on line %d" % (e, lino)
+        print error
     finally:
         if fh is not None:
             fh.close()

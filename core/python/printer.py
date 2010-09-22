@@ -18,7 +18,7 @@ def loadPrinters(): # ok
             printer.load(fname)
             printerDict[printer.name] = printer
             logger.debug('*** Loading printer: ' + fname.split('.')[0])
-    logger.debug('** Finished loading printers')
+    logger.debug('Finished loading printers')
     return printerDict
 
 class Axis(object): # ok
