@@ -1,3 +1,4 @@
+from __future__ import division
 import vtk
 
 def generateAxes():
@@ -54,19 +55,19 @@ def validateMove(actor, printer):
     xmin, xmax = actor.GetXRange()
     ymin, ymax = actor.GetYRange()
     zmin, zmax = actor.GetZRange()
-    if xmin < 0 and not xmax > XMAX:
-        newx = x - xmin
-    elif xmax > XMAX and not xmin < 0:
-        newx = x - (xmax - XMAX)
-    elif xmin >= 0 and xmax <= XMAX:
+    if xmin < -XMAX/2 and not xmax > XMAX/2:
+        newx = x - (xmin + XMAX/2)
+    elif xmax > XMAX/2 and not xmin < -XMAX/2:
+        newx = x - (xmax - XMAX/2)
+    elif xmin >= -XMAX/2 and xmax <= XMAX/2:
         newx = x
     else:
         return False # Model too big
-    if ymin < 0 and not ymax > YMAX:
-        newy = y - ymin
-    elif ymax > YMAX and not ymin < 0:
-        newy = y - (ymax - YMAX)
-    elif ymin >= 0 and ymax <= YMAX:
+    if ymin < -YMAX/2 and not ymax > YMAX/2:
+        newy = y - (ymin + YMAX/2)
+    elif ymax > YMAX/2 and not ymin < -YMAX/2:
+        newy = y - (ymax - YMAX/2)
+    elif ymin >= -YMAX/2 and ymax <= YMAX/2:
         newy = y
     else:
         return False # Model too big

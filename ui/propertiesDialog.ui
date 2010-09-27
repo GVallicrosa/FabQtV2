@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>338</width>
+    <width>339</width>
     <height>221</height>
    </rect>
   </property>
@@ -83,10 +83,10 @@ p, li { white-space: pre-wrap; }
          <item row="0" column="2">
           <widget class="QDoubleSpinBox" name="x_translate">
            <property name="minimum">
-            <double>-100.000000000000000</double>
+            <double>-500.000000000000000</double>
            </property>
            <property name="maximum">
-            <double>300.000000000000000</double>
+            <double>500.000000000000000</double>
            </property>
            <property name="value">
             <double>0.000000000000000</double>
@@ -109,10 +109,10 @@ p, li { white-space: pre-wrap; }
          <item row="1" column="2">
           <widget class="QDoubleSpinBox" name="y_translate">
            <property name="minimum">
-            <double>-100.000000000000000</double>
+            <double>-500.000000000000000</double>
            </property>
            <property name="maximum">
-            <double>300.000000000000000</double>
+            <double>500.000000000000000</double>
            </property>
           </widget>
          </item>
@@ -132,10 +132,10 @@ p, li { white-space: pre-wrap; }
          <item row="2" column="2">
           <widget class="QDoubleSpinBox" name="z_translate">
            <property name="minimum">
-            <double>-100.000000000000000</double>
+            <double>-500.000000000000000</double>
            </property>
            <property name="maximum">
-            <double>300.000000000000000</double>
+            <double>500.000000000000000</double>
            </property>
           </widget>
          </item>

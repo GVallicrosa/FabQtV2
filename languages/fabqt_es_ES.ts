@@ -38,12 +38,12 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>FabQtMain</name>
     <message>
-        <location filename="fabqt.py" line="438"/>
+        <location filename="fabqt.py" line="514"/>
         <source>Translation Info</source>
         <translation>Información de Traducción</translation>
     </message>
     <message>
-        <location filename="fabqt.py" line="438"/>
+        <location filename="fabqt.py" line="514"/>
         <source>You need to restart the application to change the language</source>
         <translation>Necessitas reiniciar la aplicación para aplicar los cambios</translation>
     </message>
@@ -696,12 +696,12 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="core/python/dialogs/propertiesDialog.py" line="35"/>
+        <location filename="core/python/dialogs/propertiesDialog.py" line="36"/>
         <source>Error</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="core/python/dialogs/propertiesDialog.py" line="35"/>
+        <location filename="core/python/dialogs/propertiesDialog.py" line="36"/>
         <source>Model exceeds limits. Need to be scaled.</source>
         <translation type="unfinished"></translation>
     </message>

@@ -180,6 +180,7 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
     def deleteModel(self):
         ''' Deletes the model from view and dictionary and reloads the model tree.'''
         self.ren.RemoveActor(self.model.readActor())
+        self.ren.RemoveActor(self.model.getPathActor())
         self.modelDict.pop(str(self.model.name))
         self.loadModelTree()        
         self.qvtkWidget.GetRenderWindow().Render()
@@ -347,16 +348,19 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         event.accept()
         
     def pathPlanning(self):
-        logging.debug('Starting path planning')
-        pool = ThreadPool(2) 
-        pool.add_task(self.model.Slice())
-        pathActor = self.model.getPathActor()
-        self.ren.AddActor(pathActor)
-        logging.debug('Added path actor to the scene')
-        modelActor = self.model.readActor()
-        modelActor.GetProperty().SetOpacity(0)
-        self.qvtkWidget.GetRenderWindow().Render()
-        self.loadModelTree()
+        if self.model.readModelMaterial() is None:
+            QMessageBox().about(self, self.tr("Error"), self.tr("You need to define model material to slice it."))
+        else:
+            logging.debug('Starting path planning')
+            pool = ThreadPool(2) 
+            pool.add_task(self.model.Slice())
+            pathActor = self.model.getPathActor()
+            self.ren.AddActor(pathActor)
+            logging.debug('Added path actor to the scene')
+            modelActor = self.model.readActor()
+            modelActor.GetProperty().SetOpacity(0)
+            self.qvtkWidget.GetRenderWindow().Render()
+            self.loadModelTree()
         
     def populatePrinterPort(self):
         ports = printerports.scan()
@@ -458,9 +462,12 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         self.modelMenu.exec_(QCursor.pos())
         
     def showPropertiesDialog(self):
-        logging.debug('Showing model properties dialog')
-        dialog = propertiesDialog(self, self.model, self.toolDict, self.currentPrinter)
-        dialog.exec_()
+        if self.model._slice_actor is not None:
+            QMessageBox().about(self, self.tr("Error"), self.tr("Model sliced, you cannot change it's properties."))
+        else:
+            logging.debug('Showing model properties dialog')
+            dialog = propertiesDialog(self, self.model, self.toolDict, self.currentPrinter)
+            dialog.exec_()
         
     def showPrinterDialog(self, new):
         logging.debug('Showing printer edit dialog')
