@@ -1,14 +1,15 @@
 from __future__ import division
 import vtk
 
-def generateAxes():
+def generateAxes(printer):
+    xmax, ymax, zmax = printer.getPrintingDimensions()
     axes = vtk.vtkAxes()
-    axes.SetOrigin(0, 0, 0)
-    axes.SetScaleFactor(40)
+    axes.SetOrigin(-xmax/2, -ymax/2, 0)
+    axes.SetScaleFactor(20)
     axesTubes = vtk.vtkTubeFilter()
     axesTubes.SetInputConnection(axes.GetOutputPort())
     axesTubes.SetRadius(2)
-    axesTubes.SetNumberOfSides(6)
+    axesTubes.SetNumberOfSides(4)
     axesMapper = vtk.vtkPolyDataMapper()
     axesMapper.SetInputConnection(axesTubes.GetOutputPort())
     axesActor = vtk.vtkActor()
@@ -19,8 +20,8 @@ def generateAxes():
     XTextMapper.SetInputConnection(XText.GetOutputPort())
     XActor = vtk.vtkFollower()
     XActor.SetMapper(XTextMapper)
-    XActor.SetScale(10, 10, 10)
-    XActor.SetPosition(40, -20, 0)
+    XActor.SetScale(5, 5, 5)
+    XActor.SetPosition(-xmax/2 + 20, -ymax/2 - 10, 5)
     XActor.GetProperty().SetColor(1, 0, 0)
     YText = vtk.vtkVectorText()
     YText.SetText('Y')
@@ -28,8 +29,8 @@ def generateAxes():
     YTextMapper.SetInputConnection(YText.GetOutputPort())
     YActor = vtk.vtkFollower()
     YActor.SetMapper(YTextMapper)
-    YActor.SetScale(10, 10, 10)
-    YActor.SetPosition(-20, 40, 0)
+    YActor.SetScale(5, 5, 5)
+    YActor.SetPosition(-xmax/2 - 5, -ymax/2 + 20, 5)
     YActor.GetProperty().SetColor(1, 1, 0)
     ZText = vtk.vtkVectorText()
     ZText.SetText('Z')
@@ -37,8 +38,8 @@ def generateAxes():
     ZTextMapper.SetInputConnection(ZText.GetOutputPort())
     ZActor = vtk.vtkFollower()
     ZActor.SetMapper(ZTextMapper)
-    ZActor.SetScale(10, 10, 10)
-    ZActor.SetPosition(-20, -20, 40)
+    ZActor.SetScale(5, 5, 5)
+    ZActor.SetPosition(-xmax/2, -ymax/2, 25)
     ZActor.GetProperty().SetColor(0, 1, 0)
     return axesActor, XActor, YActor, ZActor
     

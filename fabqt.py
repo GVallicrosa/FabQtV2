@@ -6,7 +6,7 @@ import vtk
 from time import localtime, asctime
 import logging
 # Import Qt
-from PyQt4.QtCore import QString, QVariant, QSettings, QTranslator, QStringList, QSize, QPoint, SIGNAL, QStringList
+from PyQt4.QtCore import QString, QUrl, QVariant, QSettings, QTranslator, QStringList, QSize, QPoint, SIGNAL, QStringList
 from PyQt4.QtGui import QTreeWidgetItem, QApplication, QMenu, QMainWindow, QFileDialog, QCursor, QMessageBox
 # Dialogs
 import ui.ui_fabqtDialog as ui_fabqtDialog
@@ -26,7 +26,7 @@ if os.path.exists('log.txt'):
     if os.path.getsize('log.txt') >= 1024*1024: # 1MB
         os.remove('log.txt')
 LOG_FILE = 'log.txt'
-logging.basicConfig(filename=LOG_FILE, level=logging.DEBUG)
+logging.basicConfig(filename=LOG_FILE)
 logging.debug('\n\n' + str(asctime(localtime())) + '\n')
 
 class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
@@ -67,7 +67,7 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         baseActor.SetMapper(baseMapper)
         baseActor.PickableOff()
         ## Origin Axes
-        axesActor, XActor, YActor, ZActor = generateAxes()
+        axesActor, XActor, YActor, ZActor = generateAxes(self.currentPrinter)
         XActor.SetCamera(self.camera)
         YActor.SetCamera(self.camera)
         ZActor.SetCamera(self.camera)
@@ -140,17 +140,20 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         actionProperties = self.modelMenu.addAction("Properties/Transform")
         actionStandard = self.modelMenu.addAction("Standard Path Planning")
         actionAdvanced = self.modelMenu.addAction("Advanced Path Planning")
+        actionDeletePath = self.modelMenu.addAction("Erase Path")
         actionOrigin = self.modelMenu.addAction("Move to Origin")
         actionDelete = self.modelMenu.addAction("Delete")
         self.connect(actionProperties, SIGNAL('triggered()'), self.showPropertiesDialog)
         self.connect(actionStandard, SIGNAL('triggered()'), self.pathPlanning) # testing save STL
 #        self.connect(actionAdvanced, SIGNAL('triggered()'), self.???)
+        self.connect(actionDeletePath, SIGNAL('triggered()'), self.pathDelete)
         self.connect(actionOrigin, SIGNAL('triggered()'), self.moveToOrigin)
         self.connect(actionDelete, SIGNAL('triggered()'), self.deleteModel)
         self.modelMenu.addAction(actionProperties)
         self.modelMenu.addSeparator()
         self.modelMenu.addAction(actionStandard)
         self.modelMenu.addAction(actionAdvanced)
+        self.modelMenu.addAction(actionDeletePath)
         self.modelMenu.addSeparator()
         self.modelMenu.addAction(actionOrigin)
         self.modelMenu.addSeparator()
@@ -199,7 +202,8 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         fname = str(fname)
         settings.setValue("Path/ModelDir", QVariant(fname[0:fname.find(fname.split('/')[-1])]))
         model = Model()
-        model.load(fname)
+        pool = ThreadPool(2) 
+        pool.add_task(model.load(fname))
         if str(model.name) in self.modelDict.keys():
             logging.debug('++ Model name already used')
             exists = True
@@ -218,12 +222,7 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         self.ren.AddActor(model.readActor())
         validateMove(model.readActor(), printer)
         self.qvtkWidget.GetRenderWindow().Render()
-        self.loadModelTree() 
-        #self.ren.GetActiveCamera().OrthogonalizeViewUp()
-        #for i in range(0,360):
-        #    time.sleep(0.03)
-        #    self.qvtkWidget.GetRenderWindow().Render()
-        #    self.ren.GetActiveCamera().Azimuth( 1 )
+        self.loadModelTree()
 
     def loadConfigTree(self):
         logging.debug('Delete config tree')
@@ -295,8 +294,12 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
                 nextattirb = QStringList('DEPRATE')
                 nextattirb.append(QString(tool.depRate))
                 actualTool.addChild(QTreeWidgetItem(nextattirb))
+                
+    def log(self, text):
+        logging.debug(text)
+        logging.debugTextBrowser.append(text)
 
-    def modelDoubleClicked(self, index):########################################
+    def modelDoubleClicked(self, index):
         item = self.modelTreeWidget.itemFromIndex(index)
         if not item.parent(): # its a model
             modelName = item.text(0)
@@ -347,11 +350,21 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         self.actionMain_tools.setChecked(False)
         event.accept()
         
+    def pathDelete(self):
+        self.ren.RemoveActor(self.model.getPathActor())
+        self.model.deletePath()
+        modelActor = self.model.readActor()
+        modelActor.GetProperty().SetOpacity(0.5)
+        self.loadModelTree()        
+        self.qvtkWidget.GetRenderWindow().Render()
+        logging.debug('Deleted path of model: ' + self.model.name)
+        
     def pathPlanning(self):
         if self.model.readModelMaterial() is None:
             QMessageBox().about(self, self.tr("Error"), self.tr("You need to define model material to slice it."))
         else:
             logging.debug('Starting path planning')
+            self.pathDelete()
             pool = ThreadPool(2) 
             pool.add_task(self.model.Slice())
             pathActor = self.model.getPathActor()
@@ -498,6 +511,8 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
     def startPrinting(self): # need to be implemented
         logging.debug('Starting printing process')
         pass
+        pool = ThreadPool(2) 
+        pool.add_task('####')
         
     def updateCurrentPrinter(self, printerName):
         self.currentPrinter = self.printerDict[str(printerName)]

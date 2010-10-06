@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'printerDialog.ui'
 #
-# Created: Mon Sep 27 09:24:48 2010
+# Created: Wed Sep 29 16:00:06 2010
 #      by: PyQt4 UI code generator 4.7.2
 #
 # WARNING! All changes made in this file will be lost!
