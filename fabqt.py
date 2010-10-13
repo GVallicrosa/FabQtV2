@@ -2,6 +2,7 @@
 from __future__ import division
 import sys
 import os
+import shutil
 import vtk
 from time import localtime, asctime
 import logging
@@ -25,8 +26,7 @@ from core.python.taskexecutor import ThreadPool
 if os.path.exists('log.txt'):
     if os.path.getsize('log.txt') >= 1024*1024: # 1MB
         os.remove('log.txt')
-LOG_FILE = 'log.txt'
-logging.basicConfig(filename=LOG_FILE)
+logging.basicConfig(filename='log.txt', level=logging.DEBUG)
 logging.debug('\n\n' + str(asctime(localtime())) + '\n')
 
 class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
@@ -191,11 +191,11 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
     
     def editPrinterDialog(self):
         '''Edits printer configuration, general options and axes options.'''
-        logging.debug('Edit printer dialog')
+        logging.debug('Edit printer Dialog')
         self.showPrinterDialog(False)
         
     def editToolDialog(self):
-        logging.debug('Edit tool dialog')
+        logging.debug('Edit tool Dialog')
         self.showToolDialog(False)
              
     def importModel(self, fname):
@@ -297,7 +297,7 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
                 
     def log(self, text):
         logging.debug(text)
-        logging.debugTextBrowser.append(text)
+        logging.logTextBrowser.append(text)
 
     def modelDoubleClicked(self, index):
         item = self.modelTreeWidget.itemFromIndex(index)
@@ -334,11 +334,11 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         logging.debug('Moved to Origin, model: ' + self.model.name)
 
     def newPrinterDialog(self):
-        logging.debug('New printer dialog')
+        logging.debug('New printer Dialog')
         self.showPrinterDialog(True)
         
     def newToolDialog(self):
-        logging.debug('New tool dialog')
+        logging.debug('New tool Dialog')
         self.showToolDialog(True)
 
     def okToContinue(self): # To implement not saved changes closing
@@ -364,6 +364,13 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
             QMessageBox().about(self, self.tr("Error"), self.tr("You need to define model material to slice it."))
         else:
             logging.debug('Starting path planning')
+            ## delete configs
+            homedir = os.path.expanduser('~')
+            shutil.rmtree(homedir + '/.skeinforge/profiles')      
+            ## edit files
+            ## copy
+            shutil.copytree('profiles', homedir + '/.skeinforge/profiles')
+            ## end
             self.pathDelete()
             pool = ThreadPool(2) 
             pool.add_task(self.model.Slice())
@@ -430,8 +437,8 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         logging.debug('Changed language to Portuguese')
 
     def showAboutDialog(self):
-        dialog = aboutDialog(self)
-        dialog.exec_()
+        Dialog = aboutDialog(self)
+        Dialog.exec_()
 
     def showConfigCustomContextMenu(self, pos):
         ## Save some settings, because of reloading comboboxes
@@ -459,7 +466,7 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
             return
         
     def showImportDialog(self):
-        logging.debug('Showing import dialog')
+        logging.debug('Showing import Dialog')
         self.importDialog.exec_()
 
     def showModelCustomContextMenu(self, pos):
@@ -478,32 +485,32 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         if self.model._slice_actor is not None:
             QMessageBox().about(self, self.tr("Error"), self.tr("Model sliced, you cannot change it's properties."))
         else:
-            logging.debug('Showing model properties dialog')
-            dialog = propertiesDialog(self, self.model, self.toolDict, self.currentPrinter)
-            dialog.exec_()
+            logging.debug('Showing model properties Dialog')
+            Dialog = propertiesDialog(self, self.model, self.toolDict, self.currentPrinter)
+            Dialog.exec_()
         
     def showPrinterDialog(self, new):
-        logging.debug('Showing printer edit dialog')
+        logging.debug('Showing printer edit Dialog')
         if new:
-            dialog = printerDialog(self)
+            Dialog = printerDialog(self)
         else:
             printer = self.printerDict[str(self.configPrinterName)]
-            dialog = printerDialog(self, printer)
-        dialog.exec_()
+            Dialog = printerDialog(self, printer)
+        Dialog.exec_()
         self.printerDict = loadPrinters()
         self.populatePrinterComboBox()
         self.loadConfigTree()
 
     def showToolDialog(self, new):
-        logging.debug('Showing tool edit dialog')
+        logging.debug('Showing tool edit Dialog')
         if new:
             logging.debug('New Tool')
-            dialog = toolDialog(self)
+            Dialog = toolDialog(self)
         else:
             logging.debug('Edit Tool')
             tool = self.toolDict[str(self.configToolName)]
-            dialog = toolDialog(self, tool)
-        dialog.exec_() 
+            Dialog = toolDialog(self, tool)
+        Dialog.exec_() 
         self.toolDict = loadTools()
         self.populateToolComboBox() # Reload data for comboboxes and tool tree
         self.loadConfigTree()

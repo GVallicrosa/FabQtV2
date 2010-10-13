@@ -41,7 +41,10 @@ def readGcode(fname):
                 #G28 Go Home Implemented. (X = -135mm, Y = 100mm, Z = 0mm)
                 #G90 Absolute Positioning Implemented. V1.0.5
                 #G92 Set current as home Implemented V1.0.5
-                    g, x, y, z = line.split(' ') #!!!!!add f if velocity is in gcode
+                    if 'F' in line:
+                        g, x, y, z, f = line.split(' ')
+                    else:
+                        g, x, y, z = line.split(' ')
                     x = float(x[1:]) # Avoids the character X, and return a float
                     y = float(y[1:])
                     z = float(z[1:])
