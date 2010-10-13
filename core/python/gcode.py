@@ -59,7 +59,6 @@ def readGcode(fname):
                         layer = Layer()
             lino += 1
             line = fh.readline()
-        logger.log('GCode imported')
     except (IOError, OSError, ValueError), e:
         error = "Failed to load: %s on line %d" % (e, lino)
         print error

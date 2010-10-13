@@ -54,7 +54,7 @@ class Model(object):
             logger.log('No valid file extension for model import')
         
     def save(self): # writer to new file
-        logger.debug('Exporting temp STL of model %s...' % self.name)
+        logger.log('Exporting temp STL of model %s...' % self.name)
         # Extract transformations done to the actor
         matrix = vtk.vtkMatrix4x4() 
         self.readActor().GetMatrix(matrix)
@@ -111,7 +111,7 @@ class Model(object):
         logger.log('Creating GCode...')
         os.remove('temp.stl')
         ok, layers = readGcode('temp_export.gcode')
-        logging.debug('Reading GCode...')
+        logger.log('Reading GCode...')
         #os.remove('temp_export.gcode')
         if ok:
             self.setLayers(layers)

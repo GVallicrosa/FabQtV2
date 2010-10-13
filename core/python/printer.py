@@ -3,13 +3,13 @@ from PyQt4.QtCore import QFile, QIODevice, SIGNAL, QTextStream
 from PyQt4.QtGui import QDialog, QDialogButtonBox, QMessageBox
 from PyQt4.QtXml import QDomDocument
 import os
-import logging
+from core.python.fablog import Fablog
 
+logger = Fablog()
 CODEC = "UTF-8"
-logger = logging.getLogger('core.python.printer')
 
 def loadPrinters(): # ok
-    logger.debug('** Loading printers')
+    logger.log('Loading printers')
     dirList = os.listdir('config/')
     printerDict = dict()
     printer = Printer()
@@ -23,8 +23,8 @@ def loadPrinters(): # ok
             printer = Printer()
             printer.load(fname)
             printerDict[printer.name] = printer
-            logger.debug('*** Loading printer: ' + fname.split('.')[0])
-    logger.debug('Finished loading printers')
+            logger.log('++ Loading printer: ' + fname.split('.')[0])
+    logger.log('Finished loading printers')
     return printerDict
 
 class Axis(object): # ok

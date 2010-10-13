@@ -298,7 +298,7 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
                 actualTool.addChild(QTreeWidgetItem(nextattirb))
                 
     def logText(self, text):
-        self.logTextBrowser.append(text)
+        self.logTextBrowser.append(QString(text))
 
     def modelDoubleClicked(self, index):
         item = self.modelTreeWidget.itemFromIndex(index)
