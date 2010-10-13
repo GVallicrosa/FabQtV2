@@ -365,11 +365,30 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         else:
             logging.debug('Starting path planning')
             ## delete configs
-            homedir = os.path.expanduser('~')
-            shutil.rmtree(homedir + '/.skeinforge/profiles')      
+            path = os.path.expanduser('~') + '/.skeinforge/profiles'
+            if os.path.exists(path):
+                shutil.rmtree(path)      
             ## edit files
+            toolname = self.model.readModelMaterial()
+            tool = self.toolDict[str(toolname)]
+            mod = []
+            try:
+                fh = open("profiles/extrusion/FAB/carve.csv", "r")
+                for line in fh:
+                    if 'Thickness' in line:
+                        line = 'Layer Thickness (mm):\t' + tool.pathHeight + '\n'
+                    mod.append(line)
+                fh.close()
+            except IOError:
+                print "Couldn't open file"
+            try:
+                fh = open("profiles/extrusion/FAB/carve.csv", "w")
+                fh.writelines(mod)
+                fh.close()
+            except IOError:
+                print "Couldn't save file"
             ## copy
-            shutil.copytree('profiles', homedir + '/.skeinforge/profiles')
+            shutil.copytree('profiles', path)
             ## end
             self.pathDelete()
             pool = ThreadPool(2) 
