@@ -30,9 +30,9 @@ class Model(object):
             return False
             
     def deletePath(self):
-        _slice_vtkpolydata = None
-        _slice_mapper = None
-        _slice_actor = None
+        self._slice_vtkpolydata = None
+        self._slice_mapper = None
+        self._slice_actor = None
 
     def load(self, fname): # from source, returns vtkPolydata, mapper and actor
         self.name = fname.split('/')[-1] # name with extension

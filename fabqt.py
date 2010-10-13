@@ -2,7 +2,6 @@
 from __future__ import division
 import sys
 import os
-import shutil
 import vtk
 from time import localtime, asctime
 import logging
@@ -22,6 +21,7 @@ from core.python.render import generateAxes, moveToOrigin, validateMove
 from core.python.model import Model
 from core.python import printerports
 from core.python.taskexecutor import ThreadPool
+import core.python.skeinmod as skeinmod
 
 if os.path.exists('log.txt'):
     if os.path.getsize('log.txt') >= 1024*1024: # 1MB
@@ -364,32 +364,7 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
             QMessageBox().about(self, self.tr("Error"), self.tr("You need to define model material to slice it."))
         else:
             logging.debug('Starting path planning')
-            ## delete configs
-            path = os.path.expanduser('~') + '/.skeinforge/profiles'
-            if os.path.exists(path):
-                shutil.rmtree(path)      
-            ## edit files
-            toolname = self.model.readModelMaterial()
-            tool = self.toolDict[str(toolname)]
-            mod = []
-            try:
-                fh = open("profiles/extrusion/FAB/carve.csv", "r")
-                for line in fh:
-                    if 'Thickness' in line:
-                        line = 'Layer Thickness (mm):\t' + tool.pathHeight + '\n'
-                    mod.append(line)
-                fh.close()
-            except IOError:
-                print "Couldn't open file"
-            try:
-                fh = open("profiles/extrusion/FAB/carve.csv", "w")
-                fh.writelines(mod)
-                fh.close()
-            except IOError:
-                print "Couldn't save file"
-            ## copy
-            shutil.copytree('profiles', path)
-            ## end
+            skeinmod.applyConfig(self.model, self.toolDict)
             self.pathDelete()
             pool = ThreadPool(2) 
             pool.add_task(self.model.Slice())
