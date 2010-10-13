@@ -1,18 +1,14 @@
 import vtk
 import random
-import logging
 import os
 from core.python.gcode import readGcode
 from core.python.vtkLinePlotter import vtkLinePlotter
-
 from core.skeinforge.skeinforge_application.skeinforge_plugins.craft_plugins import export
-logger = logging.getLogger('core.python.model')
+from core.python.fablog import Fablog
+
+logger = Fablog()
 
 class Model(object):           
-            
-    _slice_vtkpolydata = None
-    _slice_mapper = None
-    _slice_actor = None
     
     def __init__(self, name = None, actor = None, mapper = None, supportMaterial = None, modelMaterial = None, layer = list(), vtkpolydata = None):
         self.name = name
@@ -22,12 +18,15 @@ class Model(object):
         self._modelMaterial = modelMaterial
         self._layer = layer
         self._vtkpolydata = vtkpolydata
-        
+        self._slice_vtkpolydata = None
+        self._slice_mapper = None
+        self._slice_actor = None
+            
     def hasPath(self):
-        if self._slice_actor is not None:
-            return True
-        else:
+        if self._slice_actor is None:
             return False
+        else:
+            return True
             
     def deletePath(self):
         self._slice_vtkpolydata = None
@@ -36,7 +35,7 @@ class Model(object):
 
     def load(self, fname): # from source, returns vtkPolydata, mapper and actor
         self.name = fname.split('/')[-1] # name with extension
-        logger.debug('Importing model: ' + self.name)
+        logger.log('Importing model: ' + self.name)
         extension = fname.split('.')[1]
         if extension.lower() == 'stl': 
             reader = vtk.vtkSTLReader()
@@ -50,10 +49,9 @@ class Model(object):
             actor.SetMapper(mapper)
             actor.GetProperty().SetColor(random.random(), random.random(), random.random()) # Colorizes randomly
             actor.GetProperty().SetOpacity(0.5)
-            actor.GetProperty()
             self.setActor(actor)
         else:
-            logger.debug('No valid file extension for model import')
+            logger.log('No valid file extension for model import')
         
     def save(self): # writer to new file
         logger.debug('Exporting temp STL of model %s...' % self.name)
@@ -72,7 +70,7 @@ class Model(object):
         writer.SetInputConnection(t_filter.GetOutputPort())
         writer.SetFileTypeToBinary()
         writer.Write()
-        logger.debug('End exporting')
+        logger.log('End exporting')
             
     def readActor(self): # if no one set yet return false or null
         return self._actor
@@ -110,16 +108,16 @@ class Model(object):
     def Slice(self): # calls skeinforge
         self.save()
         export.writeOutput('temp.stl')
-        logging.debug('Creating GCode...')
+        logger.log('Creating GCode...')
         os.remove('temp.stl')
         ok, layers = readGcode('temp_export.gcode')
         logging.debug('Reading GCode...')
         #os.remove('temp_export.gcode')
         if ok:
             self.setLayers(layers)
-            logging.debug('GCode correctly readed')
+            logger.log('GCode correctly readed')
         else:
-            logger.debug('Error importing GCode')
+            logger.log('Error importing GCode')
         self.generatePaths(layers)
         
     def getPathActor(self):
