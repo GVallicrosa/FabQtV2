@@ -4,60 +4,56 @@ from core.python.path import Path
 from core.skeinforge.fabmetheus_utilities.vector3 import Vector3
 import codecs
 
-CODEC = 'UTF8'
-
 def readGcode(fname):
     error = None
     fh = None
     try:
-        fh = codecs.open(unicode(fname), "rU", CODEC)
-        lino = 0
+        fh = codecs.open(unicode(fname), "rU", 'UTF8')
+        text = fh.readlines()
+        linemax = len(text)
         printing = False
         lastZ = None
         layerList = list()
-        line = fh.readline()
-        while line:
-            if 'M' in line:
+        lino = 18
+        for line in text[18:]: #avoiding useless information
+            if 'M10' in line:
             #M101 Turn extruder on Forward
             #M103 Turn extruder off.
-                if 'M101' in line:
-                    printing = True # new path
+                if 'M101' in line: # When starts to extrude a new path is starting
+                    printing = True
                     path = Path()
+                    path.addVector(vec) # We are in the last point when starting to extrude
                 elif 'M103' in line:
-                    printing = False # close path
+                    printing = False
                     try:
-                        layer.addModelPath(path)
+                        layer.addModelPath(path) # Save path to its layer
                     except:
                         pass                    
-            if printing:
-                if 'G1' in line:
-                #G0 Rapid Motion Implemented - supports X, Y, and Z axes.
-                #G1 Coordinated Motion Implemented - supports X, Y, and Z axes.
-                #G2 Arc - Clockwise Not used by Skienforge
-                #G3 Arc - Counter Clockwise Not used by Skienforge
-                #G4 Dwell Implemented.
-                #G20 Inches as units Implemented.
-                #G21 Millimetres as units Implemented.
-                #G28 Go Home Implemented. (X = -135mm, Y = 100mm, Z = 0mm)
-                #G90 Absolute Positioning Implemented. V1.0.5
-                #G92 Set current as home Implemented V1.0.5
-                    if 'F' in line:
-                        g, x, y, z, f = line.split(' ')
-                    else:
-                        g, x, y, z = line.split(' ')
+            elif 'G1' in line:
+            #G1 Coordinated Motion Implemented - supports X, Y, and Z axes.
+                sline = line.split(' ')
+                if len(sline) >= 4:
+                    if len(sline) == 5:
+                        g, x, y, z, f = line.split(' ') # Take all parameters splitting in spaces
+                    elif len(sline) == 4:
+                        g, x, y, z = line.split(' ') # Same when no SPEED is active
                     x = float(x[1:]) # Avoids the character X, and return a float
-                    y = float(y[1:])
-                    z = float(z[1:])
-                    vec = Vector3(x, y, z)
-                    path.addVector(vec)
+                    y = float(y[1:]) # Avoids the character Y, and return a float
+                    z = float(z[1:]) # Avoids the character Z, and return a float
+                    vec = Vector3(x, y, z) # Creates a vector
+                    if printing: # if extruding, adds a vector
+                        path.addVector(vec)
                     if not z == lastZ: # Z change = layer change
                         lastZ = z
                         try:
-                            layerList.append(layer)
+                            layerlist = layerList.append(layer)
+                            #layerlist += (layer,)
                         except: # Layer no exists at first execution
                             pass
                         layer = Layer()
             lino += 1
+            if lino == linemax:
+                layerlist = layerList.append(layer)
             line = fh.readline()
     except (IOError, OSError, ValueError), e:
         error = "Failed to load: %s on line %d" % (e, lino)
