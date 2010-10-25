@@ -3,21 +3,27 @@ class Layer(object):
     def __init__(self, modelPaths = tuple(), supportPaths = tuple()):
         self._model = modelPaths
         self._support = supportPaths
+        self._base = tuple()
         #self._contourSupport ## (list of path) future implementation for custom path planning
         #self._contourModel ## (list of path) future implementation for custom path planning
     
     def addModelPath(self, path = None):
         if path is None:
             return
-        self._model = self._model + (path,)
+        self._model += (path,)
+        
+    def addBasePath(self, path = None):
+        if path is None:
+            return
+        self._base += (path,)
         
     def delete(self):
-        self._model = list()
+        self._model = tuple()
         
     def addSupportPath(self, path = None):
         if path is None:
             return
-        self._support.append(path)
+        self._support += (path,)
         
     def getSupportLength(self):
         value = 0
@@ -37,6 +43,12 @@ class Layer(object):
     
     def readModelPaths(self):
         return self._model
+        
+    def readSupportPaths(self):
+        return self._support
+        
+    def readBasePaths(self):
+        return self._base
             
     def optimize(self): # TSP algorithm to minimize the distance among all paths
         pass

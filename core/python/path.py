@@ -8,6 +8,9 @@ class Path(object):
             return
         self._vector = self._vector + (vector,)
         
+    def getVector(self):
+        return self._vector
+        
     def __len__(self):
         return len(self._vector)
         

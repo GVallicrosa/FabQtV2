@@ -13,12 +13,14 @@ def readGcode(fname):
         linemax = len(text)
         printing = False
         lastZ = None
-        layerList = list()
+        kind = 'base'
+        layerlist = list()
         lino = 18
         for line in text[18:]: #avoiding useless information
             if 'M10' in line:
-            #M101 Turn extruder on Forward
-            #M103 Turn extruder off.
+            # M101 Turn extruder on forward
+            # M103 Turn extruder off
+            # M104 Temperature control
                 if 'M101' in line: # When starts to extrude a new path is starting
                     printing = True
                     path = Path()
@@ -26,11 +28,27 @@ def readGcode(fname):
                 elif 'M103' in line:
                     printing = False
                     try:
-                        layer.addModelPath(path) # Save path to its layer
+                        if kind == 'base':
+                            layer.addBasePath(path) # Save path to its layer
+                        if kind == 'support':
+                            layer.addSupportPath(path) # Save path to its layer
+                        if kind == 'model':
+                            layer.addModelPath(path) # Save path to its layer
                     except:
-                        pass                    
+                        pass
+                elif 'M104' in line: # temperature hack
+                    m, s = line.split(' ')
+                    s = float(s[1:])
+                    if s == 200: # base
+                        kind = 'base'
+                    elif s == 250: # support
+                        kind = 'support'
+                    elif s == 300: # model
+                        kind = 'model'
+                    elif s == 0: # end
+                        break
             elif 'G1' in line:
-            #G1 Coordinated Motion Implemented - supports X, Y, and Z axes.
+            # G1 Coordinated Motion Implemented - supports X, Y, and Z axes.
                 sline = line.split(' ')
                 if len(sline) >= 4:
                     if len(sline) == 5:
@@ -46,7 +64,7 @@ def readGcode(fname):
                     if not z == lastZ: # Z change = layer change
                         lastZ = z
                         try:
-                            layerlist = layerList.append(layer)
+                            layerlist.append(layer)
                             #layerlist += (layer,)
                         except: # Layer no exists at first execution
                             pass
@@ -63,4 +81,4 @@ def readGcode(fname):
             fh.close()
         if error is not None:
             return False, error
-        return True, layerList
+        return True, layerlist

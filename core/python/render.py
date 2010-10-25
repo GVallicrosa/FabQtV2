@@ -75,8 +75,8 @@ def validateMove(actor, printer):
     if zmin < 0 and not zmax > ZMAX:
         newz = z - zmin
     elif zmax > ZMAX and not zmin < 0:
-        newz = z - zmin # Always touching the table
-    elif zmin >= 0 and zmax <= ZMAX:
+        newz = z - zmin 
+    elif zmin >= 0 and zmax <= ZMAX: # Always touching the table
         newz = z - zmin
     else:
         return False # Model too big
