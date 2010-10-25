@@ -242,8 +242,12 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
             modelItem = QTreeWidgetItem(self.modelTreeWidget)
             modelItem.setText(0, model)
             modelItem.addChild(QTreeWidgetItem(QStringList('Model')))
-            if self.modelDict[model].hasPath():
-                modelItem.addChild(QTreeWidgetItem(QStringList('Toolpath')))
+            if self.modelDict[model].hasModelPath():
+                modelItem.addChild(QTreeWidgetItem(QStringList('model_path')))
+            if self.modelDict[model].hasSupportPath():
+                modelItem.addChild(QTreeWidgetItem(QStringList('support_path')))
+            if self.modelDict[model].hasBasePath():
+                modelItem.addChild(QTreeWidgetItem(QStringList('base_path')))
         self.modelTreeWidget.expandAll()
             
     def loadPrinterTree(self):
@@ -313,15 +317,30 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
             parent = item.parent()
             modelName = parent.text(0)
             model = self.modelDict[str(modelName)]
-            if str(item.text(0)) == 'Model':
+            text = str(item.text(0))
+            if text == 'Model':
                 actor = model.readActor()
                 num = actor.GetProperty().GetOpacity()
                 if num == 0:
                     actor.GetProperty().SetOpacity(0.5)
                 else:
                     actor.GetProperty().SetOpacity(0)
-            else: # == 'Toolpath'
+            elif text == 'model_path':
                 actor = model.getPathActor()
+                num = actor.GetProperty().GetOpacity()
+                if num == 0:
+                    actor.GetProperty().SetOpacity(1)
+                else:
+                    actor.GetProperty().SetOpacity(0)
+            elif text == 'support_path':
+                actor = model.getSupportPathActor()
+                num = actor.GetProperty().GetOpacity()
+                if num == 0:
+                    actor.GetProperty().SetOpacity(1)
+                else:
+                    actor.GetProperty().SetOpacity(0)
+            elif text == 'base_path':
+                actor = model.getBasePathActor()
                 num = actor.GetProperty().GetOpacity()
                 if num == 0:
                     actor.GetProperty().SetOpacity(1)
@@ -370,7 +389,9 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
             pool = ThreadPool(2) 
             pool.add_task(self.model.Slice())
             pathActor = self.model.getPathActor()
-            self.ren.AddActor(pathActor)
+            self.ren.AddActor(self.model._slice_actor)
+            self.ren.AddActor(self.model._support_actor)
+            self.ren.AddActor(self.model._base_actor)
             logger.log('Added path actor to the scene')
             modelActor = self.model.readActor()
             modelActor.GetProperty().SetOpacity(0)
@@ -477,7 +498,7 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         self.modelMenu.exec_(QCursor.pos())
         
     def showPropertiesDialog(self):
-        if self.model.hasPath():
+        if self.model.hasModelPath():
             QMessageBox().about(self, self.tr("Error"), self.tr("Model sliced, you cannot change it's properties."))
         else:
             logger.log('Showing model properties Dialog')
