@@ -186,6 +186,8 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         ''' Deletes the model from view and dictionary and reloads the model tree.'''
         self.ren.RemoveActor(self.model.readActor())
         self.ren.RemoveActor(self.model.getPathActor())
+        self.ren.RemoveActor(self.model.getSupportPathActor())
+        self.ren.RemoveActor(self.model.getBasePathActor())
         self.modelDict.pop(str(self.model.name))
         self.loadModelTree()        
         self.qvtkWidget.GetRenderWindow().Render()
@@ -372,6 +374,8 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         
     def pathDelete(self):
         self.ren.RemoveActor(self.model.getPathActor())
+        self.ren.RemoveActor(self.model.getSupportPathActor())
+        self.ren.RemoveActor(self.model.getBasePathActor())
         self.model.deletePath()
         modelActor = self.model.readActor()
         modelActor.GetProperty().SetOpacity(0.5)
