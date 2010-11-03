@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'ui/fabqtDialog.ui'
 #
-# Created: Wed Sep 29 16:00:07 2010
-#      by: PyQt4 UI code generator 4.7.2
+# Created: Wed Nov  3 10:33:57 2010
+#      by: PyQt4 UI code generator 4.7.4
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -34,15 +34,9 @@ class Ui_MainWindow(object):
         self.qvtkWidget.setSizePolicy(sizePolicy)
         self.qvtkWidget.setObjectName("qvtkWidget")
         self.verticalLayout_2.addWidget(self.qvtkWidget)
-        self.logTextBrowser = QtGui.QTextBrowser(self.centralwidget)
-        self.logTextBrowser.setMinimumSize(QtCore.QSize(300, 80))
-        self.logTextBrowser.setMaximumSize(QtCore.QSize(16777215, 80))
-        self.logTextBrowser.setAcceptDrops(False)
-        self.logTextBrowser.setObjectName("logTextBrowser")
-        self.verticalLayout_2.addWidget(self.logTextBrowser)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtGui.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 850, 23))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 850, 25))
         self.menubar.setContextMenuPolicy(QtCore.Qt.PreventContextMenu)
         self.menubar.setAcceptDrops(False)
         self.menubar.setObjectName("menubar")
@@ -721,13 +715,24 @@ class Ui_MainWindow(object):
         self.dockWidgetContents_2.setObjectName("dockWidgetContents_2")
         self.verticalLayout_7 = QtGui.QVBoxLayout(self.dockWidgetContents_2)
         self.verticalLayout_7.setObjectName("verticalLayout_7")
-        self.build_hardwareTabWidget = QtGui.QTabWidget(self.dockWidgetContents_2)
-        self.build_hardwareTabWidget.setMaximumSize(QtCore.QSize(300, 16777215))
+        self.logTab = QtGui.QTabWidget(self.dockWidgetContents_2)
+        self.logTab.setMaximumSize(QtCore.QSize(300, 16777215))
         font = QtGui.QFont()
         font.setPointSize(8)
-        self.build_hardwareTabWidget.setFont(font)
-        self.build_hardwareTabWidget.setTabPosition(QtGui.QTabWidget.West)
-        self.build_hardwareTabWidget.setObjectName("build_hardwareTabWidget")
+        self.logTab.setFont(font)
+        self.logTab.setTabPosition(QtGui.QTabWidget.West)
+        self.logTab.setObjectName("logTab")
+        self.tab = QtGui.QWidget()
+        self.tab.setObjectName("tab")
+        self.verticalLayout_10 = QtGui.QVBoxLayout(self.tab)
+        self.verticalLayout_10.setObjectName("verticalLayout_10")
+        self.logTextBrowser = QtGui.QTextBrowser(self.tab)
+        self.logTextBrowser.setMinimumSize(QtCore.QSize(0, 0))
+        self.logTextBrowser.setMaximumSize(QtCore.QSize(16777215, 16777215))
+        self.logTextBrowser.setAcceptDrops(False)
+        self.logTextBrowser.setObjectName("logTextBrowser")
+        self.verticalLayout_10.addWidget(self.logTextBrowser)
+        self.logTab.addTab(self.tab, "")
         self.hardwareStatusTab = QtGui.QWidget()
         self.hardwareStatusTab.setObjectName("hardwareStatusTab")
         self.verticalLayout_9 = QtGui.QVBoxLayout(self.hardwareStatusTab)
@@ -737,7 +742,7 @@ class Ui_MainWindow(object):
         self.hardwareStatusTextBrowser.setMaximumSize(QtCore.QSize(200, 16777215))
         self.hardwareStatusTextBrowser.setObjectName("hardwareStatusTextBrowser")
         self.verticalLayout_9.addWidget(self.hardwareStatusTextBrowser)
-        self.build_hardwareTabWidget.addTab(self.hardwareStatusTab, "")
+        self.logTab.addTab(self.hardwareStatusTab, "")
         self.buildInfoTab = QtGui.QWidget()
         self.buildInfoTab.setObjectName("buildInfoTab")
         self.verticalLayout_8 = QtGui.QVBoxLayout(self.buildInfoTab)
@@ -747,8 +752,8 @@ class Ui_MainWindow(object):
         self.buildInfoTextBrowser.setMaximumSize(QtCore.QSize(200, 16777215))
         self.buildInfoTextBrowser.setObjectName("buildInfoTextBrowser")
         self.verticalLayout_8.addWidget(self.buildInfoTextBrowser)
-        self.build_hardwareTabWidget.addTab(self.buildInfoTab, "")
-        self.verticalLayout_7.addWidget(self.build_hardwareTabWidget)
+        self.logTab.addTab(self.buildInfoTab, "")
+        self.verticalLayout_7.addWidget(self.logTab)
         self.infoDock.setWidget(self.dockWidgetContents_2)
         MainWindow.addDockWidget(QtCore.Qt.DockWidgetArea(1), self.infoDock)
         self.toolBar = QtGui.QToolBar(MainWindow)
@@ -867,7 +872,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
         self.mainTabWidget.setCurrentIndex(0)
-        self.build_hardwareTabWidget.setCurrentIndex(0)
+        self.logTab.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
@@ -909,8 +914,9 @@ class Ui_MainWindow(object):
         self.resetViewButton.setShortcut(QtGui.QApplication.translate("MainWindow", "Ctrl+R", None, QtGui.QApplication.UnicodeUTF8))
         self.mainTabWidget.setTabText(self.mainTabWidget.indexOf(self.configTab), QtGui.QApplication.translate("MainWindow", "Config", None, QtGui.QApplication.UnicodeUTF8))
         self.infoDock.setAccessibleName(QtGui.QApplication.translate("MainWindow", "hardwareStatusDock", None, QtGui.QApplication.UnicodeUTF8))
-        self.build_hardwareTabWidget.setTabText(self.build_hardwareTabWidget.indexOf(self.hardwareStatusTab), QtGui.QApplication.translate("MainWindow", "Hardware Status", None, QtGui.QApplication.UnicodeUTF8))
-        self.build_hardwareTabWidget.setTabText(self.build_hardwareTabWidget.indexOf(self.buildInfoTab), QtGui.QApplication.translate("MainWindow", "Build Info", None, QtGui.QApplication.UnicodeUTF8))
+        self.logTab.setTabText(self.logTab.indexOf(self.tab), QtGui.QApplication.translate("MainWindow", "Log", None, QtGui.QApplication.UnicodeUTF8))
+        self.logTab.setTabText(self.logTab.indexOf(self.hardwareStatusTab), QtGui.QApplication.translate("MainWindow", "Hardware Status", None, QtGui.QApplication.UnicodeUTF8))
+        self.logTab.setTabText(self.logTab.indexOf(self.buildInfoTab), QtGui.QApplication.translate("MainWindow", "Build Info", None, QtGui.QApplication.UnicodeUTF8))
         self.toolBar.setWindowTitle(QtGui.QApplication.translate("MainWindow", "toolBar", None, QtGui.QApplication.UnicodeUTF8))
         self.actionNew.setText(QtGui.QApplication.translate("MainWindow", "New", None, QtGui.QApplication.UnicodeUTF8))
         self.actionOpen.setText(QtGui.QApplication.translate("MainWindow", "Open", None, QtGui.QApplication.UnicodeUTF8))

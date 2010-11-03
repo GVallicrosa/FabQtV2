@@ -31,31 +31,12 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout_2">
     <item>
-     <widget class="QVTKWidget" name="qvtkWidget">
+     <widget class="QVTKWidget" name="qvtkWidget" native="true">
       <property name="sizePolicy">
        <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
         <horstretch>200</horstretch>
         <verstretch>200</verstretch>
        </sizepolicy>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QTextBrowser" name="logTextBrowser">
-      <property name="minimumSize">
-       <size>
-        <width>300</width>
-        <height>80</height>
-       </size>
-      </property>
-      <property name="maximumSize">
-       <size>
-        <width>16777215</width>
-        <height>80</height>
-       </size>
-      </property>
-      <property name="acceptDrops">
-       <bool>false</bool>
       </property>
      </widget>
     </item>
@@ -67,7 +48,7 @@
      <x>0</x>
      <y>0</y>
      <width>850</width>
-     <height>23</height>
+     <height>25</height>
     </rect>
    </property>
    <property name="contextMenuPolicy">
@@ -1599,9 +1580,6 @@
            <attribute name="headerShowSortIndicator" stdset="0">
             <bool>false</bool>
            </attribute>
-           <attribute name="headerShowSortIndicator" stdset="0">
-            <bool>false</bool>
-           </attribute>
            <column>
             <property name="text">
              <string>Models</string>
@@ -1834,7 +1812,7 @@
    <widget class="QWidget" name="dockWidgetContents_2">
     <layout class="QVBoxLayout" name="verticalLayout_7">
      <item>
-      <widget class="QTabWidget" name="build_hardwareTabWidget">
+      <widget class="QTabWidget" name="logTab">
        <property name="maximumSize">
         <size>
          <width>300</width>
@@ -1852,6 +1830,32 @@
        <property name="currentIndex">
         <number>0</number>
        </property>
+       <widget class="QWidget" name="tab">
+        <attribute name="title">
+         <string>Log</string>
+        </attribute>
+        <layout class="QVBoxLayout" name="verticalLayout_10">
+         <item>
+          <widget class="QTextBrowser" name="logTextBrowser">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="acceptDrops">
+            <bool>false</bool>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
        <widget class="QWidget" name="hardwareStatusTab">
         <attribute name="title">
          <string>Hardware Status</string>
