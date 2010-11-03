@@ -13,7 +13,9 @@ from core.python.dialogs.printerDialog import printerDialog
 from core.python.dialogs.propertiesDialog import propertiesDialog
 from core.python.dialogs.toolDialog import toolDialog
 from core.python.dialogs.aboutDialog import aboutDialog
+from core.python.dialogs.advancedDialog import advancedDialog
 # All other modules needed
+from core.python.advancedOptions import Options
 from core.python.tool import loadTools
 from core.python.printer import loadPrinters
 from core.python.render import generateAxes, moveToOrigin, validateMove
@@ -44,6 +46,7 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         self.toolDict = loadTools() # toolname: Tool()
         self.printerDict = loadPrinters() # printername: Printer()
         self.modelDict = dict() # modelname: Model()
+        self.options = Options() # advanced path options
         ## Config tree and comboboxes, load initial values
         self.loadConfigTree()
         self.populateToolComboBox()
@@ -107,8 +110,7 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         self.connect(self.v_IncrementLineEdit, SIGNAL("textEdited(QString)"), self.updateMovement)
         ## Comboboxes
         self.connect(self.printerComboBox, SIGNAL("currentIndexChanged(QString"), self.updateCurrentPrinter)
-        ## Double clicks
-        #self.connect(self.modelTreeWidget, SIGNAL("itemDoubleClicked(QTreeWidgetItem)"), self.modelDoubleClicked)   
+        ## Double clicks   
         self.connect(self.modelTreeWidget, SIGNAL("doubleClicked(QModelIndex)"), self.modelDoubleClicked)   
         ## General actions
         self.connect(self.actionQuit, SIGNAL("triggered()"), self.close)
@@ -147,7 +149,7 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         actionDelete = self.modelMenu.addAction("Delete")
         self.connect(actionProperties, SIGNAL('triggered()'), self.showPropertiesDialog)
         self.connect(actionStandard, SIGNAL('triggered()'), self.pathPlanning) # testing save STL
-#        self.connect(actionAdvanced, SIGNAL('triggered()'), self.???)
+        self.connect(actionAdvanced, SIGNAL('triggered()'), self.pathAdvanced)
         self.connect(actionDeletePath, SIGNAL('triggered()'), self.pathDelete)
         self.connect(actionOrigin, SIGNAL('triggered()'), self.moveToOrigin)
         self.connect(actionDelete, SIGNAL('triggered()'), self.deleteModel)
@@ -371,6 +373,27 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         print 'Entered mainDock close event' # For testing
         self.actionMain_tools.setChecked(False)
         event.accept()
+        
+    def pathAdvanced(self):
+        if self.model.readModelMaterial() is None:
+            QMessageBox().about(self, self.tr("Error"), self.tr("You need to define model material to slice it."))
+        else:
+            logger.log('Starting advanced path planning')
+            Dialog = advancedDialog(self, self.options)
+            Dialog.exec_()
+            skeinmod.applyConfig(self.model, self.toolDict, True, self.options)
+            self.pathDelete()
+            pool = ThreadPool(2) 
+            pool.add_task(self.model.Slice())
+            pathActor = self.model.getPathActor()
+            self.ren.AddActor(self.model._slice_actor)
+            self.ren.AddActor(self.model._support_actor)
+            self.ren.AddActor(self.model._base_actor)
+            logger.log('Added path actor to the scene')
+            modelActor = self.model.readActor()
+            modelActor.GetProperty().SetOpacity(0)
+            self.qvtkWidget.GetRenderWindow().Render()
+            self.loadModelTree()
         
     def pathDelete(self):
         self.ren.RemoveActor(self.model.getPathActor())

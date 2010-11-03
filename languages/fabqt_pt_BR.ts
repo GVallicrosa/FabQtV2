@@ -358,7 +358,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="ui/fabqtDialog.ui" line="2092"/>
         <source>Status/Info</source>
-        <translation>Informação de status</translation>
+        <translation type="obsolete">Informação de status</translation>
     </message>
     <message>
         <location filename="ui/fabqtDialog.ui" line="2103"/>
@@ -428,6 +428,64 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="ui/fabqtDialog.ui" line="1835"/>
         <source>Log</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ui/fabqtDialog.ui" line="2092"/>
+        <source>Log/Status/Info</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>advancedDialog</name>
+    <message>
+        <location filename="ui/advancedDialog.ui" line="14"/>
+        <source>Advanced Path Planning</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ui/advancedDialog.ui" line="23"/>
+        <source>Activate Raft</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ui/advancedDialog.ui" line="32"/>
+        <source>Add Raft, Elevate Nozzle, Orbit and Set Altitude</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ui/advancedDialog.ui" line="44"/>
+        <source>Base Infill Density (ratio):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ui/advancedDialog.ui" line="61"/>
+        <source>Base Layer Thickness over Layer Thickness:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ui/advancedDialog.ui" line="78"/>
+        <source>Base Layers (integer):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ui/advancedDialog.ui" line="92"/>
+        <source>Interface Infill Density (ratio):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ui/advancedDialog.ui" line="109"/>
+        <source>Interface Layer Thickness over Layer Thickness:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ui/advancedDialog.ui" line="126"/>
+        <source>Interface Layers (integer):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ui/advancedDialog.ui" line="140"/>
+        <source>Raft Margin (mm):</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

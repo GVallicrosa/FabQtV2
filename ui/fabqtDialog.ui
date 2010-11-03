@@ -2089,7 +2089,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Status/Info</string>
+    <string>Log/Status/Info</string>
    </property>
   </action>
   <action name="actionToolbar">

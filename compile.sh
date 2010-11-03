@@ -7,6 +7,7 @@ pyuic4 -o ui_aboutDialog.py aboutDialog.ui
 pyuic4 -o ui_toolDialog.py toolDialog.ui
 pyuic4 -o ui_propertiesDialog.py propertiesDialog.ui
 pyuic4 -o ui_printerDialog.py printerDialog.ui
+pyuic4 -o ui_advancedDialog.py advancedDialog.ui
 cd ..
 pylupdate4 fabqt.pro
 python fixUI.py

@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/fabqtDialog.ui'
 #
-# Created: Wed Nov  3 10:33:57 2010
+# Created: Wed Nov  3 11:50:33 2010
 #      by: PyQt4 UI code generator 4.7.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -940,7 +940,7 @@ class Ui_MainWindow(object):
         self.actionStop.setToolTip(QtGui.QApplication.translate("MainWindow", "Stops printing", None, QtGui.QApplication.UnicodeUTF8))
         self.actionStop.setShortcut(QtGui.QApplication.translate("MainWindow", "Ctrl+S", None, QtGui.QApplication.UnicodeUTF8))
         self.actionMain_tools.setText(QtGui.QApplication.translate("MainWindow", "Main tools", None, QtGui.QApplication.UnicodeUTF8))
-        self.actionStatus_Info.setText(QtGui.QApplication.translate("MainWindow", "Status/Info", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionStatus_Info.setText(QtGui.QApplication.translate("MainWindow", "Log/Status/Info", None, QtGui.QApplication.UnicodeUTF8))
         self.actionToolbar.setText(QtGui.QApplication.translate("MainWindow", "Toolbar", None, QtGui.QApplication.UnicodeUTF8))
         self.actionAbout.setText(QtGui.QApplication.translate("MainWindow", "About", None, QtGui.QApplication.UnicodeUTF8))
         self.actionEnglish.setText(QtGui.QApplication.translate("MainWindow", "English", None, QtGui.QApplication.UnicodeUTF8))
