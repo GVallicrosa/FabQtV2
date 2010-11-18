@@ -58,6 +58,7 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         self.camera.SetFocalPoint(0, 0, 0)
         self.camera.SetPosition(300, 0, 100)
         self.camera.SetViewUp(-1, 0, 0)
+        #self.camera.SetParallelProjection(1)#######
         self.ren = vtk.vtkRenderer()
         self.ren.SetActiveCamera(self.camera)
         self.qvtkWidget.SetInteractorStyle(vtk.vtkInteractorStyleTrackballCamera())

@@ -44,7 +44,7 @@ class vtkLinePlotter(object):
 
     def CreateActor(self):
         '''Create poly data'''
-        polyData = self.CreatePolyData()
+        polydata = self.CreatePolyData()
         #create a color lookup table
         if self.m_lookupTable is None:
             m_lookupTable = vtk.vtkLookupTable()
@@ -59,4 +59,4 @@ class vtkLinePlotter(object):
         actor = vtk.vtkActor()
         actor.SetMapper(mapper)
         actor.GetProperty().SetLineWidth(self.m_allLineWidth)
-        return mapper, actor
+        return polydata, mapper, actor

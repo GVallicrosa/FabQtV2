@@ -204,13 +204,13 @@ class Model(object):
                     vec2[1] = vectors[i + 1].y
                     vec2[2] = vectors[i + 1].z
                     basePlotter.PlotLine(vec1, vec2, color3)
-        mapper, actor = modelPlotter.CreateActor()
+        polydata, mapper, actor = modelPlotter.CreateActor()
         self._slice_mapper = mapper
         self._slice_actor = actor
-        mapper, actor = supportPlotter.CreateActor()
+        polydata, mapper, actor = supportPlotter.CreateActor()
         self._support_mapper = mapper
         self._support_actor = actor
-        mapper, actor = basePlotter.CreateActor()
+        polydata, mapper, actor = basePlotter.CreateActor()
         self._base_mapper = mapper
         self._base_actor = actor
         
