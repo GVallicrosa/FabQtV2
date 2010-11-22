@@ -50,6 +50,20 @@ def moveToOrigin(actor):
     zmin, zmax = actor.GetZRange()
     actor.SetPosition(-xmin, -ymin, -zmin)
     
+def tubeView(paths, pathWidth = 1.2, polydata = False):
+    tubes = vtk.vtkTubeFilter()
+    if polydata:
+        axesTubes.SetInput(paths)
+    else:
+        axesTubes.SetInputConnection(paths.GetOutputPort())
+    tubes.SetRadius(pathWidth/2.0)
+    tubes.SetNumberOfSides(4)
+    tubesMapper = vtk.vtkPolyDataMapper()
+    tubesMapper.SetInputConnection(tubesTubes.GetOutputPort())
+    tubesActor = vtk.vtkActor()
+    tubesActor.SetMapper(tubesMapper)
+    return tubesActor
+    
 def validateMove(actor, printer):
     XMAX, YMAX, ZMAX = printer.getPrintingDimensions()
     x, y, z = actor.GetPosition()

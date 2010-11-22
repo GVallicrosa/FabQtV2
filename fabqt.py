@@ -54,39 +54,10 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         self.populatePrinterPort()
         self.currentPrinter = self.printerDict[str(self.printerComboBox.currentText())]
         ## Render window using VTK lib
-        self.camera = vtk.vtkCamera()
-        self.camera.SetFocalPoint(0, 0, 0)
-        self.camera.SetPosition(300, 0, 100)
-        self.camera.SetViewUp(-1, 0, 0)
-        #self.camera.SetParallelProjection(1)#######
-        self.ren = vtk.vtkRenderer()
-        self.ren.SetActiveCamera(self.camera)
-        self.qvtkWidget.SetInteractorStyle(vtk.vtkInteractorStyleTrackballCamera())
-        self.qvtkWidget.GetRenderWindow().AddRenderer(self.ren)
-        ## Building table representation
-        base = vtk.vtkCubeSource()
-        xmax, ymax, zmax = self.currentPrinter.getPrintingDimensions()
-        base.SetBounds(-xmax/2, xmax/2, -ymax/2, ymax/2, -5, 0)
-        baseMapper = vtk.vtkPolyDataMapper()
-        baseMapper.SetInput(base.GetOutput())
-        baseActor = vtk.vtkActor()
-        baseActor.SetMapper(baseMapper)
-        baseActor.PickableOff()
-        ## Origin Axes
-        axesActor, XActor, YActor, ZActor = generateAxes(self.currentPrinter)
-        XActor.SetCamera(self.camera)
-        YActor.SetCamera(self.camera)
-        ZActor.SetCamera(self.camera)
-        ## Add all initial actors
-        self.ren.AddActor(baseActor)
-        self.ren.AddActor(axesActor)
-        self.ren.AddActor(XActor)
-        self.ren.AddActor(YActor)
-        self.ren.AddActor(ZActor)
-        ## Start rendering
-        self.qvtkWidget.Initialize()
-        self.qvtkWidget.GetRenderWindow().Render()
-        self.qvtkWidget.Start()    
+        self.qvtkWidget.customStart(self.currentPrinter)
+        #self.ren = self.qvtkWidget.ren
+        self.camera = self.qvtkWidget.camera
+        
 ## CONNECTIONS AND MENUS
         ## Import model file dialog
         self.importDialog = QFileDialog(self, 'Import model', settings.value("Path/ModelDir", QVariant(QString('./'))).toString(), 
@@ -187,10 +158,10 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
             
     def deleteModel(self):
         ''' Deletes the model from view and dictionary and reloads the model tree.'''
-        self.ren.RemoveActor(self.model.readActor())
-        self.ren.RemoveActor(self.model.getPathActor())
-        self.ren.RemoveActor(self.model.getSupportPathActor())
-        self.ren.RemoveActor(self.model.getBasePathActor())
+        self.qvtkWidget.RemoveActorCustom(self.model.readActor())
+        self.qvtkWidget.RemoveActorCustom(self.model.getPathActor())
+        self.qvtkWidget.RemoveActorCustom(self.model.getSupportPathActor())
+        self.qvtkWidget.RemoveActorCustom(self.model.getBasePathActor())
         self.modelDict.pop(str(self.model.name))
         self.loadModelTree()        
         self.qvtkWidget.GetRenderWindow().Render()
@@ -226,7 +197,7 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         self.modelDict[str(model.name)] = model
         printer = str(self.printerComboBox.currentText())
         printer = self.printerDict[printer]
-        self.ren.AddActor(model.readActor())
+        self.qvtkWidget.AddActorCustom(model)
         validateMove(model.readActor(), printer)
         self.qvtkWidget.GetRenderWindow().Render()
         self.loadModelTree()
@@ -387,9 +358,7 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
             pool = ThreadPool(2) 
             pool.add_task(self.model.Slice())
             pathActor = self.model.getPathActor()
-            self.ren.AddActor(self.model._slice_actor)
-            self.ren.AddActor(self.model._support_actor)
-            self.ren.AddActor(self.model._base_actor)
+            self.qvtkWidget.AddActorCustom(self.model)
             logger.log('Added path actor to the scene')
             modelActor = self.model.readActor()
             modelActor.GetProperty().SetOpacity(0)
@@ -397,9 +366,9 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
             self.loadModelTree()
         
     def pathDelete(self):
-        self.ren.RemoveActor(self.model.getPathActor())
-        self.ren.RemoveActor(self.model.getSupportPathActor())
-        self.ren.RemoveActor(self.model.getBasePathActor())
+        self.qvtkWidget.RemoveActorCustom(self.model.getPathActor())
+        self.qvtkWidget.RemoveActorCustom(self.model.getSupportPathActor())
+        self.qvtkWidget.RemoveActorCustom(self.model.getBasePathActor())
         self.model.deletePath()
         modelActor = self.model.readActor()
         modelActor.GetProperty().SetOpacity(0.5)
@@ -417,9 +386,7 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
             pool = ThreadPool(2) 
             pool.add_task(self.model.Slice())
             pathActor = self.model.getPathActor()
-            self.ren.AddActor(self.model._slice_actor)
-            self.ren.AddActor(self.model._support_actor)
-            self.ren.AddActor(self.model._base_actor)
+            self.qvtkWidget.AddActorCustom(self.model)
             logger.log('Added path actor to the scene')
             modelActor = self.model.readActor()
             modelActor.GetProperty().SetOpacity(0)

@@ -26,7 +26,7 @@ class Ui_MainWindow(object):
         self.centralwidget.setObjectName("centralwidget")
         self.verticalLayout_2 = QtGui.QVBoxLayout(self.centralwidget)
         self.verticalLayout_2.setObjectName("verticalLayout_2")
-        self.qvtkWidget = QVTKRenderWindowInteractor(self.centralwidget)
+        self.qvtkWidget = QVTKRenderWindowInteractorCustom(self.centralwidget)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.MinimumExpanding, QtGui.QSizePolicy.MinimumExpanding)
         sizePolicy.setHorizontalStretch(200)
         sizePolicy.setVerticalStretch(200)
@@ -949,4 +949,5 @@ class Ui_MainWindow(object):
         self.actionPortuguese_Brazil.setText(QtGui.QApplication.translate("MainWindow", "Portuguese (Brazil)", None, QtGui.QApplication.UnicodeUTF8))
 
 from vtk.qt4.QVTKRenderWindowInteractor import QVTKRenderWindowInteractor
+from ui.vtkCustom import QVTKRenderWindowInteractorCustom
 import resources_rc
