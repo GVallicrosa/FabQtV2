@@ -24,8 +24,6 @@ from core.python import printerports
 from core.python.taskexecutor import ThreadPool
 import core.python.skeinmod as skeinmod
 from core.python.fablog import Fablog
-# Testing
-from core.python.shared import Shared
 
 if os.path.exists('log.txt'):
     if os.path.getsize('log.txt') >= 1024*1024: # 1MB
@@ -46,7 +44,6 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         self.configPrinterName = None
         self.model = None
         self.toolDict = loadTools() # toolname: Tool()
-        #Shared.tool = self.toolDict
         self.qvtkWidget.toolDict = self.toolDict
         self.printerDict = loadPrinters() # printername: Printer()
         self.modelDict = dict() # modelname: Model()
@@ -167,6 +164,7 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         self.qvtkWidget.RemoveActorCustom(self.model.getSupportPathActor())
         self.qvtkWidget.RemoveActorCustom(self.model.getBasePathActor())
         self.modelDict.pop(str(self.model.name))
+        self.qvtkWidget.modelDict = self.modelDict
         self.loadModelTree()        
         self.qvtkWidget.GetRenderWindow().Render()
         logger.log('Deleted model: ' + self.model.name)
@@ -199,6 +197,7 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
                 else:
                     num += 1
         self.modelDict[str(model.name)] = model
+        self.qvtkWidget.modelDict = self.modelDict
         printer = str(self.printerComboBox.currentText())
         printer = self.printerDict[printer]
         self.qvtkWidget.AddActorCustom(model)

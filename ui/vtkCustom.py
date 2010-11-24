@@ -2,8 +2,6 @@ from PyQt4 import QtCore, QtGui
 from vtk.qt4.QVTKRenderWindowInteractor import QVTKRenderWindowInteractor
 import vtk
 from core.python.render import generateAxes
-# Testing
-from core.python.shared import Shared
 
 class QVTKRenderWindowInteractorCustom(QVTKRenderWindowInteractor):
     def __init__(self, parent = None):
@@ -21,16 +19,15 @@ class QVTKRenderWindowInteractorCustom(QVTKRenderWindowInteractor):
         self.ren.InteractiveOn()
         ## Variables
         self.tubeOn = False
-        self.currentIndex = 1
-        self.models = dict()
+        self.currentIndex = -1
         self.newActors = list()
         self.toolDict = None
+        self.modelDict = None
         
     def AddActorCustom(self, model):
         for actor in [model._actor, model._slice_actor, model._support_actor, model._base_actor]:
             if actor is not None:
                 self.ren.AddActor(actor)
-        self.models[model.name] = model
             
     def customStart(self, printer):
         axesActor, XActor, YActor, ZActor = generateAxes(printer)
@@ -55,21 +52,33 @@ class QVTKRenderWindowInteractorCustom(QVTKRenderWindowInteractor):
         self.Start()
         
     def cutter(self):
-        #if self.tubeOn:
-        #    self.toolDict = Shared.tool
-        plane = vtk.vtkPlane() 
-        plane.SetOrigin(0, 0, self.currentIndex) 
-        plane.SetNormal(0, 0, 1)
-        window = vtk.vtkImplicitWindowFunction()
-        window.SetImplicitFunction(plane)
-        window.SetWindowRange(0, 1) #(you will need to define the range)
-        for model in self.models.values():
+        #plane = vtk.vtkPlane() 
+        #plane.SetOrigin(0, 0, self.currentIndex -0.001) 
+        #plane.SetNormal(0, 0, 1)
+        #window = vtk.vtkImplicitWindowFunction()
+        #window.SetImplicitFunction(plane)
+        #window.SetWindowRange(0, 1) #(you will need to define the range)
+        for model in self.modelDict.values():
             for actor in [model._actor, model._slice_actor, model._support_actor, model._base_actor]:
                 if actor is not None:
                     actor.GetProperty().SetOpacity(0)
+            print model.layerValues
             for polydata in [model._slice_vtkpolydata, model._support_vtkpolydata, model._base_vtkpolydata]:
                 if polydata is not None:
-                    clipper = vtk.vtkClipPolyData() #/ or vtk.vtkClipVolume()
+                    i = self.currentIndex
+                    if i < 0:
+                        i = 0
+                        self.currentIndex = -1
+                    elif i > len(model.layerValues) - 1:
+                        i = len(model.layerValues) - 1
+                    plane = vtk.vtkPlane() 
+                    plane.SetOrigin(0, 0, model.layerValues[i] -0.005) # some errors
+                    plane.SetNormal(0, 0, 1)
+                    window = vtk.vtkImplicitWindowFunction()
+                    window.SetImplicitFunction(plane)
+                    pathHeight = float(self.toolDict[str(model._modelMaterial)].pathHeight)
+                    window.SetWindowRange(0, pathHeight/2.0)
+                    clipper = vtk.vtkClipPolyData()
                     clipper.AddInput(polydata) 
                     clipper.SetClipFunction(window)
                     clipper.GenerateClippedOutputOn()
@@ -85,31 +94,32 @@ class QVTKRenderWindowInteractorCustom(QVTKRenderWindowInteractor):
         
     def Keypress(self, obj, event):
         key = obj.GetKeyCode()
-        if key in ['b', 'n', 'm', 'x']:
-            for actor in self.newActors:
-                    self.ren.RemoveActor(actor)
-            self.newActors = list()
-            if key == 'm':
-                self.currentIndex += 1
-                self.cutter()
-            elif key == 'n':
-                self.currentIndex -= 1
-                self.cutter()
-            elif key == 'b':
-                if self.tubeOn:
-                    self.tubeOn = False
-                else:
-                    self.tubeOn = True
-                self.cutter()
-            elif key == 'x':
-                self.currentIndex = 1
-                for model in self.models.values():
-                    for actor in [model._slice_actor, model._support_actor, model._base_actor]:
-                        if actor is not None:
-                            actor.GetProperty().SetOpacity(1)
-            self.ren.GetRenderWindow().Render()
-        elif key == 'z':
-            self.currentIndex = 1
+        if self.modelDict is not None:
+            if key in ['b', 'n', 'm', 'x']:
+                for actor in self.newActors:
+                        self.ren.RemoveActor(actor)
+                self.newActors = list()
+                if key == 'm':
+                    self.currentIndex += 1
+                    self.cutter()
+                elif key == 'n':
+                    self.currentIndex -= 1
+                    self.cutter()
+                elif key == 'b':
+                    if self.tubeOn:
+                        self.tubeOn = False
+                    else:
+                        self.tubeOn = True
+                    self.cutter()
+                elif key == 'x':
+                    self.currentIndex = 1
+                    for model in self.modelDict.values():
+                        for actor in [model._slice_actor, model._support_actor, model._base_actor]:
+                            if actor is not None:
+                                actor.GetProperty().SetOpacity(1)
+                self.ren.GetRenderWindow().Render()
+            elif key == 'z':
+                self.currentIndex = -1
             
     def tubeView(self, clipper, pathWidth = 1.2):
         tubes = vtk.vtkTubeFilter()

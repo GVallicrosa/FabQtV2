@@ -141,12 +141,18 @@ class Model(object):
         export.writeOutput('temp.stl')
         logger.log('Creating GCode...')
         os.remove('temp.stl')
-        ok, layers = readGcode('temp_export.gcode')
+        ok, layers = readGcode('temp_export.gcode') 
         logger.log('Reading GCode...')
         #os.remove('temp_export.gcode')
         if ok:
             self.setLayers(layers)
             logger.log('GCode correctly readed')
+            #########################
+            self.layerValues = list()
+            for layer in layers:
+                z = layer.readBasePaths()[0].read()[0].z # or others
+                self.layerValues.append(z)
+            #########################
         else:
             logger.log('Error importing GCode')
         self.generatePaths(layers)

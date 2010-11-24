@@ -21,7 +21,7 @@ class propertiesDialog(QDialog, ui_propertiesDialog.Ui_propertiesDialog):
         if self.model.readModelMaterial() is None:
             self.modelMaterialComboBox.setCurrentIndex(-1) # No tool
         else:
-            index = self.modelMaterialComboBox.findText(self.model.readModelMaterial().name)
+            index = self.modelMaterialComboBox.findText(toolDict[str(self.model.readModelMaterial())].name)
             self.modelMaterialComboBox.setCurrentIndex(index)
 
     def accept(self):
