@@ -24,6 +24,8 @@ from core.python import printerports
 from core.python.taskexecutor import ThreadPool
 import core.python.skeinmod as skeinmod
 from core.python.fablog import Fablog
+# Testing
+from core.python.shared import Shared
 
 if os.path.exists('log.txt'):
     if os.path.getsize('log.txt') >= 1024*1024: # 1MB
@@ -44,6 +46,8 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         self.configPrinterName = None
         self.model = None
         self.toolDict = loadTools() # toolname: Tool()
+        #Shared.tool = self.toolDict
+        self.qvtkWidget.toolDict = self.toolDict
         self.printerDict = loadPrinters() # printername: Printer()
         self.modelDict = dict() # modelname: Model()
         self.options = Options() # advanced path options
@@ -523,6 +527,7 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
             Dialog = toolDialog(self, tool)
         Dialog.exec_() 
         self.toolDict = loadTools()
+        self.qvtkWidget.toolDict = self.toolDict
         self.populateToolComboBox() # Reload data for comboboxes and tool tree
         self.loadConfigTree()
 

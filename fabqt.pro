@@ -6,6 +6,7 @@ FORMS        += ui/propertiesDialog.ui
 FORMS        += ui/printerDialog.ui
 
 SOURCES	     += fabqt.py
+SOURCES	     += ui/vtkCustom.py
 SOURCES	     += core/python/advancedOptions.py
 SOURCES	     += core/python/layer.py
 SOURCES	     += core/python/model.py

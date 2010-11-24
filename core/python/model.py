@@ -29,8 +29,8 @@ class Model(object):
         self._base_mapper = None
         self._base_actor = None
         # properties
-        self._supportMaterial = supportMaterial
-        self._modelMaterial = modelMaterial
+        self._supportMaterial = supportMaterial # string
+        self._modelMaterial = modelMaterial # string
         # model layers
         self._layer = layer    
             
@@ -205,12 +205,15 @@ class Model(object):
                     vec2[2] = vectors[i + 1].z
                     basePlotter.PlotLine(vec1, vec2, color3)
         polydata, mapper, actor = modelPlotter.CreateActor()
+        self._slice_vtkpolydata = polydata
         self._slice_mapper = mapper
         self._slice_actor = actor
         polydata, mapper, actor = supportPlotter.CreateActor()
+        self._support_vtkpolydata = polydata
         self._support_mapper = mapper
         self._support_actor = actor
         polydata, mapper, actor = basePlotter.CreateActor()
+        self._base_vtkpolydata = polydata
         self._base_mapper = mapper
         self._base_actor = actor
         

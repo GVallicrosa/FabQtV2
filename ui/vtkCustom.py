@@ -1,7 +1,9 @@
 from PyQt4 import QtCore, QtGui
 from vtk.qt4.QVTKRenderWindowInteractor import QVTKRenderWindowInteractor
 import vtk
-from core.python.render import generateAxes, tubeView
+from core.python.render import generateAxes
+# Testing
+from core.python.shared import Shared
 
 class QVTKRenderWindowInteractorCustom(QVTKRenderWindowInteractor):
     def __init__(self, parent = None):
@@ -22,6 +24,7 @@ class QVTKRenderWindowInteractorCustom(QVTKRenderWindowInteractor):
         self.currentIndex = 1
         self.models = dict()
         self.newActors = list()
+        self.toolDict = None
         
     def AddActorCustom(self, model):
         for actor in [model._actor, model._slice_actor, model._support_actor, model._base_actor]:
@@ -52,15 +55,18 @@ class QVTKRenderWindowInteractorCustom(QVTKRenderWindowInteractor):
         self.Start()
         
     def cutter(self):
+        #if self.tubeOn:
+        #    self.toolDict = Shared.tool
         plane = vtk.vtkPlane() 
-        plane.SetOrigin(0, 0, self.currentIndex - 1) 
+        plane.SetOrigin(0, 0, self.currentIndex) 
         plane.SetNormal(0, 0, 1)
         window = vtk.vtkImplicitWindowFunction()
         window.SetImplicitFunction(plane)
         window.SetWindowRange(0, 1) #(you will need to define the range)
         for model in self.models.values():
             for actor in [model._actor, model._slice_actor, model._support_actor, model._base_actor]:
-                actor.GetProperty().SetOpacity(0)
+                if actor is not None:
+                    actor.GetProperty().SetOpacity(0)
             for polydata in [model._slice_vtkpolydata, model._support_vtkpolydata, model._base_vtkpolydata]:
                 if polydata is not None:
                     clipper = vtk.vtkClipPolyData() #/ or vtk.vtkClipVolume()
@@ -68,7 +74,7 @@ class QVTKRenderWindowInteractorCustom(QVTKRenderWindowInteractor):
                     clipper.SetClipFunction(window)
                     clipper.GenerateClippedOutputOn()
                     if self.tubeOn:
-                        clipActor = tubeView(clipper, model_modelMaterial.pathWidth)
+                        clipActor = self.tubeView(clipper, float(self.toolDict[str(model._modelMaterial)].pathWidth))
                     else:
                         clipMapper = vtk.vtkPolyDataMapper()
                         clipMapper.SetInputConnection(clipper.GetOutputPort())
@@ -79,7 +85,7 @@ class QVTKRenderWindowInteractorCustom(QVTKRenderWindowInteractor):
         
     def Keypress(self, obj, event):
         key = obj.GetKeyCode()
-        if key in ['b', 'n', 'm']:
+        if key in ['b', 'n', 'm', 'x']:
             for actor in self.newActors:
                     self.ren.RemoveActor(actor)
             self.newActors = list()
@@ -87,7 +93,7 @@ class QVTKRenderWindowInteractorCustom(QVTKRenderWindowInteractor):
                 self.currentIndex += 1
                 self.cutter()
             elif key == 'n':
-                self.currentIndex += 1
+                self.currentIndex -= 1
                 self.cutter()
             elif key == 'b':
                 if self.tubeOn:
@@ -95,10 +101,28 @@ class QVTKRenderWindowInteractorCustom(QVTKRenderWindowInteractor):
                 else:
                     self.tubeOn = True
                 self.cutter()
+            elif key == 'x':
+                self.currentIndex = 1
+                for model in self.models.values():
+                    for actor in [model._slice_actor, model._support_actor, model._base_actor]:
+                        if actor is not None:
+                            actor.GetProperty().SetOpacity(1)
             self.ren.GetRenderWindow().Render()
+        elif key == 'z':
+            self.currentIndex = 1
+            
+    def tubeView(self, clipper, pathWidth = 1.2):
+        tubes = vtk.vtkTubeFilter()
+        tubes.SetInputConnection(clipper.GetOutputPort())
+        tubes.SetRadius(pathWidth/2.0)
+        tubes.SetNumberOfSides(4)
+        tubesMapper = vtk.vtkPolyDataMapper()
+        tubesMapper.SetInputConnection(tubes.GetOutputPort())
+        tubesActor = vtk.vtkActor()
+        tubesActor.SetMapper(tubesMapper)
+        return tubesActor
             
     def RemoveActorCustom(self, actor):
         if actor is not None:
-            self.actors.remove(actor)
             self.ren.RemoveActor(actor)
         
