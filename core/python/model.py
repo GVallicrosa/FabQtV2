@@ -32,7 +32,13 @@ class Model(object):
         self._supportMaterial = supportMaterial # string
         self._modelMaterial = modelMaterial # string
         # model layers
-        self._layer = layer    
+        self._layer = layer 
+           
+    def hasModel(self):
+        if self._actor is None:
+            return False
+        else:
+            return True
             
     def hasModelPath(self):
         if self._slice_actor is None:
@@ -81,6 +87,19 @@ class Model(object):
             actor.GetProperty().SetColor(random.random(), random.random(), random.random()) # Colorizes randomly
             actor.GetProperty().SetOpacity(0.5)
             self.setActor(actor)
+        if extension.lower() == 'gcode':
+            logger.log('Reading GCode...')
+            ok, layers = readGcode(str(fname))
+            if ok:
+                self.setLayers(layers)
+                logger.log('GCode correctly readed')
+                self.layerValues = list()
+                for layer in layers:
+                    z = layer.readModelPaths()[0].read()[0].z # or others
+                    self.layerValues.append(z)
+            else:
+                logger.log('Error importing GCode')
+            self.generatePaths(layers)
         else:
             logger.log('No valid file extension for model import')
         
@@ -150,7 +169,7 @@ class Model(object):
             #########################
             self.layerValues = list()
             for layer in layers:
-                z = layer.readBasePaths()[0].read()[0].z # or others
+                z = layer.readModelPaths()[0].read()[0].z # or others
                 self.layerValues.append(z)
             #########################
         else:
@@ -166,13 +185,14 @@ class Model(object):
     def getBasePathActor(self):
         return self._base_actor 
             
-    def generatePaths(self, layers):
+    def generatePaths(self, layers, basic = True):
         color1 = 0#random.random()
-        color2 = 0.5
-        color3 = 1
         modelPlotter = vtkLinePlotter()
-        supportPlotter = vtkLinePlotter()
-        basePlotter = vtkLinePlotter()
+        if not basic:
+            color2 = 0.5
+            color3 = 1
+            supportPlotter = vtkLinePlotter()
+            basePlotter = vtkLinePlotter()
         for layer in layers: # layer
             for path in layer.readModelPaths(): # path
                 vectors = path.read()
@@ -186,42 +206,44 @@ class Model(object):
                     vec2[1] = vectors[i + 1].y
                     vec2[2] = vectors[i + 1].z
                     modelPlotter.PlotLine(vec1, vec2, color1)
-            for path in layer.readSupportPaths(): # path
-                vectors = path.read()
-                for i in range(len(vectors) - 1): # vector
-                    vec1 = [0, 0, 0]
-                    vec2 = [0, 0, 0]
-                    vec1[0] = vectors[i].x
-                    vec1[1] = vectors[i].y
-                    vec1[2] = vectors[i].z
-                    vec2[0] = vectors[i + 1].x
-                    vec2[1] = vectors[i + 1].y
-                    vec2[2] = vectors[i + 1].z
-                    supportPlotter.PlotLine(vec1, vec2, color2)
-            for path in layer.readBasePaths(): # path
-                vectors = path.read()
-                for i in range(len(vectors) - 1): # vector
-                    vec1 = [0, 0, 0]
-                    vec2 = [0, 0, 0]
-                    vec1[0] = vectors[i].x
-                    vec1[1] = vectors[i].y
-                    vec1[2] = vectors[i].z
-                    vec2[0] = vectors[i + 1].x
-                    vec2[1] = vectors[i + 1].y
-                    vec2[2] = vectors[i + 1].z
-                    basePlotter.PlotLine(vec1, vec2, color3)
+            if not basic:
+                for path in layer.readSupportPaths(): # path
+                    vectors = path.read()
+                    for i in range(len(vectors) - 1): # vector
+                        vec1 = [0, 0, 0]
+                        vec2 = [0, 0, 0]
+                        vec1[0] = vectors[i].x
+                        vec1[1] = vectors[i].y
+                        vec1[2] = vectors[i].z
+                        vec2[0] = vectors[i + 1].x
+                        vec2[1] = vectors[i + 1].y
+                        vec2[2] = vectors[i + 1].z
+                        supportPlotter.PlotLine(vec1, vec2, color2)
+                for path in layer.readBasePaths(): # path
+                    vectors = path.read()
+                    for i in range(len(vectors) - 1): # vector
+                        vec1 = [0, 0, 0]
+                        vec2 = [0, 0, 0]
+                        vec1[0] = vectors[i].x
+                        vec1[1] = vectors[i].y
+                        vec1[2] = vectors[i].z
+                        vec2[0] = vectors[i + 1].x
+                        vec2[1] = vectors[i + 1].y
+                        vec2[2] = vectors[i + 1].z
+                        basePlotter.PlotLine(vec1, vec2, color3)
         polydata, mapper, actor = modelPlotter.CreateActor()
         self._slice_vtkpolydata = polydata
         self._slice_mapper = mapper
         self._slice_actor = actor
-        polydata, mapper, actor = supportPlotter.CreateActor()
-        self._support_vtkpolydata = polydata
-        self._support_mapper = mapper
-        self._support_actor = actor
-        polydata, mapper, actor = basePlotter.CreateActor()
-        self._base_vtkpolydata = polydata
-        self._base_mapper = mapper
-        self._base_actor = actor
+        if not basic:
+            polydata, mapper, actor = supportPlotter.CreateActor()
+            self._support_vtkpolydata = polydata
+            self._support_mapper = mapper
+            self._support_actor = actor
+            polydata, mapper, actor = basePlotter.CreateActor()
+            self._base_vtkpolydata = polydata
+            self._base_mapper = mapper
+            self._base_actor = actor
         
     def transform(self): # transformation = vtkMatrix4x4
         pass

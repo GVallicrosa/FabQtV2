@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 class Layer(object):
-    def __init__(self, modelPaths = tuple(), supportPaths = tuple()):
+    def __init__(self, modelPaths = tuple(), supportPaths = tuple(), basePaths = tuple()):
         self._model = modelPaths
         self._support = supportPaths
-        self._base = tuple()
+        self._base = basePaths
         #self._contourSupport ## (list of path) future implementation for custom path planning
         #self._contourModel ## (list of path) future implementation for custom path planning
 
@@ -24,6 +24,8 @@ class Layer(object):
         
     def delete(self):
         self._model = tuple()
+        self._support = tuple()
+        self._base = tuple()
         
     def getBaseLenght(self):
         value = 0

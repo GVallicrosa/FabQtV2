@@ -13,7 +13,7 @@ def readGcode(fname):
         linemax = len(text)
         printing = False
         lastZ = None
-        kind = 'base'
+        kind = 'model'
         layerlist = list()
         lino = 18
         for line in text[18:]: #avoiding useless information

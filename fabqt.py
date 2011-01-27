@@ -61,8 +61,12 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         
 ## CONNECTIONS AND MENUS
         ## Import model file dialog
-        self.importDialog = QFileDialog(self, 'Import model', settings.value("Path/ModelDir", QVariant(QString('./'))).toString(), 
-            "3D Models (*.STL *.stl);;All files (*)")
+        filters = QStringList()
+        filters.append("STL Models (*.stl)")
+        filters.append("GCode file (*.gcode)")
+        filters.append("All files (*)")
+        self.importDialog = QFileDialog(self, 'Import model', settings.value("Path/ModelDir", QVariant(QString('./'))).toString())
+        self.importDialog.setNameFilters(filters)
         self.connect(self.importDialog, SIGNAL('fileSelected(QString)'), self.importModel)
         ## Load preferences (called at the main loop)
         self.resize(settings.value("MainWindow/Size", QVariant(QSize(600, 500))).toSize())
@@ -183,7 +187,7 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         settings.setValue("Path/ModelDir", QVariant(fname[0:fname.find(fname.split('/')[-1])]))
         model = Model()
         pool = ThreadPool(2) 
-        pool.add_task(model.load(fname))
+        model.load(fname)
         if str(model.name) in self.modelDict.keys():
             logger.log('++ Model name already used')
             exists = True
@@ -197,11 +201,14 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
                 else:
                     num += 1
         self.modelDict[str(model.name)] = model
-        self.qvtkWidget.modelDict = self.modelDict
+        self.qvtkWidget.modelDict = self.modelDict #for view slices
         printer = str(self.printerComboBox.currentText())
         printer = self.printerDict[printer]
         self.qvtkWidget.AddActorCustom(model)
-        validateMove(model.readActor(), printer)
+        try:#################################################
+            validateMove(model.readActor(), printer)
+        except:
+            pass
         self.qvtkWidget.GetRenderWindow().Render()
         self.loadModelTree()
 
@@ -220,7 +227,8 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
             logger.log('Adding model: ' + model)
             modelItem = QTreeWidgetItem(self.modelTreeWidget)
             modelItem.setText(0, model)
-            modelItem.addChild(QTreeWidgetItem(QStringList('Model')))
+            if self.modelDict[model].hasModel():
+                modelItem.addChild(QTreeWidgetItem(QStringList('Model')))
             if self.modelDict[model].hasModelPath():
                 modelItem.addChild(QTreeWidgetItem(QStringList('model_path')))
             if self.modelDict[model].hasSupportPath():
