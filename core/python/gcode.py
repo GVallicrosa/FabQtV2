@@ -65,7 +65,6 @@ def readGcode(fname):
                         lastZ = z
                         try:
                             layerlist.append(layer)
-                            #layerlist += (layer,)
                         except: # Layer no exists at first execution
                             pass
                         layer = Layer()

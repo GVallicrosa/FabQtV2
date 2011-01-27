@@ -205,10 +205,10 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         printer = str(self.printerComboBox.currentText())
         printer = self.printerDict[printer]
         self.qvtkWidget.AddActorCustom(model)
-        try:#################################################
+        if self.modelDict[str(model.name)].hasModel():
             validateMove(model.readActor(), printer)
-        except:
-            pass
+        else:
+            validateMove(model.getPathActor(), printer)
         self.qvtkWidget.GetRenderWindow().Render()
         self.loadModelTree()
 
@@ -297,7 +297,10 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
             modelName = item.text(0)
             logger.log('Double clicked on model: ' + modelName)
             model = self.modelDict[str(modelName)]
-            actor = model.readActor()
+            if model.hasModel():
+                actor = model.readActor()
+            else:
+                actor = model.getPathActor()
             center = actor.GetCenter()
             self.camera.SetFocalPoint(center)
         else: # is 'Model' or 'Toolpath'
