@@ -97,6 +97,7 @@ class Model(object):
                 for layer in layers:
                     z = layer.readModelPaths()[0].read()[0].z # or others
                     self.layerValues.append(z)
+                self.pathHeight = float(layers[1].readModelPaths()[0].read()[0].z) - float(layers[0].readModelPaths()[0].read()[0].z)
             else:
                 logger.log('Error importing GCode')
             self.generatePaths(layers)
@@ -186,7 +187,7 @@ class Model(object):
         return self._base_actor 
             
     def generatePaths(self, layers, basic = True):
-        color1 = 0#random.random()
+        color1 = 0 #random.random()
         modelPlotter = vtkLinePlotter()
         if not basic:
             color2 = 0.5

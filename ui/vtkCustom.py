@@ -52,17 +52,10 @@ class QVTKRenderWindowInteractorCustom(QVTKRenderWindowInteractor):
         self.Start()
         
     def cutter(self):
-        #plane = vtk.vtkPlane() 
-        #plane.SetOrigin(0, 0, self.currentIndex -0.001) 
-        #plane.SetNormal(0, 0, 1)
-        #window = vtk.vtkImplicitWindowFunction()
-        #window.SetImplicitFunction(plane)
-        #window.SetWindowRange(0, 1) #(you will need to define the range)
         for model in self.modelDict.values():
             for actor in [model._actor, model._slice_actor, model._support_actor, model._base_actor]:
                 if actor is not None:
                     actor.GetProperty().SetOpacity(0)
-            print model.layerValues
             for polydata in [model._slice_vtkpolydata, model._support_vtkpolydata, model._base_vtkpolydata]:
                 if polydata is not None:
                     i = self.currentIndex
@@ -76,14 +69,20 @@ class QVTKRenderWindowInteractorCustom(QVTKRenderWindowInteractor):
                     plane.SetNormal(0, 0, 1)
                     window = vtk.vtkImplicitWindowFunction()
                     window.SetImplicitFunction(plane)
-                    pathHeight = float(self.toolDict[str(model._modelMaterial)].pathHeight)
+                    try:
+                        pathHeight = float(self.toolDict[str(model._modelMaterial)].pathHeight)
+                    except:
+                        pathHeight = model.pathHeight
                     window.SetWindowRange(0, pathHeight/2.0)
                     clipper = vtk.vtkClipPolyData()
                     clipper.AddInput(polydata) 
                     clipper.SetClipFunction(window)
                     clipper.GenerateClippedOutputOn()
                     if self.tubeOn:
-                        clipActor = self.tubeView(clipper, float(self.toolDict[str(model._modelMaterial)].pathWidth))
+                        try:
+                            clipActor = self.tubeView(clipper, float(self.toolDict[str(model._modelMaterial)].pathWidth))
+                        except:
+                            clipActor = self.tubeView(clipper, pathHeight)
                     else:
                         clipMapper = vtk.vtkPolyDataMapper()
                         clipMapper.SetInputConnection(clipper.GetOutputPort())
