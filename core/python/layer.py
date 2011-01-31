@@ -37,7 +37,7 @@ class Layer(object):
         for i in range(len(self._model)):
             value += self._model[i].length()
             
-    def getSupportLength(self):
+    def getSupportLenght(self):
         value = 0
         for i in range(len(self._support)):
             value += self._support[i].length()
@@ -50,6 +50,24 @@ class Layer(object):
         
     def getPathSupportNumber(self):
         return len(self._support)
+        
+    def hasBasePaths(self):
+        if self._base:
+            return True
+        else:
+            return False
+        
+    def hasModelPaths(self):
+        if self._model:
+            return True
+        else:
+            return False
+            
+    def hasSupportPaths(self):
+        if self._support:
+            return True
+        else:
+            return False
     
     def readBasePaths(self):
         return self._base

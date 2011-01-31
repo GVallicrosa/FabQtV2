@@ -59,4 +59,4 @@ class vtkLinePlotter(object):
         actor = vtk.vtkActor()
         actor.SetMapper(mapper)
         actor.GetProperty().SetLineWidth(self.m_allLineWidth)
-        return polydata, mapper, actor
+        return polydata, actor

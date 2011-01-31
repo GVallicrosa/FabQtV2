@@ -10,23 +10,23 @@ logger = Fablog()
 
 class Model(object):           
     
-    def __init__(self, name = None, actor = None, mapper = None, supportMaterial = None, modelMaterial = None, layer = list(), vtkpolydata = None):
+    def __init__(self, name = None, actor = None, supportMaterial = None, modelMaterial = None, layer = list(), vtkpolydata = None):
         self.name = name
         # 3D model
         self._actor = actor
-        self._mapper = mapper
-        self._vtkpolydata = vtkpolydata
+        #self._mapper = mapper
+        self._vtkpolydata = vtkpolydata # basic data
         # model path
         self._slice_vtkpolydata = None
-        self._slice_mapper = None
+        #self._slice_mapper = None
         self._slice_actor = None
         # support path
         self._support_vtkpolydata = None
-        self._support_mapper = None
+        #self._support_mapper = None
         self._support_actor = None
         # base path
         self._base_vtkpolydata = None
-        self._base_mapper = None
+        #self._base_mapper = None
         self._base_actor = None
         # properties
         self._supportMaterial = supportMaterial # string
@@ -61,16 +61,16 @@ class Model(object):
     def deletePath(self):# delete all data related to paths
         self._layer = list()
         self._slice_vtkpolydata = None
-        self._slice_mapper = None
+        #self._slice_mapper = None
         self._slice_actor = None
         self._support_vtkpolydata = None
-        self._support_mapper = None
+        #self._support_mapper = None
         self._support_actor = None
         self._base_vtkpolydata = None
-        self._base_mapper = None
+        #self._base_mapper = None
         self._base_actor = None
 
-    def load(self, fname): # from source, returns vtkPolydata, mapper and actor
+    def load(self, fname): # from source, returns vtkPolydata and actor
         self.name = fname.split('/')[-1] # name with extension
         logger.log('Importing model: ' + self.name)
         extension = fname.split('.')[1]
@@ -81,7 +81,7 @@ class Model(object):
             self.setPolyData(vtkPolyData)
             mapper = vtk.vtkPolyDataMapper()
             mapper.SetInput(vtkPolyData)
-            self.setMapper(mapper)
+            #self.setMapper(mapper)
             actor = vtk.vtkActor()
             actor.SetMapper(mapper)
             actor.GetProperty().SetColor(random.random(), random.random(), random.random()) # Colorizes randomly
@@ -125,9 +125,6 @@ class Model(object):
             
     def readActor(self): # if no one set yet return false or null
         return self._actor
-    
-    def readMapper(self): # if no one set yet return false or null
-        return self._mapper
    
     def readModelMaterial(self): # if no one set yet return false or null
         return self._modelMaterial
@@ -140,9 +137,6 @@ class Model(object):
             
     def setActor(self, actor): # points to private attribute _actor
         self._actor = actor
-        
-    def setMapper(self, mapper): # points to private attribute _mapper
-        self._mapper = mapper
         
     def setModelMaterial(self, material):
         self._modelMaterial = material
@@ -170,7 +164,12 @@ class Model(object):
             #########################
             self.layerValues = list()
             for layer in layers:
-                z = layer.readModelPaths()[0].read()[0].z # or others
+                if layer.hasModelPaths():
+                    z = layer.readModelPaths()[0].read()[0].z
+                elif layer.hasBasePaths():
+                    z = layer.readBasePaths()[0].read()[0].z
+                elif layer.hasSupportPaths():
+                    z = layer.readSupportPaths()[0].read()[0].z
                 self.layerValues.append(z)
             #########################
         else:
@@ -186,14 +185,15 @@ class Model(object):
     def getBasePathActor(self):
         return self._base_actor 
             
-    def generatePaths(self, layers, basic = True):
+    def generatePaths(self, layers):
         color1 = 0 #random.random()
+        color2 = 0.5
+        color3 = 1
         modelPlotter = vtkLinePlotter()
-        if not basic:
-            color2 = 0.5
-            color3 = 1
-            supportPlotter = vtkLinePlotter()
-            basePlotter = vtkLinePlotter()
+        supportPlotter = vtkLinePlotter()
+        basePlotter = vtkLinePlotter()
+        base = False
+        support = False  
         for layer in layers: # layer
             for path in layer.readModelPaths(): # path
                 vectors = path.read()
@@ -207,43 +207,45 @@ class Model(object):
                     vec2[1] = vectors[i + 1].y
                     vec2[2] = vectors[i + 1].z
                     modelPlotter.PlotLine(vec1, vec2, color1)
-            if not basic:
-                for path in layer.readSupportPaths(): # path
-                    vectors = path.read()
-                    for i in range(len(vectors) - 1): # vector
-                        vec1 = [0, 0, 0]
-                        vec2 = [0, 0, 0]
-                        vec1[0] = vectors[i].x
-                        vec1[1] = vectors[i].y
-                        vec1[2] = vectors[i].z
-                        vec2[0] = vectors[i + 1].x
-                        vec2[1] = vectors[i + 1].y
-                        vec2[2] = vectors[i + 1].z
-                        supportPlotter.PlotLine(vec1, vec2, color2)
-                for path in layer.readBasePaths(): # path
-                    vectors = path.read()
-                    for i in range(len(vectors) - 1): # vector
-                        vec1 = [0, 0, 0]
-                        vec2 = [0, 0, 0]
-                        vec1[0] = vectors[i].x
-                        vec1[1] = vectors[i].y
-                        vec1[2] = vectors[i].z
-                        vec2[0] = vectors[i + 1].x
-                        vec2[1] = vectors[i + 1].y
-                        vec2[2] = vectors[i + 1].z
-                        basePlotter.PlotLine(vec1, vec2, color3)
-        polydata, mapper, actor = modelPlotter.CreateActor()
+            for path in layer.readSupportPaths(): # path
+                vectors = path.read()
+                for i in range(len(vectors) - 1): # vector
+                    vec1 = [0, 0, 0]
+                    vec2 = [0, 0, 0]
+                    vec1[0] = vectors[i].x
+                    vec1[1] = vectors[i].y
+                    vec1[2] = vectors[i].z
+                    vec2[0] = vectors[i + 1].x
+                    vec2[1] = vectors[i + 1].y
+                    vec2[2] = vectors[i + 1].z
+                    supportPlotter.PlotLine(vec1, vec2, color2)
+                    support = True
+            for path in layer.readBasePaths(): # path
+                vectors = path.read()
+                for i in range(len(vectors) - 1): # vector
+                    vec1 = [0, 0, 0]
+                    vec2 = [0, 0, 0]
+                    vec1[0] = vectors[i].x
+                    vec1[1] = vectors[i].y
+                    vec1[2] = vectors[i].z
+                    vec2[0] = vectors[i + 1].x
+                    vec2[1] = vectors[i + 1].y
+                    vec2[2] = vectors[i + 1].z
+                    basePlotter.PlotLine(vec1, vec2, color3)
+                    base = True
+        polydata, actor = modelPlotter.CreateActor()
         self._slice_vtkpolydata = polydata
-        self._slice_mapper = mapper
+        #self._slice_mapper = mapper
         self._slice_actor = actor
-        if not basic:
-            polydata, mapper, actor = supportPlotter.CreateActor()
+        if support:
+            polydata, actor = supportPlotter.CreateActor()
             self._support_vtkpolydata = polydata
-            self._support_mapper = mapper
+            #self._support_mapper = mapper
             self._support_actor = actor
-            polydata, mapper, actor = basePlotter.CreateActor()
+        if base:
+            polydata, actor = basePlotter.CreateActor()
             self._base_vtkpolydata = polydata
-            self._base_mapper = mapper
+            #self._base_mapper = mapper
             self._base_actor = actor
         
     def transform(self): # transformation = vtkMatrix4x4
