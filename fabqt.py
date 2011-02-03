@@ -58,6 +58,10 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         self.qvtkWidget.customStart(self.currentPrinter)
         #self.ren = self.qvtkWidget.ren
         self.camera = self.qvtkWidget.camera
+        ## Thread pool
+        self.pathPool = ThreadPool(2)
+        self.advancedPool = ThreadPool(2)
+        self.importPool = ThreadPool(2)
         
 ## CONNECTIONS AND MENUS
         ## Import model file dialog
@@ -369,15 +373,20 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
             Dialog.exec_()
             skeinmod.applyConfig(self.model, self.toolDict, True, self.options)
             self.pathDelete()
-            pool = ThreadPool(2) 
-            pool.add_task(self.model.Slice())
-            pathActor = self.model.getPathActor()
-            self.qvtkWidget.AddActorCustom(self.model)
-            logger.log('Added path actor to the scene')
-            modelActor = self.model.readActor()
-            modelActor.GetProperty().SetOpacity(0)
-            self.qvtkWidget.GetRenderWindow().Render()
-            self.loadModelTree()
+            printer = str(self.printerComboBox.currentText())
+            printer = self.printerDict[printer]
+            def slice():
+                if self.model.hasModel():
+                    validateMove(self.model.readActor(), printer, float(self.options.dict['raftMargin']))
+                self.model.Slice()
+                pathActor = self.model.getPathActor()
+                self.qvtkWidget.AddActorCustom(self.model)
+                logger.log('Added path actor/s to the scene')
+                modelActor = self.model.readActor()
+                modelActor.GetProperty().SetOpacity(0)
+                self.qvtkWidget.GetRenderWindow().Render()
+                self.loadModelTree()
+            self.advancedPool.add_task(slice)
         
     def pathDelete(self):
         self.qvtkWidget.RemoveActorCustom(self.model.getPathActor())
@@ -394,18 +403,19 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         if self.model.readModelMaterial() is None:
             QMessageBox().about(self, self.tr("Error"), self.tr("You need to define model material to slice it."))
         else:
-            logger.log('Starting path planning')
-            skeinmod.applyConfig(self.model, self.toolDict)
-            self.pathDelete()
-            pool = ThreadPool(2) 
-            pool.add_task(self.model.Slice())
-            pathActor = self.model.getPathActor()
-            self.qvtkWidget.AddActorCustom(self.model)
-            logger.log('Added path actor to the scene')
-            modelActor = self.model.readActor()
-            modelActor.GetProperty().SetOpacity(0)
-            self.qvtkWidget.GetRenderWindow().Render()
-            self.loadModelTree()
+           logger.log('Starting path planning')
+           skeinmod.applyConfig(self.model, self.toolDict)
+           self.pathDelete()
+           def slice():
+               self.model.Slice()
+               pathActor = self.model.getPathActor()
+               self.qvtkWidget.AddActorCustom(self.model)
+               logger.log('Added path actor to the scene')
+               modelActor = self.model.readActor()
+               modelActor.GetProperty().SetOpacity(0)
+               self.qvtkWidget.GetRenderWindow().Render()
+               self.loadModelTree()
+           self.pathPool.add_task(slice)
         
     def populatePrinterPort(self):
         ports = printerports.scan()

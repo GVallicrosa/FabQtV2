@@ -53,26 +53,31 @@ class QVTKRenderWindowInteractorCustom(QVTKRenderWindowInteractor):
         
     def cutter(self):
         for model in self.modelDict.values():
+        
+            i = self.currentIndex
+            if i < 0:
+                i = 0
+                self.currentIndex = -1
+            elif i > len(model.layerValues) - 1:
+                i = len(model.layerValues) - 1
+                self.currentIndex = len(model.layerValues) -1 # problems whem more than one model
+                
             for actor in [model._actor, model._slice_actor, model._support_actor, model._base_actor]:
                 if actor is not None:
                     actor.GetProperty().SetOpacity(0)
+                    
             for polydata in [model._slice_vtkpolydata, model._support_vtkpolydata, model._base_vtkpolydata]:
                 if polydata is not None:
-                    i = self.currentIndex
-                    if i < 0:
-                        i = 0
-                        self.currentIndex = -1
-                    elif i > len(model.layerValues) - 1:
-                        i = len(model.layerValues) - 1
+                   
                     plane = vtk.vtkPlane() 
-                    plane.SetOrigin(0, 0, model.layerValues[i] -0.005) # some errors
+                    plane.SetOrigin(0, 0, model.layerValues[i] -0.005) # some errors if path height is 0.005
                     plane.SetNormal(0, 0, 1)
                     window = vtk.vtkImplicitWindowFunction()
                     window.SetImplicitFunction(plane)
                     try:
                         pathHeight = float(self.toolDict[str(model._modelMaterial)].pathHeight)
                     except:
-                        pathHeight = model.pathHeight
+                        pathHeight = model.pathHeight # error fix in gcode import
                     window.SetWindowRange(0, pathHeight/2.0)
                     clipper = vtk.vtkClipPolyData()
                     clipper.AddInput(polydata) 
@@ -82,7 +87,7 @@ class QVTKRenderWindowInteractorCustom(QVTKRenderWindowInteractor):
                         try:
                             clipActor = self.tubeView(clipper, float(self.toolDict[str(model._modelMaterial)].pathWidth))
                         except:
-                            clipActor = self.tubeView(clipper, pathHeight)
+                            clipActor = self.tubeView(clipper, pathHeight) # error fix in gcode import
                     else:
                         clipMapper = vtk.vtkPolyDataMapper()
                         clipMapper.SetInputConnection(clipper.GetOutputPort())

@@ -105,7 +105,7 @@ class Model(object):
             logger.log('No valid file extension for model import')
         
     def save(self): # writer to new file
-        logger.log('Exporting temp STL of model %s...' % self.name)
+        ###logger.log('Exporting temp OBJ of model %s...' % self.name)
         # Extract transformations done to the actor
         matrix = vtk.vtkMatrix4x4() 
         self.readActor().GetMatrix(matrix)
@@ -117,7 +117,9 @@ class Model(object):
         t_filter.SetTransform(transform)
         # Save data to a STL file
         writer = vtk.vtkSTLWriter()
-        writer.SetFileName('temp.stl')
+        ###writer = vtk.vtkOBJExporter()
+        ###writer.WriteAnActor(self.getActor, 'temp.obj', 'temp.mat', 1)
+        writer.SetFileName(str(self.name) + '_temp.stl')
         writer.SetInputConnection(t_filter.GetOutputPort())
         writer.SetFileTypeToBinary()
         writer.Write()
@@ -152,16 +154,16 @@ class Model(object):
     
     def Slice(self): # calls skeinforge
         self.save()
-        export.writeOutput('temp.stl')
+        #export.writeOutput('temp.stl')
+        export.writeOutput(str(self.name) + '_temp.stl')
         logger.log('Creating GCode...')
-        os.remove('temp.stl')
-        ok, layers = readGcode('temp_export.gcode') 
+        os.remove(str(self.name) + '_temp.stl')
+        ok, layers = readGcode(str(self.name) + '_temp_export.gcode') 
         logger.log('Reading GCode...')
         #os.remove('temp_export.gcode')
         if ok:
             self.setLayers(layers)
             logger.log('GCode correctly readed')
-            #########################
             self.layerValues = list()
             for layer in layers:
                 if layer.hasModelPaths():
@@ -171,7 +173,6 @@ class Model(object):
                 elif layer.hasSupportPaths():
                     z = layer.readSupportPaths()[0].read()[0].z
                 self.layerValues.append(z)
-            #########################
         else:
             logger.log('Error importing GCode')
         self.generatePaths(layers)
