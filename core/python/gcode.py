@@ -16,8 +16,8 @@ def readGcode(fname):
         kind = 'model'
         layerlist = list()
         lino = 18
-        for line in text[18:]: #avoiding useless information
-            if 'M10' in line:
+        for line in text: #avoiding useless information
+            if line.startswith('M10'):
             # M101 Turn extruder on forward
             # M103 Turn extruder off
             # M104 Temperature control

@@ -7,11 +7,11 @@
     <x>0</x>
     <y>0</y>
     <width>850</width>
-    <height>716</height>
+    <height>754</height>
    </rect>
   </property>
   <property name="sizePolicy">
-   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+   <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
     <horstretch>0</horstretch>
     <verstretch>0</verstretch>
    </sizepolicy>
@@ -152,7 +152,7 @@
         </size>
        </property>
        <property name="currentIndex">
-        <number>0</number>
+        <number>1</number>
        </property>
        <widget class="QWidget" name="moveTab">
         <attribute name="title">
@@ -1587,6 +1587,9 @@
            </column>
           </widget>
          </item>
+         <item>
+          <widget class="QListWidget" name="materialListWidget"/>
+         </item>
         </layout>
        </widget>
        <widget class="QWidget" name="configTab">
@@ -1635,14 +1638,12 @@
            <property name="headerHidden">
             <bool>false</bool>
            </property>
+           <property name="columnCount">
+            <number>1</number>
+           </property>
            <column>
             <property name="text">
              <string>Property</string>
-            </property>
-           </column>
-           <column>
-            <property name="text">
-             <string>Value</string>
             </property>
            </column>
            <item>
@@ -1653,9 +1654,6 @@
            <item>
             <property name="text">
              <string>Syringe 1</string>
-            </property>
-            <property name="text">
-             <string/>
             </property>
            </item>
            <item>
@@ -1940,6 +1938,14 @@
    <addaction name="actionPrint"/>
    <addaction name="actionPause"/>
    <addaction name="actionStop"/>
+   <addaction name="separator"/>
+   <addaction name="actionDefault_view"/>
+   <addaction name="separator"/>
+   <addaction name="actionTop_view"/>
+   <addaction name="actionLeft_view"/>
+   <addaction name="actionRight_view"/>
+   <addaction name="actionFront_view"/>
+   <addaction name="actionBehind_view"/>
   </widget>
   <action name="actionNew">
    <property name="text">
@@ -2138,6 +2144,60 @@
    </property>
    <property name="text">
     <string>Portuguese (Brazil)</string>
+   </property>
+  </action>
+  <action name="actionLeft_view">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/viewLeft.png</normaloff>:/viewLeft.png</iconset>
+   </property>
+   <property name="text">
+    <string>Left view</string>
+   </property>
+  </action>
+  <action name="actionRight_view">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/viewRight.png</normaloff>:/viewRight.png</iconset>
+   </property>
+   <property name="text">
+    <string>Right view</string>
+   </property>
+  </action>
+  <action name="actionFront_view">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/viewFront.png</normaloff>:/viewFront.png</iconset>
+   </property>
+   <property name="text">
+    <string>Front view</string>
+   </property>
+  </action>
+  <action name="actionBehind_view">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/viewBehind.png</normaloff>:/viewBehind.png</iconset>
+   </property>
+   <property name="text">
+    <string>Behind view</string>
+   </property>
+  </action>
+  <action name="actionTop_view">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/viewTop.png</normaloff>:/viewTop.png</iconset>
+   </property>
+   <property name="text">
+    <string>Top view</string>
+   </property>
+  </action>
+  <action name="actionDefault_view">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/viewOriginal.png</normaloff>:/viewOriginal.png</iconset>
+   </property>
+   <property name="text">
+    <string>Default view</string>
    </property>
   </action>
  </widget>

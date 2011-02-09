@@ -10,32 +10,41 @@ class Layer(object):
     def addBasePath(self, path = None):
         if path is None:
             return
-        self._base += (path,)
+        self._base = self._base + (path,)
     
     def addModelPath(self, path = None):
         if path is None:
             return
-        self._model += (path,)
+        self._model = self._model + (path,)
         
     def addSupportPath(self, path = None):
         if path is None:
             return
-        self._support += (path,)
+        self._support = self._support + (path,)
         
     def delete(self):
         self._model = tuple()
         self._support = tuple()
         self._base = tuple()
         
-    def getBaseLenght(self):
-        value = 0
-        for i in range(len(self._base)):
-            value += self._base[i].length()
+    def getBasePaths(self):
+        return self._base
+        
+    def getModelPaths(self):
+        return self._model
+        
+    def getSupportPaths(self):
+        return self._support
         
     def getModelLenght(self):
         value = 0
         for i in range(len(self._model)):
             value += self._model[i].length()
+            
+    def getBaseLenght(self):
+        value = 0
+        for i in range(len(self._base)):
+            value += self._base[i].length()
             
     def getSupportLenght(self):
         value = 0
@@ -68,15 +77,6 @@ class Layer(object):
             return True
         else:
             return False
-    
-    def readBasePaths(self):
-        return self._base
-    
-    def readModelPaths(self):
-        return self._model
         
-    def readSupportPaths(self):
-        return self._support
-                    
     def optimize(self): # TSP algorithm to minimize the distance among all paths
         pass

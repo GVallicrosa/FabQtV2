@@ -10,7 +10,7 @@ def applyConfig(model, toolDict, advanced = False, options = None):
     # CARVE #
     #########      
     ## edit files
-    toolname = model.readModelMaterial()
+    toolname = model.getModelMaterial()
     tool = toolDict[str(toolname)]
     mod = []
     try:

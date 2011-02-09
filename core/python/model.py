@@ -14,19 +14,15 @@ class Model(object):
         self.name = name
         # 3D model
         self._actor = actor
-        #self._mapper = mapper
         self._vtkpolydata = vtkpolydata # basic data
         # model path
         self._slice_vtkpolydata = None
-        #self._slice_mapper = None
         self._slice_actor = None
         # support path
         self._support_vtkpolydata = None
-        #self._support_mapper = None
         self._support_actor = None
         # base path
         self._base_vtkpolydata = None
-        #self._base_mapper = None
         self._base_actor = None
         # properties
         self._supportMaterial = supportMaterial # string
@@ -61,33 +57,36 @@ class Model(object):
     def deletePath(self):# delete all data related to paths
         self._layer = list()
         self._slice_vtkpolydata = None
-        #self._slice_mapper = None
         self._slice_actor = None
         self._support_vtkpolydata = None
-        #self._support_mapper = None
         self._support_actor = None
         self._base_vtkpolydata = None
-        #self._base_mapper = None
         self._base_actor = None
 
     def load(self, fname): # from source, returns vtkPolydata and actor
-        self.name = fname.split('/')[-1] # name with extension
+        self.name = fname.split('/')[-1] # filename with extension
         logger.log('Importing model: ' + self.name)
         extension = fname.split('.')[1]
-        if extension.lower() == 'stl': 
-            reader = vtk.vtkSTLReader()
-            reader.SetFileName(str(fname))
-            vtkPolyData = reader.GetOutput()
+        extension = extension.lower()
+        if extension == 'stl': 
+            importer = vtk.vtkSTLReader()
+            importer.SetFileName(str(fname))
+            vtkPolyData = importer.GetOutput()
             self.setPolyData(vtkPolyData)
             mapper = vtk.vtkPolyDataMapper()
             mapper.SetInput(vtkPolyData)
-            #self.setMapper(mapper)
             actor = vtk.vtkActor()
             actor.SetMapper(mapper)
             actor.GetProperty().SetColor(random.random(), random.random(), random.random()) # Colorizes randomly
-            actor.GetProperty().SetOpacity(0.5)
+            actor.GetProperty().SetOpacity(0.5) # Some transparency
             self.setActor(actor)
-        if extension.lower() == 'gcode':
+        #if extension == '3ds':
+            #importer = vtk.vtk3DSImporter()
+            #importer.ComputeNormalsOn()
+            #importer.SetFileName(str(fname))
+            #importer.Read()
+            #importer.GeneratePolyData()
+        if extension == 'gcode':
             logger.log('Reading GCode...')
             ok, layers = readGcode(str(fname))
             if ok:
@@ -95,9 +94,16 @@ class Model(object):
                 logger.log('GCode correctly readed')
                 self.layerValues = list()
                 for layer in layers:
-                    z = layer.readModelPaths()[0].read()[0].z # or others
+                    if layer.hasModelPaths():
+                        z = layer.getModelPaths()[0].read()[0].z
+                    elif layer.hasBasePaths():
+                        z = layer.getBasePaths()[0].read()[0].z
+                    elif layer.hasSupportPaths():
+                        z = layer.getSupportPaths()[0].read()[0].z
+                    else: # to future erase
+                        z = layer.getModelPaths()[0].read()[0].z
                     self.layerValues.append(z)
-                self.pathHeight = float(layers[1].readModelPaths()[0].read()[0].z) - float(layers[0].readModelPaths()[0].read()[0].z)
+                self.pathHeight = float(layers[1].getModelPaths()[0].read()[0].z) - float(layers[0].getModelPaths()[0].read()[0].z)
             else:
                 logger.log('Error importing GCode')
             self.generatePaths(layers)
@@ -105,36 +111,41 @@ class Model(object):
             logger.log('No valid file extension for model import')
         
     def save(self): # writer to new file
-        ###logger.log('Exporting temp OBJ of model %s...' % self.name)
+        logger.log('Exporting temp STL of model %s...' % self.name)
         # Extract transformations done to the actor
         matrix = vtk.vtkMatrix4x4() 
-        self.readActor().GetMatrix(matrix)
+        self.getActor().GetMatrix(matrix)
         # Apply transformation
         transform = vtk.vtkTransform()
         transform.SetMatrix(matrix)
+        # T
         t_filter = vtk.vtkTransformPolyDataFilter()
-        t_filter.SetInput(self.readPolyData())
+        t_filter.SetInput(self.getPolyData())
         t_filter.SetTransform(transform)
+        # Triangle filter
+        #vtkTriangleFilter
+        # Clean Polydata
+        #vtkcleanpolydata
+        # Simplify the model
+        #vtk.vtkDecimate
         # Save data to a STL file
         writer = vtk.vtkSTLWriter()
-        ###writer = vtk.vtkOBJExporter()
-        ###writer.WriteAnActor(self.getActor, 'temp.obj', 'temp.mat', 1)
-        writer.SetFileName(str(self.name) + '_temp.stl')
+        writer.SetFileName('temp.stl')
         writer.SetInputConnection(t_filter.GetOutputPort())
         writer.SetFileTypeToBinary()
         writer.Write()
         logger.log('End exporting')
             
-    def readActor(self): # if no one set yet return false or null
+    def getActor(self): # if no one set yet return false or null
         return self._actor
    
-    def readModelMaterial(self): # if no one set yet return false or null
+    def getModelMaterial(self): # if no one set yet return false or null
         return self._modelMaterial
         
-    def readPolyData(self):
+    def getPolyData(self):
         return self._vtkpolydata
     
-    def readSupportMaterial(self): # if no one set yet return false or null
+    def getSupportMaterial(self): # if no one set yet return false or null
         return self._supportMaterial
             
     def setActor(self, actor): # points to private attribute _actor
@@ -154,11 +165,10 @@ class Model(object):
     
     def Slice(self): # calls skeinforge
         self.save()
-        #export.writeOutput('temp.stl')
-        export.writeOutput(str(self.name) + '_temp.stl')
+        export.writeOutput('temp.stl')
         logger.log('Creating GCode...')
-        os.remove(str(self.name) + '_temp.stl')
-        ok, layers = readGcode(str(self.name) + '_temp_export.gcode') 
+        os.remove('temp.stl')
+        ok, layers = readGcode('temp_export.gcode') 
         logger.log('Reading GCode...')
         #os.remove('temp_export.gcode')
         if ok:
@@ -167,11 +177,11 @@ class Model(object):
             self.layerValues = list()
             for layer in layers:
                 if layer.hasModelPaths():
-                    z = layer.readModelPaths()[0].read()[0].z
+                    z = layer.getModelPaths()[0].read()[0].z
                 elif layer.hasBasePaths():
-                    z = layer.readBasePaths()[0].read()[0].z
+                    z = layer.getBasePaths()[0].read()[0].z
                 elif layer.hasSupportPaths():
-                    z = layer.readSupportPaths()[0].read()[0].z
+                    z = layer.getSupportPaths()[0].read()[0].z
                 self.layerValues.append(z)
         else:
             logger.log('Error importing GCode')
@@ -196,7 +206,7 @@ class Model(object):
         base = False
         support = False  
         for layer in layers: # layer
-            for path in layer.readModelPaths(): # path
+            for path in layer.getModelPaths(): # path
                 vectors = path.read()
                 for i in range(len(vectors) - 1): # vector
                     vec1 = [0, 0, 0]
@@ -208,7 +218,7 @@ class Model(object):
                     vec2[1] = vectors[i + 1].y
                     vec2[2] = vectors[i + 1].z
                     modelPlotter.PlotLine(vec1, vec2, color1)
-            for path in layer.readSupportPaths(): # path
+            for path in layer.getSupportPaths(): # path
                 vectors = path.read()
                 for i in range(len(vectors) - 1): # vector
                     vec1 = [0, 0, 0]
@@ -221,7 +231,7 @@ class Model(object):
                     vec2[2] = vectors[i + 1].z
                     supportPlotter.PlotLine(vec1, vec2, color2)
                     support = True
-            for path in layer.readBasePaths(): # path
+            for path in layer.getBasePaths(): # path
                 vectors = path.read()
                 for i in range(len(vectors) - 1): # vector
                     vec1 = [0, 0, 0]
@@ -236,17 +246,14 @@ class Model(object):
                     base = True
         polydata, actor = modelPlotter.CreateActor()
         self._slice_vtkpolydata = polydata
-        #self._slice_mapper = mapper
         self._slice_actor = actor
         if support:
             polydata, actor = supportPlotter.CreateActor()
             self._support_vtkpolydata = polydata
-            #self._support_mapper = mapper
             self._support_actor = actor
         if base:
             polydata, actor = basePlotter.CreateActor()
             self._base_vtkpolydata = polydata
-            #self._base_mapper = mapper
             self._base_actor = actor
         
     def transform(self): # transformation = vtkMatrix4x4

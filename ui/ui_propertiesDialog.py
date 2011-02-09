@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'propertiesDialog.ui'
 #
-# Created: Wed Nov  3 11:50:33 2010
+# Created: Wed Feb  9 12:04:31 2011
 #      by: PyQt4 UI code generator 4.7.4
 #
 # WARNING! All changes made in this file will be lost!

@@ -15,6 +15,13 @@
         <file alias="SW.png">images/south_west.png</file>
         <file alias="W.png">images/west.png</file>
         <file alias="NW.png">images/north_west.png</file>
+        
+        <file alias="viewBehind.png">images/viewBehind.png</file>
+        <file alias="viewFront.png">images/viewFront.png</file>
+        <file alias="viewLeft.png">images/viewLeft.png</file>
+        <file alias="viewRight.png">images/viewRight.png</file>
+        <file alias="viewTop.png">images/viewTop.png</file>
+        <file alias="viewOriginal.png">images/viewOriginal.png</file>
     </qresource>
 </RCC>
 

@@ -16,7 +16,7 @@ f.close()
 s = s.replace('QVTKWidget','QVTKRenderWindowInteractor')
 s = s.replace('from QVTK', 'from vtk.qt4.QVTK')
 s = s.replace('from vtk.qt4.QVTKRenderWindowInteractor import QVTKRenderWindowInteractor', 'from ui.vtkCustom import QVTKRenderWindowInteractorCustom')
-s = s.replace('self.qvtkWidget = QVTKRenderWindowInteractor(self.centralwidget)', 'self.qvtkWidget = QVTKRenderWindowInteractorCustom(self.centralwidget')
+s = s.replace('self.qvtkWidget = QVTKRenderWindowInteractor(self.centralwidget)', 'self.qvtkWidget = QVTKRenderWindowInteractorCustom(self.centralwidget)')
 
 w = open('ui/ui_fabqtDialog.py', 'w')
 w.write(s)

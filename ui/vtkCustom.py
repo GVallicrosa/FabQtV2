@@ -19,17 +19,19 @@ class QVTKRenderWindowInteractorCustom(QVTKRenderWindowInteractor):
         self.ren.InteractiveOn()
         ## Variables
         self.tubeOn = False
-        self.currentIndex = -1
+        self.currentIndex = -1 # Next is 0, the first one
         self.newActors = list()
         self.toolDict = None
         self.modelDict = None
         
     def AddActorCustom(self, model):
+        ''' Adds all actors of one Model'''
         for actor in [model._actor, model._slice_actor, model._support_actor, model._base_actor]:
             if actor is not None:
                 self.ren.AddActor(actor)
             
     def customStart(self, printer):
+        ''' Creates build platform based on last printer statistics and the axes'''
         axesActor, XActor, YActor, ZActor = generateAxes(printer)
         XActor.SetCamera(self.camera)
         YActor.SetCamera(self.camera)
@@ -52,15 +54,20 @@ class QVTKRenderWindowInteractorCustom(QVTKRenderWindowInteractor):
         self.Start()
         
     def cutter(self):
+        maxLayers = 0
         for model in self.modelDict.values():
-        
+            if len(model.layerValues) > maxLayers:
+                maxLayers = len(model.layerValues)
+                
+        for model in self.modelDict.values():
             i = self.currentIndex
             if i < 0:
                 i = 0
                 self.currentIndex = -1
             elif i > len(model.layerValues) - 1:
-                i = len(model.layerValues) - 1
-                self.currentIndex = len(model.layerValues) -1 # problems whem more than one model
+                i = len(model.layerValues) - 1 # The last layer
+                if len(model.layerValues) > maxLayers:
+                    self.currentIndex = maxLayers
                 
             for actor in [model._actor, model._slice_actor, model._support_actor, model._base_actor]:
                 if actor is not None:
@@ -68,7 +75,6 @@ class QVTKRenderWindowInteractorCustom(QVTKRenderWindowInteractor):
                     
             for polydata in [model._slice_vtkpolydata, model._support_vtkpolydata, model._base_vtkpolydata]:
                 if polydata is not None:
-                   
                     plane = vtk.vtkPlane() 
                     plane.SetOrigin(0, 0, model.layerValues[i] -0.005) # some errors if path height is 0.005
                     plane.SetNormal(0, 0, 1)
@@ -78,7 +84,7 @@ class QVTKRenderWindowInteractorCustom(QVTKRenderWindowInteractor):
                         pathHeight = float(self.toolDict[str(model._modelMaterial)].pathHeight)
                     except:
                         pathHeight = model.pathHeight # error fix in gcode import
-                    window.SetWindowRange(0, pathHeight/2.0)
+                    window.SetWindowRange(0, pathHeight)
                     clipper = vtk.vtkClipPolyData()
                     clipper.AddInput(polydata) 
                     clipper.SetClipFunction(window)
@@ -116,7 +122,7 @@ class QVTKRenderWindowInteractorCustom(QVTKRenderWindowInteractor):
                         self.tubeOn = True
                     self.cutter()
                 elif key == 'x':
-                    self.currentIndex = 1
+                    self.currentIndex = -1
                     for model in self.modelDict.values():
                         for actor in [model._slice_actor, model._support_actor, model._base_actor]:
                             if actor is not None:
@@ -136,7 +142,40 @@ class QVTKRenderWindowInteractorCustom(QVTKRenderWindowInteractor):
         tubesActor.SetMapper(tubesMapper)
         return tubesActor
             
-    def RemoveActorCustom(self, actor):
-        if actor is not None:
-            self.ren.RemoveActor(actor)
+    def RemoveActorCustom(self, model, allAct = True):
+        if allAct:
+            for actor in [model._actor, model._slice_actor, model._support_actor, model._base_actor]:
+                if actor is not None:
+                    self.ren.RemoveActor(actor)
+        else:
+            for actor in [model._slice_actor, model._support_actor, model._base_actor]:
+                if actor is not None:
+                    self.ren.RemoveActor(actor)
+    
+    def resetView(self):
+        '''Resets the camera to its initial position'''
+        self.camera.SetFocalPoint(0, 0, 0)
+        self.camera.SetPosition(300, 0, 100)
+        self.camera.SetViewUp(-1, 0, 0)
+        self.GetRenderWindow().Render()
         
+    def behindView(self):
+        pass
+        
+    def frontView(self):
+        pass
+        
+    def defaultView(self):
+        pass
+        
+    def leftView(self):
+        pass
+        
+    def rightView(self):
+        pass
+        
+    def topView(self):
+        pass
+    
+    def ortographicView(self):
+        pass

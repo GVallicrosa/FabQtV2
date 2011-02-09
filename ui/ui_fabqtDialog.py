@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/fabqtDialog.ui'
 #
-# Created: Wed Nov  3 11:50:33 2010
+# Created: Wed Feb  9 12:04:31 2011
 #      by: PyQt4 UI code generator 4.7.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -12,8 +12,8 @@ from PyQt4 import QtCore, QtGui
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(850, 716)
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Preferred)
+        MainWindow.resize(850, 754)
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.MinimumExpanding, QtGui.QSizePolicy.MinimumExpanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(MainWindow.sizePolicy().hasHeightForWidth())
@@ -612,6 +612,9 @@ class Ui_MainWindow(object):
         self.modelTreeWidget.setObjectName("modelTreeWidget")
         self.modelTreeWidget.header().setSortIndicatorShown(False)
         self.verticalLayout_6.addWidget(self.modelTreeWidget)
+        self.materialListWidget = QtGui.QListWidget(self.modelTab)
+        self.materialListWidget.setObjectName("materialListWidget")
+        self.verticalLayout_6.addWidget(self.materialListWidget)
         self.mainTabWidget.addTab(self.modelTab, "")
         self.configTab = QtGui.QWidget()
         self.configTab.setObjectName("configTab")
@@ -640,6 +643,7 @@ class Ui_MainWindow(object):
         self.configTreeWidget.setMidLineWidth(1)
         self.configTreeWidget.setAllColumnsShowFocus(True)
         self.configTreeWidget.setHeaderHidden(False)
+        self.configTreeWidget.setColumnCount(1)
         self.configTreeWidget.setObjectName("configTreeWidget")
         item_0 = QtGui.QTreeWidgetItem(self.configTreeWidget)
         item_0 = QtGui.QTreeWidgetItem(self.configTreeWidget)
@@ -838,6 +842,36 @@ class Ui_MainWindow(object):
         self.actionPortuguese_Brazil = QtGui.QAction(MainWindow)
         self.actionPortuguese_Brazil.setCheckable(True)
         self.actionPortuguese_Brazil.setObjectName("actionPortuguese_Brazil")
+        self.actionLeft_view = QtGui.QAction(MainWindow)
+        icon14 = QtGui.QIcon()
+        icon14.addPixmap(QtGui.QPixmap(":/viewLeft.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.actionLeft_view.setIcon(icon14)
+        self.actionLeft_view.setObjectName("actionLeft_view")
+        self.actionRight_view = QtGui.QAction(MainWindow)
+        icon15 = QtGui.QIcon()
+        icon15.addPixmap(QtGui.QPixmap(":/viewRight.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.actionRight_view.setIcon(icon15)
+        self.actionRight_view.setObjectName("actionRight_view")
+        self.actionFront_view = QtGui.QAction(MainWindow)
+        icon16 = QtGui.QIcon()
+        icon16.addPixmap(QtGui.QPixmap(":/viewFront.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.actionFront_view.setIcon(icon16)
+        self.actionFront_view.setObjectName("actionFront_view")
+        self.actionBehind_view = QtGui.QAction(MainWindow)
+        icon17 = QtGui.QIcon()
+        icon17.addPixmap(QtGui.QPixmap(":/viewBehind.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.actionBehind_view.setIcon(icon17)
+        self.actionBehind_view.setObjectName("actionBehind_view")
+        self.actionTop_view = QtGui.QAction(MainWindow)
+        icon18 = QtGui.QIcon()
+        icon18.addPixmap(QtGui.QPixmap(":/viewTop.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.actionTop_view.setIcon(icon18)
+        self.actionTop_view.setObjectName("actionTop_view")
+        self.actionDefault_view = QtGui.QAction(MainWindow)
+        icon19 = QtGui.QIcon()
+        icon19.addPixmap(QtGui.QPixmap(":/viewOriginal.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.actionDefault_view.setIcon(icon19)
+        self.actionDefault_view.setObjectName("actionDefault_view")
         self.menuFile.addAction(self.actionNew)
         self.menuFile.addSeparator()
         self.menuFile.addAction(self.actionOpen)
@@ -869,9 +903,17 @@ class Ui_MainWindow(object):
         self.toolBar.addAction(self.actionPrint)
         self.toolBar.addAction(self.actionPause)
         self.toolBar.addAction(self.actionStop)
+        self.toolBar.addSeparator()
+        self.toolBar.addAction(self.actionDefault_view)
+        self.toolBar.addSeparator()
+        self.toolBar.addAction(self.actionTop_view)
+        self.toolBar.addAction(self.actionLeft_view)
+        self.toolBar.addAction(self.actionRight_view)
+        self.toolBar.addAction(self.actionFront_view)
+        self.toolBar.addAction(self.actionBehind_view)
 
         self.retranslateUi(MainWindow)
-        self.mainTabWidget.setCurrentIndex(0)
+        self.mainTabWidget.setCurrentIndex(1)
         self.logTab.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
@@ -898,7 +940,6 @@ class Ui_MainWindow(object):
         self.mainTabWidget.setTabText(self.mainTabWidget.indexOf(self.modelTab), QtGui.QApplication.translate("MainWindow", "Model/Path", None, QtGui.QApplication.UnicodeUTF8))
         self.portLabel.setText(QtGui.QApplication.translate("MainWindow", "Printer Port:", None, QtGui.QApplication.UnicodeUTF8))
         self.configTreeWidget.headerItem().setText(0, QtGui.QApplication.translate("MainWindow", "Property", None, QtGui.QApplication.UnicodeUTF8))
-        self.configTreeWidget.headerItem().setText(1, QtGui.QApplication.translate("MainWindow", "Value", None, QtGui.QApplication.UnicodeUTF8))
         __sortingEnabled = self.configTreeWidget.isSortingEnabled()
         self.configTreeWidget.setSortingEnabled(False)
         self.configTreeWidget.topLevelItem(0).setText(0, QtGui.QApplication.translate("MainWindow", "Printer", None, QtGui.QApplication.UnicodeUTF8))
@@ -947,7 +988,12 @@ class Ui_MainWindow(object):
         self.actionSpanish_Spain.setText(QtGui.QApplication.translate("MainWindow", "Spanish (Spain)", None, QtGui.QApplication.UnicodeUTF8))
         self.actionCatalan.setText(QtGui.QApplication.translate("MainWindow", "Catalan", None, QtGui.QApplication.UnicodeUTF8))
         self.actionPortuguese_Brazil.setText(QtGui.QApplication.translate("MainWindow", "Portuguese (Brazil)", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionLeft_view.setText(QtGui.QApplication.translate("MainWindow", "Left view", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionRight_view.setText(QtGui.QApplication.translate("MainWindow", "Right view", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionFront_view.setText(QtGui.QApplication.translate("MainWindow", "Front view", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionBehind_view.setText(QtGui.QApplication.translate("MainWindow", "Behind view", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionTop_view.setText(QtGui.QApplication.translate("MainWindow", "Top view", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionDefault_view.setText(QtGui.QApplication.translate("MainWindow", "Default view", None, QtGui.QApplication.UnicodeUTF8))
 
-from vtk.qt4.QVTKRenderWindowInteractor import QVTKRenderWindowInteractor
 from ui.vtkCustom import QVTKRenderWindowInteractorCustom
 import resources_rc

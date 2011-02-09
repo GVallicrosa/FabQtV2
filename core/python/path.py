@@ -6,7 +6,7 @@ class Path(object):
     def addVector(self, vector = None):
         if vector is None:
             return
-        self._vector = self._vector + (vector,)
+        self._vector += (vector,)
         
     def getVector(self):
         return self._vector

@@ -38,28 +38,38 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>FabQtMain</name>
     <message>
-        <location filename="fabqt.py" line="562"/>
+        <location filename="fabqt.py" line="574"/>
         <source>Translation Info</source>
         <translation>Informação</translation>
     </message>
     <message>
-        <location filename="fabqt.py" line="562"/>
+        <location filename="fabqt.py" line="574"/>
         <source>You need to restart the application to change the language</source>
         <translation>É necessário reiniciar o programa para vigorar a nova lingua</translation>
     </message>
     <message>
-        <location filename="fabqt.py" line="506"/>
+        <location filename="fabqt.py" line="517"/>
         <source>Error</source>
         <translation type="unfinished">Erro</translation>
     </message>
     <message>
-        <location filename="fabqt.py" line="388"/>
+        <location filename="fabqt.py" line="393"/>
         <source>You need to define model material to slice it.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="fabqt.py" line="506"/>
+        <location filename="fabqt.py" line="517"/>
         <source>Model sliced, you cannot change it&apos;s properties.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="fabqt.py" line="395"/>
+        <source>You already doing a path planning, wait for completition.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="fabqt.py" line="499"/>
+        <source>Model already importing, wait for completition.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -161,52 +171,52 @@ p, li { white-space: pre-wrap; }
         <translation>Modelos</translation>
     </message>
     <message>
-        <location filename="ui/fabqtDialog.ui" line="1594"/>
+        <location filename="ui/fabqtDialog.ui" line="1597"/>
         <source>Config</source>
         <translation>Configurar</translation>
     </message>
     <message>
-        <location filename="ui/fabqtDialog.ui" line="1608"/>
+        <location filename="ui/fabqtDialog.ui" line="1611"/>
         <source>Printer Port:</source>
         <translation>Porta da Impressora:</translation>
     </message>
     <message>
-        <location filename="ui/fabqtDialog.ui" line="1640"/>
+        <location filename="ui/fabqtDialog.ui" line="1646"/>
         <source>Property</source>
         <translation>Propriedades</translation>
     </message>
     <message>
         <location filename="ui/fabqtDialog.ui" line="1645"/>
         <source>Value</source>
-        <translation>Valor</translation>
+        <translation type="obsolete">Valor</translation>
     </message>
     <message>
-        <location filename="ui/fabqtDialog.ui" line="1650"/>
+        <location filename="ui/fabqtDialog.ui" line="1651"/>
         <source>Printer</source>
         <translation>Impressora</translation>
     </message>
     <message>
-        <location filename="ui/fabqtDialog.ui" line="1655"/>
+        <location filename="ui/fabqtDialog.ui" line="1656"/>
         <source>Syringe 1</source>
         <translation>Motor U</translation>
     </message>
     <message>
-        <location filename="ui/fabqtDialog.ui" line="1663"/>
+        <location filename="ui/fabqtDialog.ui" line="1661"/>
         <source>Syringe 2</source>
         <translation>Motor V</translation>
     </message>
     <message>
-        <location filename="ui/fabqtDialog.ui" line="1726"/>
+        <location filename="ui/fabqtDialog.ui" line="1724"/>
         <source>Pause at Tool Change</source>
         <translation>Pausa para troca de ferramenta</translation>
     </message>
     <message>
-        <location filename="ui/fabqtDialog.ui" line="1733"/>
+        <location filename="ui/fabqtDialog.ui" line="1731"/>
         <source>Auto Resume</source>
         <translation>Resume Automaticamente</translation>
     </message>
     <message>
-        <location filename="ui/fabqtDialog.ui" line="1757"/>
+        <location filename="ui/fabqtDialog.ui" line="1755"/>
         <source>Graphics:</source>
         <translation>Gráfico:</translation>
     </message>
@@ -236,122 +246,122 @@ p, li { white-space: pre-wrap; }
         <translation type="obsolete">Renderização por Triangulos</translation>
     </message>
     <message>
-        <location filename="ui/fabqtDialog.ui" line="1777"/>
+        <location filename="ui/fabqtDialog.ui" line="1775"/>
         <source>Reset View</source>
         <translation>Reestabelece visão da camera</translation>
     </message>
     <message>
-        <location filename="ui/fabqtDialog.ui" line="1804"/>
+        <location filename="ui/fabqtDialog.ui" line="1802"/>
         <source>hardwareStatusDock</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="ui/fabqtDialog.ui" line="1861"/>
+        <location filename="ui/fabqtDialog.ui" line="1859"/>
         <source>Hardware Status</source>
         <translation>Status do Hardware</translation>
     </message>
     <message>
-        <location filename="ui/fabqtDialog.ui" line="1884"/>
+        <location filename="ui/fabqtDialog.ui" line="1882"/>
         <source>Build Info</source>
         <translation>Informação da Construção</translation>
     </message>
     <message>
-        <location filename="ui/fabqtDialog.ui" line="1915"/>
+        <location filename="ui/fabqtDialog.ui" line="1913"/>
         <source>toolBar</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="ui/fabqtDialog.ui" line="1946"/>
+        <location filename="ui/fabqtDialog.ui" line="1952"/>
         <source>New</source>
         <translation>Novo</translation>
     </message>
     <message>
-        <location filename="ui/fabqtDialog.ui" line="1951"/>
+        <location filename="ui/fabqtDialog.ui" line="1957"/>
         <source>Open</source>
         <translation>Abrir</translation>
     </message>
     <message>
-        <location filename="ui/fabqtDialog.ui" line="1956"/>
+        <location filename="ui/fabqtDialog.ui" line="1962"/>
         <source>Save</source>
         <translation>Salvar</translation>
     </message>
     <message>
-        <location filename="ui/fabqtDialog.ui" line="1961"/>
+        <location filename="ui/fabqtDialog.ui" line="1967"/>
         <source>Save As...</source>
         <translation>Salvar Como...</translation>
     </message>
     <message>
-        <location filename="ui/fabqtDialog.ui" line="1966"/>
+        <location filename="ui/fabqtDialog.ui" line="1972"/>
         <source>Open Recent</source>
         <translation>Abrir Recente</translation>
     </message>
     <message>
-        <location filename="ui/fabqtDialog.ui" line="1971"/>
+        <location filename="ui/fabqtDialog.ui" line="1977"/>
         <source>Quit</source>
         <translation>Sair</translation>
     </message>
     <message>
-        <location filename="ui/fabqtDialog.ui" line="1986"/>
+        <location filename="ui/fabqtDialog.ui" line="1992"/>
         <source>Connect</source>
         <translation>Conectar</translation>
     </message>
     <message>
-        <location filename="ui/fabqtDialog.ui" line="1989"/>
+        <location filename="ui/fabqtDialog.ui" line="1995"/>
         <source>Connects to fab@home printer</source>
         <translation>Conectar a impressora fab@home</translation>
     </message>
     <message>
-        <location filename="ui/fabqtDialog.ui" line="2001"/>
+        <location filename="ui/fabqtDialog.ui" line="2007"/>
         <source>Import</source>
         <translation>Importar</translation>
     </message>
     <message>
-        <location filename="ui/fabqtDialog.ui" line="2004"/>
+        <location filename="ui/fabqtDialog.ui" line="2010"/>
         <source>Imports a model to print</source>
         <translation>Importar um modelo a ser impresso</translation>
     </message>
     <message>
-        <location filename="ui/fabqtDialog.ui" line="2016"/>
+        <location filename="ui/fabqtDialog.ui" line="2022"/>
         <source>Slice</source>
         <translation>Fatiar</translation>
     </message>
     <message>
-        <location filename="ui/fabqtDialog.ui" line="2019"/>
+        <location filename="ui/fabqtDialog.ui" line="2025"/>
         <source>Slices the model and does the path planning</source>
         <translation>Fatiar o modelo e realizar o planejamento</translation>
     </message>
     <message>
-        <location filename="ui/fabqtDialog.ui" line="2031"/>
+        <location filename="ui/fabqtDialog.ui" line="2037"/>
         <source>Print</source>
         <translation>Imprimir</translation>
     </message>
     <message>
-        <location filename="ui/fabqtDialog.ui" line="2034"/>
+        <location filename="ui/fabqtDialog.ui" line="2040"/>
         <source>Starts printing</source>
         <translation>Inicia impressão</translation>
     </message>
     <message>
-        <location filename="ui/fabqtDialog.ui" line="2049"/>
+        <location filename="ui/fabqtDialog.ui" line="2055"/>
         <source>Pause</source>
         <translation>Pause</translation>
     </message>
     <message>
-        <location filename="ui/fabqtDialog.ui" line="2052"/>
+        <location filename="ui/fabqtDialog.ui" line="2058"/>
         <source>Pauses/Resumes printing</source>
         <translation>Pause/Continua impressão</translation>
     </message>
     <message>
-        <location filename="ui/fabqtDialog.ui" line="2064"/>
+        <location filename="ui/fabqtDialog.ui" line="2070"/>
         <source>Stop</source>
         <translation>Para</translation>
     </message>
     <message>
-        <location filename="ui/fabqtDialog.ui" line="2067"/>
+        <location filename="ui/fabqtDialog.ui" line="2073"/>
         <source>Stops printing</source>
         <translation>Para impressão</translation>
     </message>
     <message>
-        <location filename="ui/fabqtDialog.ui" line="2081"/>
+        <location filename="ui/fabqtDialog.ui" line="2087"/>
         <source>Main tools</source>
         <translation>Ferramentas Principais</translation>
     </message>
@@ -361,17 +371,17 @@ p, li { white-space: pre-wrap; }
         <translation type="obsolete">Informação de status</translation>
     </message>
     <message>
-        <location filename="ui/fabqtDialog.ui" line="2103"/>
+        <location filename="ui/fabqtDialog.ui" line="2109"/>
         <source>Toolbar</source>
         <translation>Barra de Ferramentas</translation>
     </message>
     <message>
-        <location filename="ui/fabqtDialog.ui" line="2108"/>
+        <location filename="ui/fabqtDialog.ui" line="2114"/>
         <source>About</source>
         <translation>Sobre</translation>
     </message>
     <message>
-        <location filename="ui/fabqtDialog.ui" line="1668"/>
+        <location filename="ui/fabqtDialog.ui" line="1666"/>
         <source>Extruder</source>
         <translation>Extrusor</translation>
     </message>
@@ -381,58 +391,88 @@ p, li { white-space: pre-wrap; }
         <translation>Lingua</translation>
     </message>
     <message>
-        <location filename="ui/fabqtDialog.ui" line="2116"/>
+        <location filename="ui/fabqtDialog.ui" line="2122"/>
         <source>English</source>
         <translation>Ingles</translation>
     </message>
     <message>
-        <location filename="ui/fabqtDialog.ui" line="2124"/>
+        <location filename="ui/fabqtDialog.ui" line="2130"/>
         <source>Spanish (Spain)</source>
         <translation>Espanhol (Espanha)</translation>
     </message>
     <message>
-        <location filename="ui/fabqtDialog.ui" line="2132"/>
+        <location filename="ui/fabqtDialog.ui" line="2138"/>
         <source>Catalan</source>
         <translation>Catalão</translation>
     </message>
     <message>
-        <location filename="ui/fabqtDialog.ui" line="2140"/>
+        <location filename="ui/fabqtDialog.ui" line="2146"/>
         <source>Portuguese (Brazil)</source>
         <translation>Português (Brasil)</translation>
     </message>
     <message>
-        <location filename="ui/fabqtDialog.ui" line="1697"/>
+        <location filename="ui/fabqtDialog.ui" line="1695"/>
         <source>Printer:</source>
         <translation>Impressora:</translation>
     </message>
     <message>
-        <location filename="ui/fabqtDialog.ui" line="1780"/>
+        <location filename="ui/fabqtDialog.ui" line="1778"/>
         <source>Ctrl+R</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="ui/fabqtDialog.ui" line="2022"/>
+        <location filename="ui/fabqtDialog.ui" line="2028"/>
         <source>Ctrl+D</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="ui/fabqtDialog.ui" line="2055"/>
+        <location filename="ui/fabqtDialog.ui" line="2061"/>
         <source>Ctrl+H</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="ui/fabqtDialog.ui" line="2070"/>
+        <location filename="ui/fabqtDialog.ui" line="2076"/>
         <source>Ctrl+S</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="ui/fabqtDialog.ui" line="1835"/>
+        <location filename="ui/fabqtDialog.ui" line="1833"/>
         <source>Log</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ui/fabqtDialog.ui" line="2092"/>
+        <location filename="ui/fabqtDialog.ui" line="2098"/>
         <source>Log/Status/Info</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ui/fabqtDialog.ui" line="2155"/>
+        <source>Left view</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ui/fabqtDialog.ui" line="2164"/>
+        <source>Right view</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ui/fabqtDialog.ui" line="2173"/>
+        <source>Front view</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ui/fabqtDialog.ui" line="2182"/>
+        <source>Behind view</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ui/fabqtDialog.ui" line="2191"/>
+        <source>Top view</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ui/fabqtDialog.ui" line="2200"/>
+        <source>Default view</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -774,12 +814,12 @@ p, li { white-space: pre-wrap; }
         <translation>Scalar:</translation>
     </message>
     <message>
-        <location filename="core/python/dialogs/propertiesDialog.py" line="36"/>
+        <location filename="core/python/dialogs/propertiesDialog.py" line="37"/>
         <source>Error</source>
         <translation>Erro</translation>
     </message>
     <message>
-        <location filename="core/python/dialogs/propertiesDialog.py" line="36"/>
+        <location filename="core/python/dialogs/propertiesDialog.py" line="37"/>
         <source>Model exceeds limits. Need to be scaled.</source>
         <translation>Modelo muito grande. Nexessida ser reduzido.</translation>
     </message>

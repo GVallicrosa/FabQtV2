@@ -40,16 +40,17 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         self.connect(logger, SIGNAL('Fablogging'), self.logText)
         logger.log('--> Initialising application')
         ## Initial values
-        self.configToolName = None
-        self.configPrinterName = None
-        self.model = None
+        self.configToolName = None # handles the current clicked tool
+        self.configPrinterName = None # handles the current clicked printer
+        self.model = None # handles the current clicked model
         self.toolDict = loadTools() # toolname: Tool()
-        self.qvtkWidget.toolDict = self.toolDict
+        self.qvtkWidget.toolDict = self.toolDict # copy to vtk for layer by layer view
         self.printerDict = loadPrinters() # printername: Printer()
-        self.modelDict = dict() # modelname: Model()
+        self.modelDict = dict() # modelname: Model(), nothing at the start
         self.options = Options() # advanced path options
         ## Config tree and comboboxes, load initial values
-        self.loadConfigTree()
+        self.populateConfigTree()
+        self.populateMaterialListWidget()
         self.populateToolComboBox()
         self.populatePrinterComboBox()
         self.populatePrinterPort()
@@ -60,8 +61,9 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         self.camera = self.qvtkWidget.camera
         ## Thread pool
         self.pathPool = ThreadPool(2)
-        self.advancedPool = ThreadPool(2)
         self.importPool = ThreadPool(2)
+        self.importing = False
+        self.planning = False
         
 ## CONNECTIONS AND MENUS
         ## Import model file dialog
@@ -98,29 +100,18 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         self.connect(self.actionAbout, SIGNAL("triggered()"), self.showAboutDialog)
         self.connect(self.actionImport, SIGNAL("triggered()"), self.showImportDialog)
         self.connect(self.importModelButton, SIGNAL("clicked()"), self.showImportDialog)
-        self.connect(self.resetViewButton, SIGNAL("clicked()"), self.resetView)
-        ## Context menus
+        self.connect(self.resetViewButton, SIGNAL("clicked()"), self.qvtkWidget.resetView)
+        ## Ortographic view
+        self.connect(self.actionBehind_view, SIGNAL("clicked()"), self.qvtkWidget.behindView)
+        self.connect(self.actionDefault_view, SIGNAL("clicked()"), self.qvtkWidget.defaultView)
+        self.connect(self.actionFront_view, SIGNAL("clicked()"), self.qvtkWidget.frontView)
+        self.connect(self.actionLeft_view, SIGNAL("clicked()"), self.qvtkWidget.leftView)
+        self.connect(self.actionRight_view, SIGNAL("clicked()"), self.qvtkWidget.rightView)
+        self.connect(self.actionTop_view, SIGNAL("clicked()"), self.qvtkWidget.topView)
+        ## Context menus (right click)
         self.connect(self.modelTreeWidget, SIGNAL("customContextMenuRequested(QPoint)"), self.showModelCustomContextMenu)
         self.connect(self.configTreeWidget, SIGNAL("customContextMenuRequested(QPoint)"), self.showConfigCustomContextMenu)
-        ## The config tool context menu
-        self.toolMenu = QMenu()
-        actionEditTool = self.toolMenu.addAction("Edit Tool")
-        actionNewTool = self.toolMenu.addAction("New Tool")
-        self.connect(actionEditTool, SIGNAL('triggered()'), self.editToolDialog)
-        self.connect(actionNewTool, SIGNAL('triggered()'), self.newToolDialog)
-        self.toolMenu.addAction(actionEditTool)
-        self.toolMenu.addSeparator()
-        self.toolMenu.addAction(actionNewTool)
-        ## The config printer context menu
-        self.printerMenu = QMenu()
-        actionEditPrinter = self.printerMenu.addAction("Edit Printer")
-        actionNewPrinter = self.printerMenu.addAction("New Printer")
-        self.connect(actionEditPrinter, SIGNAL('triggered()'), self.editPrinterDialog)
-        self.connect(actionNewPrinter, SIGNAL('triggered()'), self.newPrinterDialog)
-        self.printerMenu.addAction(actionEditPrinter)
-        self.printerMenu.addSeparator()
-        self.printerMenu.addAction(actionNewPrinter)
-        ## The model context menu
+        ## Model context menu
         self.modelMenu = QMenu()
         actionProperties = self.modelMenu.addAction("Properties/Transform")
         actionStandard = self.modelMenu.addAction("Standard Path Planning")
@@ -129,12 +120,12 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         actionOrigin = self.modelMenu.addAction("Move to Origin")
         actionDelete = self.modelMenu.addAction("Delete")
         self.connect(actionProperties, SIGNAL('triggered()'), self.showPropertiesDialog)
-        self.connect(actionStandard, SIGNAL('triggered()'), self.pathPlanning) # testing save STL
+        self.connect(actionStandard, SIGNAL('triggered()'), self.pathPlanning)
         self.connect(actionAdvanced, SIGNAL('triggered()'), self.pathAdvanced)
         self.connect(actionDeletePath, SIGNAL('triggered()'), self.pathDelete)
         self.connect(actionOrigin, SIGNAL('triggered()'), self.moveToOrigin)
         self.connect(actionDelete, SIGNAL('triggered()'), self.deleteModel)
-        self.modelMenu.addAction(actionProperties)
+        self.addAction(actionProperties)
         self.modelMenu.addSeparator()
         self.modelMenu.addAction(actionStandard)
         self.modelMenu.addAction(actionAdvanced)
@@ -143,6 +134,24 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         self.modelMenu.addAction(actionOrigin)
         self.modelMenu.addSeparator()
         self.modelMenu.addAction(actionDelete)
+        ## Printer context menu
+        self.printerMenu = QMenu()
+        actionEditPrinter = self.printerMenu.addAction("Edit Printer")
+        actionNewPrinter = self.printerMenu.addAction("New Printer")
+        self.connect(actionEditPrinter, SIGNAL('triggered()'), self.printerDialogEdit)
+        self.connect(actionNewPrinter, SIGNAL('triggered()'), self.printerDialogNew)
+        self.printerMenu.addAction(actionEditPrinter)
+        self.printerMenu.addSeparator()
+        self.printerMenu.addAction(actionNewPrinter)
+        ## Tool context menu
+        self.toolMenu = QMenu()
+        actionEditTool = self.toolMenu.addAction("Edit Tool")
+        actionNewTool = self.toolMenu.addAction("New Tool")
+        self.connect(actionEditTool, SIGNAL('triggered()'), self.toolDialogEdit)
+        self.connect(actionNewTool, SIGNAL('triggered()'), self.toolDialogNew)
+        self.toolMenu.addAction(actionEditTool)
+        self.toolMenu.addSeparator()
+        self.toolMenu.addAction(actionNewTool)
         ## Translations (en, ca, es_ES, pt_BR)
         self.connect(self.actionEnglish, SIGNAL("triggered()"), self.set_en)
         self.connect(self.actionSpanish_Spain, SIGNAL("triggered()"), self.set_es_ES)
@@ -167,64 +176,70 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
             
     def deleteModel(self):
         ''' Deletes the model from view and dictionary and reloads the model tree.'''
-        self.qvtkWidget.RemoveActorCustom(self.model.readActor())
-        self.qvtkWidget.RemoveActorCustom(self.model.getPathActor())
-        self.qvtkWidget.RemoveActorCustom(self.model.getSupportPathActor())
-        self.qvtkWidget.RemoveActorCustom(self.model.getBasePathActor())
+        self.qvtkWidget.RemoveActorCustom(self.model)
         self.modelDict.pop(str(self.model.name))
         self.qvtkWidget.modelDict = self.modelDict
-        self.loadModelTree()        
+        self.populateModelTree()        
         self.qvtkWidget.GetRenderWindow().Render()
         logger.log('Deleted model: ' + self.model.name)
     
-    def editPrinterDialog(self):
+    def printerDialogEdit(self):
         '''Edits printer configuration, general options and axes options.'''
         logger.log('Edit printer Dialog')
         self.showPrinterDialog(False)
         
-    def editToolDialog(self):
+    def toolDialogEdit(self):
         logger.log('Edit tool Dialog')
         self.showToolDialog(False)
              
     def importModel(self, fname):
+        self.importing = True
         fname = str(fname)
         settings.setValue("Path/ModelDir", QVariant(fname[0:fname.find(fname.split('/')[-1])]))
-        model = Model()
-        pool = ThreadPool(2) 
-        model.load(fname)
-        if str(model.name) in self.modelDict.keys():
-            logger.log('++ Model name already used')
-            exists = True
-            name = str(model.name)
-            num = 2
-            while exists:
-                if not name + '(%s)' % str(num) in self.modelDict.keys():
-                    logger.log('++ New name: ' + name + '(%s)' % str(num))
-                    model.name = name + '(%s)' % str(num)
-                    exists = False
-                else:
-                    num += 1
-        self.modelDict[str(model.name)] = model
-        self.qvtkWidget.modelDict = self.modelDict #for view slices
-        printer = str(self.printerComboBox.currentText())
-        printer = self.printerDict[printer]
-        self.qvtkWidget.AddActorCustom(model)
-        if self.modelDict[str(model.name)].hasModel():
-            validateMove(model.readActor(), printer)
-        else:
-            validateMove(model.getPathActor(), printer)
-        self.qvtkWidget.GetRenderWindow().Render()
-        self.loadModelTree()
+        def importer():
+            model = Model()
+            pool = ThreadPool(2) 
+            model.load(fname)
+            if str(model.name) in self.modelDict.keys():
+                logger.log('++ Model name already used')
+                exists = True
+                name = str(model.name)
+                num = 2
+                while exists:
+                    if not name + '(%s)' % str(num) in self.modelDict.keys():
+                        logger.log('++ New name: ' + name + '(%s)' % str(num))
+                        model.name = name + '(%s)' % str(num)
+                        exists = False
+                    else:
+                        num += 1
+            self.modelDict[str(model.name)] = model
+            self.qvtkWidget.modelDict = self.modelDict #for view slices
+            printer = str(self.printerComboBox.currentText())
+            printer = self.printerDict[printer]
+            self.qvtkWidget.AddActorCustom(model)
+            if self.modelDict[str(model.name)].hasModel():
+                validateMove(model.getActor(), printer)
+            else:
+                validateMove(model.getPathActor(), printer)
+            self.qvtkWidget.GetRenderWindow().Render()
+            self.populateModelTree()
+            self.importing = False
+        self.importPool.add_task(importer)
 
-    def loadConfigTree(self):
+    def populateConfigTree(self):
         logger.log('Delete config tree')
         self.configTreeWidget.clear()
         logger.log('Loading tools in config tree')
-        self.loadToolTree()
+        self.populateToolTree()
         logger.log('Loading printers in config tree')
-        self.loadPrinterTree()
+        self.populatePrinterTree()
+        
+    def populateMaterialListWidget(self):
+        self.materialListWidget.clear()
+        for toolname in self.toolDict.keys():
+            self.materialListWidget.addItem(toolname)
 
-    def loadModelTree(self):
+    def populateModelTree(self):
         logger.log('Loading model tree')
         self.modelTreeWidget.clear()
         for model in self.modelDict.keys():
@@ -241,7 +256,7 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
                 modelItem.addChild(QTreeWidgetItem(QStringList('base_path')))
         self.modelTreeWidget.expandAll()
             
-    def loadPrinterTree(self):
+    def populatePrinterTree(self):
         printerTree = QTreeWidgetItem(self.configTreeWidget)
         printerTree.setText(0, "Printers")
         for printer in self.printerDict.values():
@@ -250,7 +265,7 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
                 actualPrinter = QTreeWidgetItem(printerTree)
                 actualPrinter.setText(0, printer.name)
     
-    def loadToolTree(self):
+    def populateToolTree(self):
         toolTree = QTreeWidgetItem(self.configTreeWidget)
         toolTree.setText(0, "Tools")
         for tool in self.toolDict.values():
@@ -258,39 +273,6 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
                 logger.log('Adding tool: ' + tool.name)
                 actualTool = QTreeWidgetItem(toolTree)
                 actualTool.setText(0, tool.name)
-                nextattirb = QStringList('TIPDIAM')
-                nextattirb.append(QString(tool.tipDiam))
-                actualTool.addChild(QTreeWidgetItem(nextattirb))
-                nextattirb = QStringList('SYRDIAM')
-                nextattirb.append(QString(tool.syrDiam))
-                actualTool.addChild(QTreeWidgetItem(nextattirb))
-                nextattirb = QStringList('PATHWIDTH')
-                nextattirb.append(QString(tool.pathWidth))
-                actualTool.addChild(QTreeWidgetItem(nextattirb))
-                nextattirb = QStringList('PATHHEIGHT')
-                nextattirb.append(QString(tool.pathHeight))
-                actualTool.addChild(QTreeWidgetItem(nextattirb))
-                nextattirb = QStringList('JOGSPEED')
-                nextattirb.append(QString(tool.jogSpeed))
-                actualTool.addChild(QTreeWidgetItem(nextattirb))
-                nextattirb = QStringList('SUCKBACK')
-                nextattirb.append(QString(tool.suckback))
-                actualTool.addChild(QTreeWidgetItem(nextattirb))
-                nextattirb = QStringList('PUSHOUT')
-                nextattirb.append(QString(tool.pushout))
-                actualTool.addChild(QTreeWidgetItem(nextattirb))
-                nextattirb = QStringList('PATHSPEED')
-                nextattirb.append(QString(tool.pathSpeed))
-                actualTool.addChild(QTreeWidgetItem(nextattirb))
-                nextattirb = QStringList('PAUSEPATHS')
-                nextattirb.append(QString(tool.pausePaths))
-                actualTool.addChild(QTreeWidgetItem(nextattirb))
-                nextattirb = QStringList('CLEARANCE')
-                nextattirb.append(QString(tool.clearance))
-                actualTool.addChild(QTreeWidgetItem(nextattirb))
-                nextattirb = QStringList('DEPRATE')
-                nextattirb.append(QString(tool.depRate))
-                actualTool.addChild(QTreeWidgetItem(nextattirb))
                 
     def logText(self, text):
         self.logTextBrowser.append(QString(text))
@@ -302,7 +284,7 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
             logger.log('Double clicked on model: ' + modelName)
             model = self.modelDict[str(modelName)]
             if model.hasModel():
-                actor = model.readActor()
+                actor = model.getActor()
             else:
                 actor = model.getPathActor()
             center = actor.GetCenter()
@@ -313,7 +295,7 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
             model = self.modelDict[str(modelName)]
             text = str(item.text(0))
             if text == 'Model':
-                actor = model.readActor()
+                actor = model.getActor()
                 num = actor.GetProperty().GetOpacity()
                 if num == 0:
                     actor.GetProperty().SetOpacity(0.5)
@@ -343,21 +325,24 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         self.qvtkWidget.GetRenderWindow().Render()
 
     def moveToOrigin(self):
-        moveToOrigin(self.model.readActor())
+        moveToOrigin(self.model.getActor())
         self.qvtkWidget.GetRenderWindow().Render()
         logger.log('Moved to Origin, model: ' + self.model.name)
 
-    def newPrinterDialog(self):
+    def printerDialogNew(self):
         logger.log('New printer Dialog')
         self.showPrinterDialog(True)
         
-    def newToolDialog(self):
+    def toolDialogNew(self):
         logger.log('New tool Dialog')
         self.showToolDialog(True)
 
     def okToContinue(self): # To implement not saved changes closing
         logger.log("It's ok to continue")
-        return True
+        if not self.importing or not self.planning:
+            return True
+        else:
+            return False
         
     def on_mainDock_closeEvent(self, event): # It never enters here, I don't know why (it could be a solution to the dock problem)
         print 'Entered mainDock close event' # For testing
@@ -365,10 +350,13 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         event.accept()
         
     def pathAdvanced(self):
-        if self.model.readModelMaterial() is None:
+        if self.model.getModelMaterial() is None:
             QMessageBox().about(self, self.tr("Error"), self.tr("You need to define model material to slice it."))
+        elif self.planning:
+            QMessageBox().about(self, self.tr("Error"), self.tr("You already doing a path planning, wait for completition."))
         else:
             logger.log('Starting advanced path planning')
+            self.planning = True
             Dialog = advancedDialog(self, self.options)
             Dialog.exec_()
             skeinmod.applyConfig(self.model, self.toolDict, True, self.options)
@@ -377,45 +365,48 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
             printer = self.printerDict[printer]
             def slice():
                 if self.model.hasModel():
-                    validateMove(self.model.readActor(), printer, float(self.options.dict['raftMargin']))
+                    validateMove(self.model.getActor(), printer, float(self.options.dict['raftMargin']))
                 self.model.Slice()
                 pathActor = self.model.getPathActor()
                 self.qvtkWidget.AddActorCustom(self.model)
                 logger.log('Added path actor/s to the scene')
-                modelActor = self.model.readActor()
+                modelActor = self.model.getActor()
                 modelActor.GetProperty().SetOpacity(0)
                 self.qvtkWidget.GetRenderWindow().Render()
-                self.loadModelTree()
-            self.advancedPool.add_task(slice)
+                self.populateModelTree()
+                self.planning = False
+            self.pathPool.add_task(slice)
         
     def pathDelete(self):
-        self.qvtkWidget.RemoveActorCustom(self.model.getPathActor())
-        self.qvtkWidget.RemoveActorCustom(self.model.getSupportPathActor())
-        self.qvtkWidget.RemoveActorCustom(self.model.getBasePathActor())
+        self.qvtkWidget.RemoveActorCustom(self.model, False)
         self.model.deletePath()
-        modelActor = self.model.readActor()
+        modelActor = self.model.getActor()
         modelActor.GetProperty().SetOpacity(0.5)
-        self.loadModelTree()        
+        self.populateModelTree()        
         self.qvtkWidget.GetRenderWindow().Render()
         logger.log('Deleted path of model: ' + self.model.name)
         
     def pathPlanning(self):
-        if self.model.readModelMaterial() is None:
+        if self.model.getModelMaterial() is None:
             QMessageBox().about(self, self.tr("Error"), self.tr("You need to define model material to slice it."))
+        elif self.planning:
+            QMessageBox().about(self, self.tr("Error"), self.tr("You already doing a path planning, wait for completition."))
         else:
-           logger.log('Starting path planning')
-           skeinmod.applyConfig(self.model, self.toolDict)
-           self.pathDelete()
-           def slice():
-               self.model.Slice()
-               pathActor = self.model.getPathActor()
-               self.qvtkWidget.AddActorCustom(self.model)
-               logger.log('Added path actor to the scene')
-               modelActor = self.model.readActor()
-               modelActor.GetProperty().SetOpacity(0)
-               self.qvtkWidget.GetRenderWindow().Render()
-               self.loadModelTree()
-           self.pathPool.add_task(slice)
+            logger.log('Starting path planning')
+            self.planning = True
+            skeinmod.applyConfig(self.model, self.toolDict)
+            self.pathDelete()
+            def slice():
+                self.model.Slice()
+                pathActor = self.model.getPathActor()
+                self.qvtkWidget.AddActorCustom(self.model)
+                logger.log('Added path actor to the scene')
+                modelActor = self.model.getActor()
+                modelActor.GetProperty().SetOpacity(0)
+                self.qvtkWidget.GetRenderWindow().Render()
+                self.populateModelTree()
+                self.planning = False
+            self.pathPool.add_task(slice)
         
     def populatePrinterPort(self):
         ports = printerports.scan()
@@ -502,7 +493,10 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         
     def showImportDialog(self):
         logger.log('Showing import Dialog')
-        self.importDialog.exec_()
+        if self.importing:
+            QMessageBox().about(self, self.tr("Error"), self.tr("Model already importing, wait for completition."))
+        else:
+            self.importDialog.exec_()
 
     def showModelCustomContextMenu(self, pos):
         index = self.modelTreeWidget.indexAt(pos) 
@@ -534,7 +528,7 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         Dialog.exec_()
         self.printerDict = loadPrinters()
         self.populatePrinterComboBox()
-        self.loadConfigTree()
+        self.populateConfigTree()
 
     def showToolDialog(self, new):
         logger.log('Showing tool edit Dialog')
@@ -549,7 +543,7 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         self.toolDict = loadTools()
         self.qvtkWidget.toolDict = self.toolDict
         self.populateToolComboBox() # Reload data for comboboxes and tool tree
-        self.loadConfigTree()
+        self.populateConfigTree()
 
     def startPrinting(self): # need to be implemented
         logger.log('Starting printing process')
