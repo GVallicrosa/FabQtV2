@@ -10,7 +10,6 @@ class QVTKRenderWindowInteractorCustom(QVTKRenderWindowInteractor):
         self.camera.SetFocalPoint(0, 0, 0)
         self.camera.SetPosition(300, 0, 100)
         self.camera.SetViewUp(-1, 0, 0)
-        #self.camera.SetParallelProjection(1)#######
         self.ren = vtk.vtkRenderer()
         self.ren.SetActiveCamera(self.camera)
         self.SetInteractorStyle(vtk.vtkInteractorStyleTrackballCamera())
@@ -160,22 +159,40 @@ class QVTKRenderWindowInteractorCustom(QVTKRenderWindowInteractor):
         self.GetRenderWindow().Render()
         
     def behindView(self):
-        pass
+        self.camera.ParallelProjectionOn()
+        self.camera.SetFocalPoint(0, 0, 0)
+        self.camera.SetPosition(-500, -0, 1e-6)
+        self.camera.SetViewUp(1, 0, 0)
+        self.GetRenderWindow().Render()
         
     def frontView(self):
-        pass
+        self.camera.ParallelProjectionOn()
+        self.camera.SetFocalPoint(0, 0, 0)
+        self.camera.SetPosition(500, 0, 1e-6)
+        self.camera.SetViewUp(-1, 0, 0)
+        self.GetRenderWindow().Render()
         
     def defaultView(self):
-        pass
+        self.camera.ParallelProjectionOff()
+        self.resetView()
         
     def leftView(self):
-        pass
+        self.camera.ParallelProjectionOn()
+        self.camera.SetFocalPoint(0, 0, 0)
+        self.camera.SetPosition(0, -500, 1e-6)
+        self.camera.SetViewUp(0, 1, 0)
+        self.GetRenderWindow().Render()
         
     def rightView(self):
-        pass
+        self.camera.ParallelProjectionOn()
+        self.camera.SetFocalPoint(0, 0, 0)
+        self.camera.SetPosition(0, 500, 1e-6)
+        self.camera.SetViewUp(0, -1, 0)
+        self.GetRenderWindow().Render()
         
     def topView(self):
-        pass
-    
-    def ortographicView(self):
-        pass
+        self.camera.ParallelProjectionOn()
+        self.camera.SetFocalPoint(0, 0, 0)
+        self.camera.SetPosition(1e-6, 1e-6, 500)
+        self.camera.SetViewUp(0, 0, -1)
+        self.GetRenderWindow().Render()

@@ -102,12 +102,12 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         self.connect(self.importModelButton, SIGNAL("clicked()"), self.showImportDialog)
         self.connect(self.resetViewButton, SIGNAL("clicked()"), self.qvtkWidget.resetView)
         ## Ortographic view
-        self.connect(self.actionBehind_view, SIGNAL("clicked()"), self.qvtkWidget.behindView)
-        self.connect(self.actionDefault_view, SIGNAL("clicked()"), self.qvtkWidget.defaultView)
-        self.connect(self.actionFront_view, SIGNAL("clicked()"), self.qvtkWidget.frontView)
-        self.connect(self.actionLeft_view, SIGNAL("clicked()"), self.qvtkWidget.leftView)
-        self.connect(self.actionRight_view, SIGNAL("clicked()"), self.qvtkWidget.rightView)
-        self.connect(self.actionTop_view, SIGNAL("clicked()"), self.qvtkWidget.topView)
+        self.connect(self.actionBehind_view, SIGNAL("triggered()"), self.qvtkWidget.behindView)
+        self.connect(self.actionDefault_view, SIGNAL("triggered()"), self.qvtkWidget.defaultView)
+        self.connect(self.actionFront_view, SIGNAL("triggered()"), self.qvtkWidget.frontView)
+        self.connect(self.actionLeft_view, SIGNAL("triggered()"), self.qvtkWidget.leftView)
+        self.connect(self.actionRight_view, SIGNAL("triggered()"), self.qvtkWidget.rightView)
+        self.connect(self.actionTop_view, SIGNAL("triggered()"), self.qvtkWidget.topView)
         ## Context menus (right click)
         self.connect(self.modelTreeWidget, SIGNAL("customContextMenuRequested(QPoint)"), self.showModelCustomContextMenu)
         self.connect(self.configTreeWidget, SIGNAL("customContextMenuRequested(QPoint)"), self.showConfigCustomContextMenu)
@@ -116,19 +116,22 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         actionProperties = self.modelMenu.addAction("Properties/Transform")
         actionStandard = self.modelMenu.addAction("Standard Path Planning")
         actionAdvanced = self.modelMenu.addAction("Advanced Path Planning")
+        actionCustom = self.modelMenu.addAction("Custom Path Planning")
         actionDeletePath = self.modelMenu.addAction("Erase Path")
         actionOrigin = self.modelMenu.addAction("Move to Origin")
         actionDelete = self.modelMenu.addAction("Delete")
         self.connect(actionProperties, SIGNAL('triggered()'), self.showPropertiesDialog)
         self.connect(actionStandard, SIGNAL('triggered()'), self.pathPlanning)
         self.connect(actionAdvanced, SIGNAL('triggered()'), self.pathAdvanced)
+        self.connect(actionCustom, SIGNAL('triggered()'), self.pathCustom)
         self.connect(actionDeletePath, SIGNAL('triggered()'), self.pathDelete)
         self.connect(actionOrigin, SIGNAL('triggered()'), self.moveToOrigin)
         self.connect(actionDelete, SIGNAL('triggered()'), self.deleteModel)
-        self.addAction(actionProperties)
+        self.modelMenu.addAction(actionProperties)
         self.modelMenu.addSeparator()
         self.modelMenu.addAction(actionStandard)
         self.modelMenu.addAction(actionAdvanced)
+        self.modelMenu.addAction(actionCustom)
         self.modelMenu.addAction(actionDeletePath)
         self.modelMenu.addSeparator()
         self.modelMenu.addAction(actionOrigin)
@@ -196,35 +199,34 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         self.importing = True
         fname = str(fname)
         settings.setValue("Path/ModelDir", QVariant(fname[0:fname.find(fname.split('/')[-1])]))
-        def importer():
-            model = Model()
-            pool = ThreadPool(2) 
-            model.load(fname)
-            if str(model.name) in self.modelDict.keys():
-                logger.log('++ Model name already used')
-                exists = True
-                name = str(model.name)
-                num = 2
-                while exists:
-                    if not name + '(%s)' % str(num) in self.modelDict.keys():
-                        logger.log('++ New name: ' + name + '(%s)' % str(num))
-                        model.name = name + '(%s)' % str(num)
-                        exists = False
-                    else:
-                        num += 1
-            self.modelDict[str(model.name)] = model
-            self.qvtkWidget.modelDict = self.modelDict #for view slices
-            printer = str(self.printerComboBox.currentText())
-            printer = self.printerDict[printer]
-            self.qvtkWidget.AddActorCustom(model)
-            if self.modelDict[str(model.name)].hasModel():
-                validateMove(model.getActor(), printer)
-            else:
-                validateMove(model.getPathActor(), printer)
-            self.qvtkWidget.GetRenderWindow().Render()
-            self.populateModelTree()
-            self.importing = False
-        self.importPool.add_task(importer)
+        #def importer():
+        model = Model()
+        model.load(fname)
+        if str(model.name) in self.modelDict.keys():
+            logger.log('++ Model name already used')
+            exists = True
+            name = str(model.name)
+            num = 2
+            while exists:
+                if not name + '(%s)' % str(num) in self.modelDict.keys():
+                    logger.log('++ New name: ' + name + '(%s)' % str(num))
+                    model.name = name + '(%s)' % str(num)
+                    exists = False
+                else:
+                    num += 1
+        self.modelDict[str(model.name)] = model
+        self.qvtkWidget.modelDict = self.modelDict #for view slices
+        printer = str(self.printerComboBox.currentText())
+        printer = self.printerDict[printer]
+        self.qvtkWidget.AddActorCustom(model)
+        if self.modelDict[str(model.name)].hasModel():
+            validateMove(model.getActor(), printer)
+        else:
+            validateMove(model.getPathActor(), printer)
+        self.qvtkWidget.GetRenderWindow().Render()
+        self.populateModelTree()
+        self.importing = False
+        #self.importPool.add_task(importer)
 
     def populateConfigTree(self):
         logger.log('Delete config tree')
@@ -339,7 +341,7 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
 
     def okToContinue(self): # To implement not saved changes closing
         logger.log("It's ok to continue")
-        if not self.importing or not self.planning:
+        if not self.importing and not self.planning:
             return True
         else:
             return False
@@ -349,6 +351,37 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         self.actionMain_tools.setChecked(False)
         event.accept()
         
+    def pathCustom(self):
+        if self.model.getModelMaterial() is None:
+            QMessageBox().about(self, self.tr("Error"), self.tr("You need to define model material to slice it."))
+        elif self.planning:
+            QMessageBox().about(self, self.tr("Error"), self.tr("You already doing a path planning, wait for completition."))
+        else:
+            logger.log('Starting custom path planning')
+            self.planning = True
+            #Dialog = advancedDialog(self, self.options)
+            #Dialog.exec_()
+            #skeinmod.applyConfig(self.model, self.toolDict, True, self.options)
+            self.pathDelete()
+            #printer = str(self.printerComboBox.currentText())
+            #printer = self.printerDict[printer]
+            
+            #def slice2():
+            
+            #if self.model.hasModel():
+            #    validateMove(self.model.getActor(), printer, float(self.options.dict['raftMargin']))
+            self.model.SliceCustom(self.toolDict)
+            #pathActor = self.model.getPathActor()
+            self.qvtkWidget.AddActorCustom(self.model)
+            logger.log('Added path actor/s to the scene')
+            modelActor = self.model.getActor()
+            modelActor.GetProperty().SetOpacity(0)
+            self.qvtkWidget.GetRenderWindow().Render()
+            self.populateModelTree()
+            self.planning = False
+            
+            #self.pathPool.add_task(slice2)
+    
     def pathAdvanced(self):
         if self.model.getModelMaterial() is None:
             QMessageBox().about(self, self.tr("Error"), self.tr("You need to define model material to slice it."))
