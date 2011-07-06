@@ -17,28 +17,31 @@ def extract():
     fh = zipfile.ZipFile('skeinforge.zip', 'r')
     fh.extractall('core/skeinforge/')
 
-currentVersion = 38
+# Search current version
+fh = file('core/skeinforge/fabmetheus_utilities/version.txt')
+current = fh.readline()
+current = '20' + current
+current = current.replace('.','-')
+print 'Current version: ' + current 
 try:
     fh = urllib2.urlopen("http://fabmetheus.crsndoo.com/rss.xml")
+    print 'Checking online...'
     data = fh.readlines()
-    print data
-    print '========================================================'
     data = data[0]
-    data = data.split('http://fabmetheus.crsndoo.com/files/')
-    data = data[1]
-    data = int(data[0:2])
-    print data
-    if data > currentVersion:
+    new = data.split('<item><title>')
+    new = new[1]
+    new = new[:10]
+    version = data.split('http://fabmetheus.crsndoo.com/files/')
+    version = version[1]
+    version = int(version[0:2])
+    print 'New version: ' + new + '  Number: ' + str(version)
+    if not new == current:
         print 'Please update'
-        print 'http://fabmetheus.crsndoo.com/files/%s_reprap_python_beanshell.zip' % data
-        #ask for download
-        print 'Dowloading...',
-        download(data)
-        print 'done'
-        print 'Extracting...',
+        print 'Dowloading...'
+        download(version)
+        print 'Extracting...'
         extract()
-        print 'done'
-    elif data == currentVersion:
+    elif new == current:
         print 'Already lastest version'
     else:
         print 'Error'
