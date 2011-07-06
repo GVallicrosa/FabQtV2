@@ -117,6 +117,7 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         actionStandard = self.modelMenu.addAction("Standard Path Planning")
         actionAdvanced = self.modelMenu.addAction("Advanced Path Planning")
         actionCustom = self.modelMenu.addAction("Custom Path Planning")
+        actionExport = self.modelMenu.addAction("Export to vector file")
         actionDeletePath = self.modelMenu.addAction("Erase Path")
         actionOrigin = self.modelMenu.addAction("Move to Origin")
         actionDelete = self.modelMenu.addAction("Delete")
@@ -124,6 +125,7 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         self.connect(actionStandard, SIGNAL('triggered()'), self.pathPlanning)
         self.connect(actionAdvanced, SIGNAL('triggered()'), self.pathAdvanced)
         self.connect(actionCustom, SIGNAL('triggered()'), self.pathCustom)
+        self.connect(actionExport, SIGNAL('triggered()'), self.pathExport)
         self.connect(actionDeletePath, SIGNAL('triggered()'), self.pathDelete)
         self.connect(actionOrigin, SIGNAL('triggered()'), self.moveToOrigin)
         self.connect(actionDelete, SIGNAL('triggered()'), self.deleteModel)
@@ -132,6 +134,7 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         self.modelMenu.addAction(actionStandard)
         self.modelMenu.addAction(actionAdvanced)
         self.modelMenu.addAction(actionCustom)
+        self.modelMenu.addAction(actionExport)
         self.modelMenu.addAction(actionDeletePath)
         self.modelMenu.addSeparator()
         self.modelMenu.addAction(actionOrigin)
@@ -341,15 +344,32 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
 
     def okToContinue(self): # To implement not saved changes closing
         logger.log("It's ok to continue")
-        if not self.importing and not self.planning:
-            return True
-        else:
-            return False
+        #if not self.importing and not self.planning:
+        return True
+        #else:
+        #    return False
         
     def on_mainDock_closeEvent(self, event): # It never enters here, I don't know why (it could be a solution to the dock problem)
         print 'Entered mainDock close event' # For testing
         self.actionMain_tools.setChecked(False)
         event.accept()
+        
+    def pathExport(self):
+        if not self.model.hasModelPath():
+            QMessageBox().about(self, self.tr("Error"), self.tr("No path to export, please calculate it before exporting."))
+        else:
+            logger.log('+ Start vector file export')
+            fname = settings.value("Path/ModelDir", QVariant(QString('./'))).toString() + str(self.model.name) + '.txt'
+            fh = file(fname, 'w')
+            layers = self.model._layer
+            for layer in layers:
+                paths = layer.getModelPaths()
+                for path in paths:
+                    vectors = path.getVector()
+                    for vec in vectors:
+                        print >> fh, '%s %s %s' % (vec.x, vec.y, vec.z)
+                    print >> fh, ''
+            logger.log('- Finished vector file export')
         
     def pathCustom(self):
         if self.model.getModelMaterial() is None:

@@ -193,7 +193,9 @@ class Model(object):
         # Start gathering points
         deg = 45
         layerList = list()
-        for i in range(len(layerspoly)):
+        total = len(layerspoly)
+        for i in range(total):
+            print 'processing layer %s/%s' % (i+1, total)
             # Get polygons of each layer
             polygons = layerspoly[i]
             # Get current layer z
@@ -245,6 +247,7 @@ class Model(object):
             deg = -deg
             
         # Generate actors for paths
+        self.setLayers(layerList)
         self.generatePaths(layerList)
     
     def Slice(self): # calls skeinforge
@@ -270,6 +273,7 @@ class Model(object):
         else:
             logger.log('Error importing GCode')
         self.generatePaths(layers)
+        
         
     def getPathActor(self):
         return self._slice_actor

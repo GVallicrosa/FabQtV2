@@ -138,7 +138,6 @@ def fill(fig, w, deg = 45, s = None): # Falta buffer a -w/2
     ymax = max(fig.buffer(0.99*w).exterior.envelope.boundary.xy[1])
     
     # Initial parameters
-    cuts = list()
     if 90 > deg > 0: # Start from left bottom
         x = xmin - (ymax - ymin)/abs(tan(ang)) 
         y = ymin
@@ -236,8 +235,15 @@ def fill(fig, w, deg = 45, s = None): # Falta buffer a -w/2
                             nextCandidates.append(segment)
                             distances.append(lastpoint.distance(segment))
                 
-                # Start bending lines
+                # Start binding lines
                 if len(distances) == 0: # No candidates
+                    if firstline is not None: # Add the line
+                        lastpoint = firstline.boundary[1] # Start point
+                        x.append(lastpoint.x)
+                        y.append(lastpoint.y)
+                        lastpoint = firstline.boundary[0]
+                        x.append(lastpoint.x)
+                        y.append(lastpoint.y)
                     pather = False
                 else:
                     val = min(distances)
