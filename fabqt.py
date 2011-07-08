@@ -7,6 +7,16 @@ from time import localtime, asctime
 # Import Qt
 from PyQt4.QtCore import QString, QUrl, QVariant, QSettings, QTranslator, QStringList, QSize, QPoint, SIGNAL, QStringList
 from PyQt4.QtGui import QTreeWidgetItem, QApplication, QMenu, QMainWindow, QFileDialog, QCursor, QMessageBox
+
+if os.path.exists('log.txt'):
+    if os.path.getsize('log.txt') >= 1024*1024: # 1MB
+        os.remove('log.txt')
+        import checkSkeinforgeVersion
+        checkSkeinforgeVersion.main()
+else:
+    import checkSkeinforgeVersion
+    checkSkeinforgeVersion.main()
+
 # Dialogs
 import ui.ui_fabqtDialog as ui_fabqtDialog
 from core.python.dialogs.printerDialog import printerDialog
@@ -24,11 +34,7 @@ from core.python import printerports
 from core.python.taskexecutor import ThreadPool
 import core.python.skeinmod as skeinmod
 from core.python.fablog import Fablog
-
-if os.path.exists('log.txt'):
-    if os.path.getsize('log.txt') >= 1024*1024: # 1MB
-        os.remove('log.txt')
-
+        
 logger = Fablog()
 logger.log('\n\n' + str(asctime(localtime())) + '\n')
 
@@ -343,7 +349,7 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         self.showToolDialog(True)
 
     def okToContinue(self): # To implement not saved changes closing
-        logger.log("It's ok to continue")
+        logger.log("It's ok to close")
         #if not self.importing and not self.planning:
         return True
         #else:
