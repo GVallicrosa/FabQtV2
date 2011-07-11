@@ -38,38 +38,43 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>FabQtMain</name>
     <message>
-        <location filename="fabqt.py" line="574"/>
+        <location filename="fabqt.py" line="649"/>
         <source>Translation Info</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="fabqt.py" line="574"/>
+        <location filename="fabqt.py" line="649"/>
         <source>You need to restart the application to change the language</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="fabqt.py" line="517"/>
+        <location filename="fabqt.py" line="592"/>
         <source>Error</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="fabqt.py" line="393"/>
+        <location filename="fabqt.py" line="468"/>
         <source>You need to define model material to slice it.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="fabqt.py" line="517"/>
+        <location filename="fabqt.py" line="592"/>
         <source>Model sliced, you cannot change it&apos;s properties.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="fabqt.py" line="395"/>
+        <location filename="fabqt.py" line="470"/>
         <source>You already doing a path planning, wait for completition.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="fabqt.py" line="499"/>
+        <location filename="fabqt.py" line="574"/>
         <source>Model already importing, wait for completition.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="fabqt.py" line="383"/>
+        <source>No path to export, please calculate it before exporting.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -341,37 +346,37 @@ p, li { white-space: pre-wrap; }
         <translation></translation>
     </message>
     <message>
-        <location filename="ui/fabqtDialog.ui" line="2087"/>
+        <location filename="ui/fabqtDialog.ui" line="2084"/>
         <source>Main tools</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="ui/fabqtDialog.ui" line="2109"/>
+        <location filename="ui/fabqtDialog.ui" line="2103"/>
         <source>Toolbar</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="ui/fabqtDialog.ui" line="2114"/>
+        <location filename="ui/fabqtDialog.ui" line="2108"/>
         <source>About</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="ui/fabqtDialog.ui" line="2122"/>
+        <location filename="ui/fabqtDialog.ui" line="2116"/>
         <source>English</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="ui/fabqtDialog.ui" line="2130"/>
+        <location filename="ui/fabqtDialog.ui" line="2124"/>
         <source>Spanish (Spain)</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="ui/fabqtDialog.ui" line="2138"/>
+        <location filename="ui/fabqtDialog.ui" line="2132"/>
         <source>Catalan</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="ui/fabqtDialog.ui" line="2146"/>
+        <location filename="ui/fabqtDialog.ui" line="2140"/>
         <source>Portuguese (Brazil)</source>
         <translation></translation>
     </message>
@@ -406,37 +411,37 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ui/fabqtDialog.ui" line="2098"/>
+        <location filename="ui/fabqtDialog.ui" line="2092"/>
         <source>Log/Status/Info</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ui/fabqtDialog.ui" line="2155"/>
+        <location filename="ui/fabqtDialog.ui" line="2149"/>
         <source>Left view</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ui/fabqtDialog.ui" line="2164"/>
+        <location filename="ui/fabqtDialog.ui" line="2158"/>
         <source>Right view</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ui/fabqtDialog.ui" line="2173"/>
+        <location filename="ui/fabqtDialog.ui" line="2167"/>
         <source>Front view</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ui/fabqtDialog.ui" line="2182"/>
+        <location filename="ui/fabqtDialog.ui" line="2176"/>
         <source>Behind view</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ui/fabqtDialog.ui" line="2191"/>
+        <location filename="ui/fabqtDialog.ui" line="2185"/>
         <source>Top view</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ui/fabqtDialog.ui" line="2200"/>
+        <location filename="ui/fabqtDialog.ui" line="2194"/>
         <source>Default view</source>
         <translation type="unfinished"></translation>
     </message>

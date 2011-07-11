@@ -2,16 +2,21 @@
 
 # Form implementation generated from reading ui file 'aboutDialog.ui'
 #
-# Created: Wed Feb  9 12:04:30 2011
-#      by: PyQt4 UI code generator 4.7.4
+# Created: Mon Jul 11 13:16:05 2011
+#      by: PyQt4 UI code generator 4.8.3
 #
 # WARNING! All changes made in this file will be lost!
 
 from PyQt4 import QtCore, QtGui
 
+try:
+    _fromUtf8 = QtCore.QString.fromUtf8
+except AttributeError:
+    _fromUtf8 = lambda s: s
+
 class Ui_AboutDlg(object):
     def setupUi(self, AboutDlg):
-        AboutDlg.setObjectName("AboutDlg")
+        AboutDlg.setObjectName(_fromUtf8("AboutDlg"))
         AboutDlg.resize(399, 253)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
@@ -20,35 +25,35 @@ class Ui_AboutDlg(object):
         AboutDlg.setSizePolicy(sizePolicy)
         AboutDlg.setContextMenuPolicy(QtCore.Qt.PreventContextMenu)
         self.verticalLayout = QtGui.QVBoxLayout(AboutDlg)
-        self.verticalLayout.setObjectName("verticalLayout")
+        self.verticalLayout.setObjectName(_fromUtf8("verticalLayout"))
         self.label_2 = QtGui.QLabel(AboutDlg)
         font = QtGui.QFont()
         font.setPointSize(10)
         font.setWeight(50)
         font.setBold(False)
         self.label_2.setFont(font)
-        self.label_2.setObjectName("label_2")
+        self.label_2.setObjectName(_fromUtf8("label_2"))
         self.verticalLayout.addWidget(self.label_2)
         self.line = QtGui.QFrame(AboutDlg)
         self.line.setFrameShape(QtGui.QFrame.HLine)
         self.line.setFrameShadow(QtGui.QFrame.Sunken)
-        self.line.setObjectName("line")
+        self.line.setObjectName(_fromUtf8("line"))
         self.verticalLayout.addWidget(self.line)
         self.label_3 = QtGui.QLabel(AboutDlg)
         self.label_3.setAutoFillBackground(True)
         self.label_3.setTextFormat(QtCore.Qt.RichText)
         self.label_3.setOpenExternalLinks(True)
-        self.label_3.setObjectName("label_3")
+        self.label_3.setObjectName(_fromUtf8("label_3"))
         self.verticalLayout.addWidget(self.label_3)
         self.buttonBox = QtGui.QDialogButtonBox(AboutDlg)
         self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
         self.buttonBox.setStandardButtons(QtGui.QDialogButtonBox.Ok)
-        self.buttonBox.setObjectName("buttonBox")
+        self.buttonBox.setObjectName(_fromUtf8("buttonBox"))
         self.verticalLayout.addWidget(self.buttonBox)
 
         self.retranslateUi(AboutDlg)
-        QtCore.QObject.connect(self.buttonBox, QtCore.SIGNAL("accepted()"), AboutDlg.accept)
-        QtCore.QObject.connect(self.buttonBox, QtCore.SIGNAL("rejected()"), AboutDlg.reject)
+        QtCore.QObject.connect(self.buttonBox, QtCore.SIGNAL(_fromUtf8("accepted()")), AboutDlg.accept)
+        QtCore.QObject.connect(self.buttonBox, QtCore.SIGNAL(_fromUtf8("rejected()")), AboutDlg.reject)
         QtCore.QMetaObject.connectSlotsByName(AboutDlg)
 
     def retranslateUi(self, AboutDlg):

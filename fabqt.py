@@ -40,12 +40,13 @@ logger.log('\n\n' + str(asctime(localtime())) + '\n')
 
 class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
     def __init__(self, parent = None):
-        ## Init parent and make connections
+        ## Init parent
         super(FabQtMain, self).__init__(parent)
         self.setupUi(self)
+        ## Start log
         self.connect(logger, SIGNAL('Fablogging'), self.logText)
         logger.log('--> Initialising application')
-        ## Initial values
+        ## Variables
         self.configToolName = None # handles the current clicked tool
         self.configPrinterName = None # handles the current clicked printer
         self.model = None # handles the current clicked model
@@ -84,12 +85,9 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         self.move(settings.value("MainWindow/Position", QVariant(QPoint(0, 0))).toPoint())
         self.restoreState(settings.value("MainWindow/State").toByteArray())
         ## Show/hide dialogs from the menu
-        self.connect(self.actionMain_tools, SIGNAL("toggled(bool)"), self.mainDock.setVisible)
-        self.connect(self.actionStatus_Info, SIGNAL("toggled(bool)"), self.infoDock.setVisible)
+        self.connect(self.actionMain_tools, SIGNAL("triggered()"), self.mainDock_setVisible)
+        self.connect(self.actionStatus_Info, SIGNAL("triggered()"), self.infoDock_setVisible)
         self.connect(self.actionToolbar, SIGNAL("toggled(bool)"), self.toolBar.setVisible)
-        ## If you close a dialog, update in the menu
-        self.connect(self.mainDock, SIGNAL("visibilityChanged(bool)"), self.actionMain_tools.setChecked) # PROBLEM: when minimized, it loses the docks
-        self.connect(self.infoDock, SIGNAL("visibilityChanged(bool)"), self.actionStatus_Info.setChecked)
         ## Update movements
         self.connect(self.x_IncrementLineEdit, SIGNAL("textEdited(QString)"), self.updateMovement)
         self.connect(self.y_IncrementLineEdit, SIGNAL("textEdited(QString)"), self.updateMovement)
@@ -172,6 +170,12 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         self.connect(self.actionPortuguese_Brazil, SIGNAL("triggered()"), self.set_pt_BR)
         logger.log('--> End Initialisation')
         
+    def infoDock_setVisible(self):
+        self.infoDock.setVisible(True)
+        
+    def mainDock_setVisible(self):
+        self.mainDock.setVisible(True)
+        
     def closeEvent(self, event): # Save some settings before closing
         logger.log('Main window close event')
         if self.okToContinue():
@@ -238,17 +242,20 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         self.importing = False
         #self.importPool.add_task(importer)
         
-    def materialClicked(self):#############################################################
+    def materialClicked(self):
         toolname = str(self.materialListWidget.currentItem().text())
-        item = self.modelTreeWidget.currentItem()
-        if item.text(0).contains('Model'):
-            item = item.parent()
-        elif item.text(0).contains('path'):
-            return
-        modelname = str(item.text(0))
-        if item.childCount() == 1: # Path not already calculated
-            self.modelDict[modelname].setModelMaterial(toolname)
-            logger.log('Model: ' + modelname + ' Material: ' + toolname)
+        try:
+            item = self.modelTreeWidget.currentItem()
+            if item.text(0).contains('Model'):
+                item = item.parent()
+            elif item.text(0).contains('path'):
+                return
+            modelname = str(item.text(0))
+            if item.childCount() == 1: # Path not already calculated
+                self.modelDict[modelname].setModelMaterial(toolname)
+                logger.log('Model: ' + modelname + ' Material: ' + toolname)
+        except:
+            pass
 
     def populateConfigTree(self):
         logger.log('Delete config tree')

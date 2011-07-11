@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>850</width>
-    <height>754</height>
+    <width>866</width>
+    <height>758</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -47,7 +47,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>850</width>
+     <width>866</width>
      <height>25</height>
     </rect>
    </property>
@@ -2077,22 +2077,16 @@
    </property>
   </action>
   <action name="actionMain_tools">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
    <property name="checked">
-    <bool>true</bool>
+    <bool>false</bool>
    </property>
    <property name="text">
     <string>Main tools</string>
    </property>
   </action>
   <action name="actionStatus_Info">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
    <property name="checked">
-    <bool>true</bool>
+    <bool>false</bool>
    </property>
    <property name="text">
     <string>Log/Status/Info</string>
