@@ -63,7 +63,6 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         self.currentPrinter = self.printerDict[str(self.printerComboBox.currentText())]
         ## Render window using VTK lib
         self.qvtkWidget.customStart(self.currentPrinter)
-        #self.ren = self.qvtkWidget.ren
         self.camera = self.qvtkWidget.camera
         ## Thread pool
         self.pathPool = ThreadPool(2)
@@ -146,6 +145,8 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         self.modelMenu.addAction(actionOrigin)
         self.modelMenu.addSeparator()
         self.modelMenu.addAction(actionDelete)
+        ## Model materials
+        self.connect(self.materialListWidget, SIGNAL('itemSelectionChanged()'), self.materialClicked)
         ## Printer context menu
         self.printerMenu = QMenu()
         actionEditPrinter = self.printerMenu.addAction("Edit Printer")
@@ -236,6 +237,18 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         self.populateModelTree()
         self.importing = False
         #self.importPool.add_task(importer)
+        
+    def materialClicked(self):#############################################################
+        toolname = str(self.materialListWidget.currentItem().text())
+        item = self.modelTreeWidget.currentItem()
+        if item.text(0).contains('Model'):
+            item = item.parent()
+        elif item.text(0).contains('path'):
+            return
+        modelname = str(item.text(0))
+        if item.childCount() == 1: # Path not already calculated
+            self.modelDict[modelname].setModelMaterial(toolname)
+            logger.log('Model: ' + modelname + ' Material: ' + toolname)
 
     def populateConfigTree(self):
         logger.log('Delete config tree')
