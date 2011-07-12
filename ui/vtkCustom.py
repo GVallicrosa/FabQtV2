@@ -51,6 +51,7 @@ class QVTKRenderWindowInteractorCustom(QVTKRenderWindowInteractor):
         self.Initialize()
         self.ren.GetRenderWindow().Render()
         self.Start()
+        self.resetView()
         
     def cutter(self):
         maxLayers = 0
