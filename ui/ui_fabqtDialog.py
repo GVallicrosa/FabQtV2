@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/fabqtDialog.ui'
 #
-# Created: Mon Jul 11 13:16:06 2011
+# Created: Tue Jul 12 16:22:39 2011
 #      by: PyQt4 UI code generator 4.8.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -617,6 +617,9 @@ class Ui_MainWindow(object):
         self.modelTreeWidget.setObjectName(_fromUtf8("modelTreeWidget"))
         self.modelTreeWidget.header().setSortIndicatorShown(False)
         self.verticalLayout_6.addWidget(self.modelTreeWidget)
+        self.materialLabel = QtGui.QLabel(self.modelTab)
+        self.materialLabel.setObjectName(_fromUtf8("materialLabel"))
+        self.verticalLayout_6.addWidget(self.materialLabel)
         self.materialListWidget = QtGui.QListWidget(self.modelTab)
         self.materialListWidget.setObjectName(_fromUtf8("materialListWidget"))
         self.verticalLayout_6.addWidget(self.materialListWidget)
@@ -940,6 +943,7 @@ class Ui_MainWindow(object):
         self.mainTabWidget.setTabText(self.mainTabWidget.indexOf(self.moveTab), QtGui.QApplication.translate("MainWindow", "Move", None, QtGui.QApplication.UnicodeUTF8))
         self.importModelButton.setText(QtGui.QApplication.translate("MainWindow", "Import Model", None, QtGui.QApplication.UnicodeUTF8))
         self.modelTreeWidget.headerItem().setText(0, QtGui.QApplication.translate("MainWindow", "Models", None, QtGui.QApplication.UnicodeUTF8))
+        self.materialLabel.setText(QtGui.QApplication.translate("MainWindow", "Materials:", None, QtGui.QApplication.UnicodeUTF8))
         self.mainTabWidget.setTabText(self.mainTabWidget.indexOf(self.modelTab), QtGui.QApplication.translate("MainWindow", "Model/Path", None, QtGui.QApplication.UnicodeUTF8))
         self.portLabel.setText(QtGui.QApplication.translate("MainWindow", "Printer Port:", None, QtGui.QApplication.UnicodeUTF8))
         self.configTreeWidget.headerItem().setText(0, QtGui.QApplication.translate("MainWindow", "Property", None, QtGui.QApplication.UnicodeUTF8))

@@ -1588,6 +1588,13 @@
           </widget>
          </item>
          <item>
+          <widget class="QLabel" name="materialLabel">
+           <property name="text">
+            <string>Materials:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
           <widget class="QListWidget" name="materialListWidget"/>
          </item>
         </layout>
