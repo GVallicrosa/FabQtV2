@@ -39,6 +39,12 @@ class Model(object):
         else:
             return True
             
+    def hasModelMaterial(self):
+        if self._modelMaterial is None:
+            return False
+        else:
+            return True
+            
     def hasModelPath(self):
         if self._slice_actor is None:
             return False

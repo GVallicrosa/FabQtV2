@@ -246,14 +246,20 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         toolname = str(self.materialListWidget.currentItem().text())
         try:
             item = self.modelTreeWidget.currentItem()
-            if item.text(0).contains('Model'):
+            if item.text(0).contains('Model') or item.text(0).contains('Mat:'):
                 item = item.parent()
             elif item.text(0).contains('path'):
                 return
             modelname = str(item.text(0))
-            if item.childCount() == 1: # Path not already calculated
+
+            pathdone = False
+            for i in range(item.childCount()): # Check path calculated
+                if item.child(i).text(0).contains('path'):
+                    pathdone = True
+            if not pathdone:
                 self.modelDict[modelname].setModelMaterial(toolname)
                 logger.log('Model: ' + modelname + ' Material: ' + toolname)
+            self.populateModelTree()
         except:
             pass
 
@@ -279,6 +285,8 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
             modelItem.setText(0, model)
             if self.modelDict[model].hasModel():
                 modelItem.addChild(QTreeWidgetItem(QStringList('Model')))
+            if self.modelDict[model].hasModelMaterial():
+                modelItem.addChild(QTreeWidgetItem(QStringList('Mat: ' + self.modelDict[model]._modelMaterial)))
             if self.modelDict[model].hasModelPath():
                 modelItem.addChild(QTreeWidgetItem(QStringList('model_path')))
             if self.modelDict[model].hasSupportPath():

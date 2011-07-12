@@ -18,6 +18,7 @@ def extract():
     fh.extractall('core/skeinforge/')
 
 def main():
+    have = False
     # Search current version
     try:
         fh = file('core/skeinforge/fabmetheus_utilities/version.txt', 'r')
@@ -26,6 +27,7 @@ def main():
         current = current.replace('.','-')
         print 'Current version: ' + current 
         fh.close()
+        have = True
     except:
         current = 'nothing'
         print 'Current version: no skeinforge' 
@@ -44,13 +46,16 @@ def main():
         version = int(version[0:2])
         print 'New version: ' + new + '  Number: ' + str(version)
         if not new == current:
-            print 'Updating...'
-            print '   Dowloading...'
-            download(version)
-            print '   Extracting...'
-            extract()
-            import os
-            os.remove('skeinforge.zip')
+            if have:
+                res = raw_input('Do you want to update skeinforge? (Y/N): ')
+            if res.lower == 'y' or not have:
+                print 'Updating...'
+                print '   Dowloading...'
+                download(version)
+                print '   Extracting...'
+                extract()
+                import os
+                os.remove('skeinforge.zip')
         elif new == current:
             print 'Already lastest version'
         else:
