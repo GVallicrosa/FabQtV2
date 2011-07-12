@@ -46,9 +46,13 @@ def main():
         version = int(version[0:2])
         print 'New version: ' + new + '  Number: ' + str(version)
         if not new == current:
+            update = True
             if have:
-                res = raw_input('Do you want to update skeinforge? (Y/N): ')
-            if res.lower == 'y' or not have:
+                ans = raw_input('Do you want to update skeinforge? (Y/N): ')
+                if not ans.lower() == 'y':
+                    update = False
+                
+            if update:
                 print 'Updating...'
                 print '   Dowloading...'
                 download(version)

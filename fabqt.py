@@ -66,8 +66,8 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         self.qvtkWidget.customStart(self.currentPrinter)
         self.camera = self.qvtkWidget.camera
         ## Thread pool
-        self.pathPool = ThreadPool(2)
-        self.importPool = ThreadPool(2)
+        #self.pathPool = ThreadPool(2)
+        #self.importPool = ThreadPool(2)
         self.importing = False
         self.planning = False
         
@@ -76,6 +76,7 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         filters = QStringList()
         filters.append("STL Models (*.stl)")
         filters.append("GCode file (*.gcode)")
+        #filters.append("GCode file (*.txt)")
         filters.append("All files (*)")
         self.importDialog = QFileDialog(self, 'Import model', settings.value("Path/ModelDir", QVariant(QString('./'))).toString())
         self.importDialog.setNameFilters(filters)
@@ -251,7 +252,6 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
             elif item.text(0).contains('path'):
                 return
             modelname = str(item.text(0))
-
             pathdone = False
             for i in range(item.childCount()): # Check path calculated
                 if item.child(i).text(0).contains('path'):
@@ -260,7 +260,7 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
                 self.modelDict[modelname].setModelMaterial(toolname)
                 logger.log('Model: ' + modelname + ' Material: ' + toolname)
             self.populateModelTree()
-        except:
+        except: # No models in modelTreeWidget
             pass
 
     def populateConfigTree(self):
