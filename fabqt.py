@@ -16,6 +16,11 @@ if os.path.exists('log.txt'):
 else:
     import checkSkeinforgeVersion
     checkSkeinforgeVersion.main()
+    
+if not os.path.exists('profiles/'):
+    import zipfile
+    fh = zipfile.ZipFile('profiles.zip', 'r')
+    fh.extractall('./')
 
 # Dialogs
 import ui.ui_fabqtDialog as ui_fabqtDialog
