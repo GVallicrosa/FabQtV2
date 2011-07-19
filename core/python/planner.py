@@ -16,7 +16,7 @@ class Vec(object):
     def __str__(self):
         return '%s %s %s' % (self.x, self.y, self.z)
 
-def slicevtk(vtkmesh, h, init = 0, end = 0):
+def slicevtk(vtkmesh, h, init = 0, end = 0, debug = False):
     # Get limits
     xmin, xmax, ymin, ymax, zmin, zmax = vtkmesh.GetBounds()
     zmin += init
@@ -54,10 +54,9 @@ def slicevtk(vtkmesh, h, init = 0, end = 0):
             for j in range(cutStrips.GetOutput().GetCell(i).GetPoints().GetNumberOfPoints()): # retrieve all points from the line
                 vec = Vec(cutStrips.GetOutput().GetCell(i).GetPoints().GetPoint(j))
                 coords += ((vec.x, vec.y),)
-            polygon = Polygon(coords)
-            polygons.append(polygon)
-            #actor2 = dibuixa(polygon)
-            #ren.AddActor(actor2)
+            if len(coords) >= 3:
+                polygon = Polygon(coords)
+                polygons.append(polygon)
         fora = list()
         for i in range(len(polygons)):
             if i not in fora:
