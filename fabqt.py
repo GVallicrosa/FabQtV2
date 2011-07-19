@@ -416,30 +416,21 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         elif self.planning:
             QMessageBox().about(self, self.tr("Error"), self.tr("You already doing a path planning, wait for completition."))
         else:
-            logger.log('Starting custom path planning')
-            self.planning = True
-            #Dialog = advancedDialog(self, self.options)
-            #Dialog.exec_()
-            #skeinmod.applyConfig(self.model, self.toolDict, True, self.options)
-            self.pathDelete()
-            #printer = str(self.printerComboBox.currentText())
-            #printer = self.printerDict[printer]
-            
-            #def slice2():
-            
-            #if self.model.hasModel():
-            #    validateMove(self.model.getActor(), printer, float(self.options.dict['raftMargin']))
-            self.model.SliceCustom(self.toolDict)
-            #pathActor = self.model.getPathActor()
-            self.qvtkWidget.AddActorCustom(self.model)
-            logger.log('Added path actor/s to the scene')
-            modelActor = self.model.getActor()
-            modelActor.GetProperty().SetOpacity(0)
-            self.qvtkWidget.GetRenderWindow().Render()
-            self.populateModelTree()
-            self.planning = False
-            
-            #self.pathPool.add_task(slice2)
+            try:
+                logger.log('Starting custom path planning')
+                self.planning = True
+                self.pathDelete()
+                self.model.SliceCustom(self.toolDict)
+                self.qvtkWidget.AddActorCustom(self.model)
+                logger.log('Added path actor/s to the scene')
+                modelActor = self.model.getActor()
+                modelActor.GetProperty().SetOpacity(0)
+                self.qvtkWidget.GetRenderWindow().Render()
+                self.populateModelTree()
+                self.planning = False
+            except:
+                self.planning = False
+                QMessageBox().about(self, self.tr("Error"), self.tr("Problem encountered during path planning, try another one."))
     
     def pathAdvanced(self):
         if self.model.getModelMaterial() is None:
@@ -447,15 +438,15 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         elif self.planning:
             QMessageBox().about(self, self.tr("Error"), self.tr("You already doing a path planning, wait for completition."))
         else:
-            logger.log('Starting advanced path planning')
-            self.planning = True
-            Dialog = advancedDialog(self, self.options)
-            Dialog.exec_()
-            skeinmod.applyConfig(self.model, self.toolDict, True, self.options)
-            self.pathDelete()
-            printer = str(self.printerComboBox.currentText())
-            printer = self.printerDict[printer]
-            def slice():
+            try:
+                logger.log('Starting advanced path planning')
+                self.planning = True
+                Dialog = advancedDialog(self, self.options)
+                Dialog.exec_()
+                skeinmod.applyConfig(self.model, self.toolDict, True, self.options)
+                self.pathDelete()
+                printer = str(self.printerComboBox.currentText())
+                printer = self.printerDict[printer]
                 if self.model.hasModel():
                     validateMove(self.model.getActor(), printer, float(self.options.dict['raftMargin']))
                 self.model.Slice()
@@ -467,7 +458,9 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
                 self.qvtkWidget.GetRenderWindow().Render()
                 self.populateModelTree()
                 self.planning = False
-            self.pathPool.add_task(slice)
+            except:
+                self.planning = False
+                QMessageBox().about(self, self.tr("Error"), self.tr("Problem encountered during path planning, try another one."))
         
     def pathDelete(self):
         self.qvtkWidget.RemoveActorCustom(self.model, False)
@@ -484,11 +477,11 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         elif self.planning:
             QMessageBox().about(self, self.tr("Error"), self.tr("You already doing a path planning, wait for completition."))
         else:
-            logger.log('Starting path planning')
-            self.planning = True
-            skeinmod.applyConfig(self.model, self.toolDict)
-            self.pathDelete()
-            def slice():
+            try:
+                logger.log('Starting path planning')
+                self.planning = True
+                skeinmod.applyConfig(self.model, self.toolDict)
+                self.pathDelete()
                 self.model.Slice()
                 pathActor = self.model.getPathActor()
                 self.qvtkWidget.AddActorCustom(self.model)
@@ -498,7 +491,9 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
                 self.qvtkWidget.GetRenderWindow().Render()
                 self.populateModelTree()
                 self.planning = False
-            self.pathPool.add_task(slice)
+            except:
+                self.planning = False
+                QMessageBox().about(self, self.tr("Error"), self.tr("Problem encountered during path planning, try another one."))
         
     def populatePrinterPort(self):
         ports = printerports.scan()
