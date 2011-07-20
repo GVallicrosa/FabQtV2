@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'advancedDialog.ui'
 #
-# Created: Tue Jul 12 16:22:38 2011
+# Created: Tue Jul 19 12:41:04 2011
 #      by: PyQt4 UI code generator 4.8.3
 #
 # WARNING! All changes made in this file will be lost!

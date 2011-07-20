@@ -126,6 +126,7 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         actionStandard = self.modelMenu.addAction("Standard Path Planning")
         actionAdvanced = self.modelMenu.addAction("Advanced Path Planning")
         actionCustom = self.modelMenu.addAction("Custom Path Planning")
+        actionCustom2 = self.modelMenu.addAction("Custom Path Planning (new)")
         actionExport = self.modelMenu.addAction("Export to vector file")
         actionDeletePath = self.modelMenu.addAction("Erase Path")
         actionOrigin = self.modelMenu.addAction("Move to Origin")
@@ -134,6 +135,7 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         self.connect(actionStandard, SIGNAL('triggered()'), self.pathPlanning)
         self.connect(actionAdvanced, SIGNAL('triggered()'), self.pathAdvanced)
         self.connect(actionCustom, SIGNAL('triggered()'), self.pathCustom)
+        self.connect(actionCustom2, SIGNAL('triggered()'), self.pathCustom2)
         self.connect(actionExport, SIGNAL('triggered()'), self.pathExport)
         self.connect(actionDeletePath, SIGNAL('triggered()'), self.pathDelete)
         self.connect(actionOrigin, SIGNAL('triggered()'), self.moveToOrigin)
@@ -143,6 +145,7 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
         self.modelMenu.addAction(actionStandard)
         self.modelMenu.addAction(actionAdvanced)
         self.modelMenu.addAction(actionCustom)
+        self.modelMenu.addAction(actionCustom2)
         self.modelMenu.addAction(actionExport)
         self.modelMenu.addAction(actionDeletePath)
         self.modelMenu.addSeparator()
@@ -431,6 +434,29 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
             except:
                 self.planning = False
                 QMessageBox().about(self, self.tr("Error"), self.tr("Problem encountered during path planning, try another one."))
+                
+    def pathCustom2(self):
+        if self.model.getModelMaterial() is None:
+            QMessageBox().about(self, self.tr("Error"), self.tr("You need to define model material to slice it."))
+        elif self.planning:
+            QMessageBox().about(self, self.tr("Error"), self.tr("You already doing a path planning, wait for completition."))
+        else:
+            try:
+                logger.log('Starting custom path planning (new)')
+                self.planning = True
+                self.pathDelete()
+                self.model.SliceCustom2(self.toolDict)
+                self.qvtkWidget.AddActorCustom(self.model)
+                logger.log('Added path actor/s to the scene')
+                modelActor = self.model.getActor()
+                modelActor.GetProperty().SetOpacity(0)
+                self.qvtkWidget.GetRenderWindow().Render()
+                self.populateModelTree()
+                self.planning = False
+            except StandardError, e:
+                print e
+                self.planning = False
+                QMessageBox().about(self, self.tr("Error"), self.tr("Problem encountered during path planning, try another one."))
     
     def pathAdvanced(self):
         if self.model.getModelMaterial() is None:
@@ -458,7 +484,8 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
                 self.qvtkWidget.GetRenderWindow().Render()
                 self.populateModelTree()
                 self.planning = False
-            except:
+            except StandardError, e:
+                print e
                 self.planning = False
                 QMessageBox().about(self, self.tr("Error"), self.tr("Problem encountered during path planning, try another one."))
         
@@ -491,7 +518,8 @@ class FabQtMain(QMainWindow, ui_fabqtDialog.Ui_MainWindow):
                 self.qvtkWidget.GetRenderWindow().Render()
                 self.populateModelTree()
                 self.planning = False
-            except:
+            except StandardError, e:
+                print e
                 self.planning = False
                 QMessageBox().about(self, self.tr("Error"), self.tr("Problem encountered during path planning, try another one."))
         
@@ -683,4 +711,6 @@ if __name__ == "__main__":
     elif language == "languages/fabqt_pt_BR":
         form.actionPortuguese_Brazil.setChecked(True)
     ## Start application event loop
+    global bar
+    bar = form.progressBar
     app.exec_()

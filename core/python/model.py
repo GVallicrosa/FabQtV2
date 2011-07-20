@@ -5,7 +5,7 @@ from core.python.gcode import readGcode
 from core.python.vtkLinePlotter import vtkLinePlotter
 from core.skeinforge.skeinforge_application.skeinforge_plugins.craft_plugins import export
 from core.python.fablog import Fablog
-from core.python.planner import Vec, slicevtk, fill
+from core.python.planner import Vec, slicevtk, fill, fill2
 from core.python.layer import Layer
 from core.python.path import Path
 
@@ -237,6 +237,90 @@ class Model(object):
                 
                 # Calculate filling paths
                 allx,ally = fill(polygon, w, deg)
+                for j in range(len(allx)):
+                    # Take each path points
+                    xs = allx[j]
+                    ys = ally[j]
+                    for k in range(len(xs)):
+                        # Add points to path
+                        if k == 0:
+                            path = Path()
+                        vec = Vec([xs[k], ys[k], z])
+                        path.addVector(vec)
+                        if k == len(xs)-1:
+                            layer.addModelPath(path)
+            layerList.append(layer)
+            deg = -deg
+            
+        # Generate actors for paths
+        self.setLayers(layerList)
+        self.generatePaths(layerList)
+        
+    def SliceCustom2(self, toolDict, onlycontour = False): ######################################################
+        logger.log('Custom slice starting...')
+        
+        # Get model and apply transformations done
+        matrix = vtk.vtkMatrix4x4() 
+        self.getActor().GetMatrix(matrix)
+        transform = vtk.vtkTransform()
+        transform.SetMatrix(matrix)
+        t_filter = vtk.vtkTransformPolyDataFilter()
+        t_filter.SetInput(self.getPolyData())
+        t_filter.SetTransform(transform)
+        t_filter.Update()
+        vtkmesh = t_filter.GetOutput()
+        
+        # Get path height and path width
+        tool = toolDict[str(self.getModelMaterial())]
+        h = float(tool.pathHeight)
+        w = float(tool.pathWidth)
+        
+        # Slice and get polygons of each layer
+        layerspoly, zs = slicevtk(vtkmesh, h)
+        assert len(layerspoly) == len(zs)
+        self.layerValues = zs
+        
+        # Start gathering points
+        deg = 45
+        layerList = list()
+        total = len(layerspoly)
+        for i in range(total):
+            print 'processing layer %s/%s' % (i+1, total)
+            # Get polygons of each layer
+            polygons = layerspoly[i]
+            # Get current layer z
+            z = zs[i]
+            # Create layer
+            layer = Layer()
+            for polygon in polygons:
+                # Extract contours
+                #### Exterior
+                contour = polygon.exterior.xy
+                xs = contour[0]
+                ys = contour[1]
+                for a in range(len(xs)):
+                    if a == 0:
+                        path = Path()
+                    vec = Vec([xs[a], ys[a], z])
+                    path.addVector(vec)
+                    if a == len(xs)-1:
+                            layer.addModelPath(path)
+                            
+                #### Interiors = Holes
+                interiors = polygon.interiors
+                for interior in interiors:
+                    xs = interior.xy[0]
+                    ys = interior.xy[1]
+                    for a in range(len(xs)):
+                        if a == 0:
+                            path = Path()
+                        vec = Vec([xs[a], ys[a], z])
+                        path.addVector(vec)
+                        if a == len(xs)-1:
+                                layer.addModelPath(path)
+                
+                # Calculate filling paths
+                allx,ally = fill2(polygon, w, deg)
                 for j in range(len(allx)):
                     # Take each path points
                     xs = allx[j]

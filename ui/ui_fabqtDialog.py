@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/fabqtDialog.ui'
 #
-# Created: Tue Jul 12 16:22:39 2011
+# Created: Tue Jul 19 12:41:04 2011
 #      by: PyQt4 UI code generator 4.8.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -39,6 +39,12 @@ class Ui_MainWindow(object):
         self.qvtkWidget.setSizePolicy(sizePolicy)
         self.qvtkWidget.setObjectName(_fromUtf8("qvtkWidget"))
         self.verticalLayout_2.addWidget(self.qvtkWidget)
+        self.progressBar = QtGui.QProgressBar(self.centralwidget)
+        self.progressBar.setEnabled(True)
+        self.progressBar.setProperty(_fromUtf8("value"), 0)
+        self.progressBar.setTextVisible(False)
+        self.progressBar.setObjectName(_fromUtf8("progressBar"))
+        self.verticalLayout_2.addWidget(self.progressBar)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtGui.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 866, 25))

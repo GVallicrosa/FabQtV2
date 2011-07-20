@@ -4,6 +4,7 @@ from core.python.path import Path
 from math import *
 from core.python.vtkLinePlotter import vtkLinePlotter
 import vtk
+from PyQt4.QtGui import QProgressBar
 
 
 # Vec class
@@ -15,7 +16,7 @@ class Vec(object):
         
     def __str__(self):
         return '%s %s %s' % (self.x, self.y, self.z)
-
+        
 def slicevtk(vtkmesh, h, init = 0, end = 0, debug = False):
     # Get limits
     xmin, xmax, ymin, ymax, zmin, zmax = vtkmesh.GetBounds()
@@ -56,7 +57,8 @@ def slicevtk(vtkmesh, h, init = 0, end = 0, debug = False):
                 coords += ((vec.x, vec.y),)
             if len(coords) >= 3:
                 polygon = Polygon(coords)
-                polygons.append(polygon)
+                if polygon.area > 0.1*h: # fix for STL problems
+                    polygons.append(polygon)
         fora = list()
         for i in range(len(polygons)):
             if i not in fora:
@@ -375,3 +377,149 @@ def plot3d(x, y, z = 0):
         color += 1.0/len(x)
     polydata, actor = plot.CreateActor()
     return actor
+    
+######################    
+## New path planner ##
+######################
+
+def minidxs(values):
+    ''' Returns all indexs of minimum values'''
+    result = list()
+    val = min(values)
+    for i in range(len(values)):
+        if values[i] == val:
+            result.append(i)
+    return result
+
+def raster(fig, w, deg = 45, s = None):
+    '''Creates parallel lines to fill the figure'''
+    # Angle to radians
+    ang = deg*pi/180.0
+    
+    # Contour separation
+    if s is None:
+        s = w
+        
+    # Bounding box, get limits
+    xmin, ymin, xmax, ymax = fig.bounds
+    
+    # Correct path trajectory
+    fig = fig.buffer(-w/2.0)
+    
+    # Initial parameters
+    if 90 > deg > 0: # Start from left bottom
+        x = xmin - (ymax - ymin)/abs(tan(ang)) 
+        y = ymin
+        incx = abs(w/sin(ang))
+        incy = 0
+    elif -90 < deg < 0: # Start from left top
+        x = xmin - (ymax - ymin)/abs(tan(ang))
+        y = ymax
+        incx = abs(w/sin(ang))
+        incy = 0
+    elif deg == 0:
+        x = xmin
+        y = ymin
+        incx = 0
+        incy = w
+    elif abs(deg) == 90:
+        x = xmin
+        y = ymin
+        incx = w
+        incy = 0
+    else: # Raise Exception
+        raise 'Exception: wrong degree value [-90, 90].'
+    
+    # Obtain intersections
+    cuts = list()
+    while x < xmax:
+        line = LineString(((x, y),(xmax, xmax*tan(ang) + y - x*tan(ang)))) # Equacio linia: y = x*tan(deg) + (yo - xo*tan(deg))
+        lines = line.intersection(fig.buffer(-s))
+        if not lines.is_empty:
+            if lines.type == 'LineString':
+                cuts.append(lines)
+            elif lines.type == 'MultiLineString':
+                for line in list(lines): 
+                    cuts.append(line)
+        x += incx
+        y += incy
+        if ang == 0 and y > ymax:
+            x = xmax + 1
+    return cuts
+    
+def bindLines(cuts, fig, w, n = 10): # n = confidence in unions
+    # Variables to store paths
+    allx = list()
+    ally = list()
+    
+    finished = False
+    while not finished:
+        x = list()
+        y = list()
+        if len(cuts) == 0:
+            finished = True
+            
+        # Still lines to bind
+        else:
+            # Take the first one
+            lastline = cuts.pop(0)
+            l0 = lastline.boundary[0]
+            l1 = lastline.boundary[1]
+            x += [l0.x, l1.x]
+            y += [l0.y, l1.y]
+            lastpoint = l1
+            pather = True
+            
+            while pather:
+                # Look for candidates
+                distances = list()
+                candidates = list()
+                for segment in cuts:
+                    if segment.distance(lastline) <= 1.5*w:
+                        distances.append(segment.distance(lastline))
+                        candidates.append(segment)
+                
+                # If no candidates
+                if len(candidates)==0:
+                    pather = False
+                    
+                else:
+                    # If candidates, check the nearest to lastpoint
+                    mindist = 1e60
+                    for line in candidates:
+                        if lastpoint.distance(line) < mindist:
+                            #nextline = candidates[distances.index(min(distances))]
+                            nextline = line
+                            mindist = lastpoint.distance(line)
+                    # Look for nearer point
+                    n0 = nextline.boundary[0]
+                    n1 = nextline.boundary[1]
+                    distance = lastpoint.distance(n0) - lastpoint.distance(n1)
+                    if distance < 0:
+                    # Point n0 nearer
+                        if fig.contains(LineString(((lastpoint.x, lastpoint.y),(n0.x, n0.y)))) and lastpoint.distance(n0) < n*w:
+                            x += [n0.x, n1.x]
+                            y += [n0.y, n1.y]
+                            lastpoint = n1
+                        else:
+                            break
+                    # Point n0 nearer
+                    else:
+                        if fig.contains(LineString(((lastpoint.x, lastpoint.y),(n1.x, n1.y)))) and lastpoint.distance(n1) < n*w:
+                            x += [n1.x, n0.x]
+                            y += [n1.y, n0.y]
+                            lastpoint = n0
+                        else:
+                            break
+                    lastline = nextline
+                    cuts.remove(lastline)
+
+            allx.append(x)
+            ally.append(y)
+
+    return allx,ally
+
+def fill2(fig, w, deg = 45, s = None):
+    lines = raster(fig, w, deg, s)
+    xs, ys = bindLines(lines, fig, w)
+    return xs, ys
