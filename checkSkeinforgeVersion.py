@@ -1,15 +1,17 @@
-import urllib2
+import requests
 
 def download(version):
-    o = urllib2.build_opener(urllib2.HTTPCookieProcessor())
+    #o = urllib2.build_opener(urllib2.HTTPCookieProcessor())
     fileURL = 'http://fabmetheus.crsndoo.com/files/%s_reprap_python_beanshell.zip' % version
-    fh = o.open(fileURL)
+    data = requests.get(fileURL).content
     output = open('skeinforge.zip', "wb")
-    chunk = fh.read()
-    while chunk:
-        output.write(chunk)
-        chunk = fh.read()
-    fh.close()
+    output.write(data)
+    
+    #chunk = fh.read()
+    #while chunk:
+      #  output.write(chunk)
+     #   chunk = fh.read()
+    #fh.close()
     output.close()
     
 def extract():
@@ -30,22 +32,16 @@ def main():
         have = True
     except:
         current = 'nothing'
-        print 'Current version: no skeinforge' 
+        print 'Skeinforge: not in disk' 
     
     try:
-        fh = urllib2.urlopen("http://fabmetheus.crsndoo.com/rss.xml")
-        #print 'Checking online...'
-        data = fh.readlines()
-        data = data[0]
-        fh.close()
-        new = data.split('<item><title>')
-        new = new[1]
-        new = new[:10]
-        version = data.split('http://fabmetheus.crsndoo.com/files/')
-        version = version[1]
-        version = int(version[0:2])
-        print 'New version: ' + new + '  Number: ' + str(version)
-        if not new == current:
+        r = requests.get("http://fabmetheus.crsndoo.com/rss.xml")
+        print 'Checking online...'
+        data = r.content
+        date = data.split('<item><title>')[1][:10]
+        version = int(data.split('http://fabmetheus.crsndoo.com/files/')[1][:2])
+        print 'New version: ' + date + '  Number: ' + str(version)
+        if not date == current:
             update = True
             if have:
                 ans = raw_input('Do you want to update skeinforge? (Y/N): ')
@@ -60,7 +56,7 @@ def main():
                 extract()
                 import os
                 os.remove('skeinforge.zip')
-        elif new == current:
+        elif date == current:
             print 'Already lastest version'
         else:
             print 'Error'

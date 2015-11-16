@@ -1,0 +1,9 @@
+*.pyc
+*.gcode
+*.swp
+core/skeinforge/*
+languages/*.ts
+profiles/*
+ui/ui_*
+ui/resources_rc.py
+log.txt

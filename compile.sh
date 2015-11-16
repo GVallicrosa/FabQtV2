@@ -13,3 +13,6 @@ pylupdate4 fabqt.pro
 python fixUI.py
 cd languages
 lrelease *.ts
+
+# INSTALL
+# sudo apt-get install pyqt4-dev-tools 
